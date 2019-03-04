@@ -1,0 +1,97 @@
+
+*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    04-Mar-2019 17:12:49 CST
+
+Input    noflare_raw.fits
+Outroot  noflare
+Wavecal  odlm21050_wav.fits
+         HSTIO error 114:  Filename odlm21050_wav.fits EXTNAME  EXTVER 0 CFITSIO status 104
+failed to find or open the following file: (ffopen)odlm21050_wav.fits[0]
+Error opening image array.
+         Open failed.
+calstis0 failed.
+
+*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    04-Mar-2019 17:13:23 CST
+
+Input    noflare_raw.fits
+Outroot  noflare
+Wavecal  noflare_dump/odlm21050_wav.fits
+Warning  BPIXTAB `oref$uce15153o_bpx.fits' not found or can't open.
+Warning  MLINTAB `oref$j9r16559o_lin.fits' not found or can't open.
+Warning  DARKFILE `oref$q591955ro_drk.fits' not found or can't open.
+Warning  PFLTFILE `oref$mbj1658bo_pfl.fits' not found or can't open.
+Warning  LFLTFILE `oref$o481727ao_lfl.fits' not found or can't open.
+Warning  WCPTAB `oref$16j1600co_wcp.fits' not found or can't open.
+Warning  LAMPTAB `oref$l421050oo_lmp.fits' not found or can't open.
+Warning  APDESTAB `oref$16j16005o_apd.fits' not found or can't open.
+Warning  SDCTAB `oref$16j1600ao_sdc.fits' not found or can't open.
+Warning  PCTAB `oref$y2r16004o_pct.fits' not found or can't open.
+Warning  XTRACTAB `oref$n7p10323o_1dx.fits' not found or can't open.
+Warning  SPTRCTAB `oref$q8l14504o_1dt.fits' not found or can't open.
+Warning  DISPTAB `oref$m7p16110o_dsp.fits' not found or can't open.
+Warning  INANGTAB `oref$h1v1541eo_iac.fits' not found or can't open.
+Warning  PHOTTAB `oref$15o1440ro_pht.fits' not found or can't open.
+Warning  APERTAB `oref$y2r1559to_apt.fits' not found or can't open.
+ERROR    16 reference files were missing.
+         Calibration file(s) missing.
+calstis0 failed.
+
+*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    04-Mar-2019 17:17:01 CST
+
+Input    noflare_raw.fits
+Outroot  noflare
+Wavecal  noflare_dump/odlm21050_wav.fits
+Warning  BPIXTAB `oref$uce15153o_bpx.fits' not found or can't open.
+Warning  MLINTAB `oref$j9r16559o_lin.fits' not found or can't open.
+Warning  DARKFILE `oref$q591955ro_drk.fits' not found or can't open.
+Warning  PFLTFILE `oref$mbj1658bo_pfl.fits' not found or can't open.
+Warning  LFLTFILE `oref$o481727ao_lfl.fits' not found or can't open.
+Warning  WCPTAB `oref$16j1600co_wcp.fits' not found or can't open.
+Warning  LAMPTAB `oref$l421050oo_lmp.fits' not found or can't open.
+Warning  APDESTAB `oref$16j16005o_apd.fits' not found or can't open.
+Warning  SDCTAB `oref$16j1600ao_sdc.fits' not found or can't open.
+Warning  PCTAB `oref$y2r16004o_pct.fits' not found or can't open.
+Warning  XTRACTAB `oref$n7p10323o_1dx.fits' not found or can't open.
+Warning  SPTRCTAB `oref$q8l14504o_1dt.fits' not found or can't open.
+Warning  DISPTAB `oref$m7p16110o_dsp.fits' not found or can't open.
+Warning  INANGTAB `oref$h1v1541eo_iac.fits' not found or can't open.
+Warning  PHOTTAB `oref$15o1440ro_pht.fits' not found or can't open.
+Warning  APERTAB `oref$y2r1559to_apt.fits' not found or can't open.
+ERROR    16 reference files were missing.
+         Calibration file(s) missing.
+calstis0 failed.
+
+*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    04-Mar-2019 17:17:26 CST
+
+Input    noflare_raw.fits
+Outroot  noflare
+Wavecal  noflare_dump/odlm21050_wav.fits
+Warning  PHOTTAB `oref$15o1440ro_pht.fits' not found or can't open.
+ERROR    One reference file was missing.
+         Calibration file(s) missing.
+calstis0 failed.
+
+*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    04-Mar-2019 17:21:24 CST
+
+Input    noflare_raw.fits
+Outroot  noflare
+Wavecal  noflare_dump/odlm21050_wav.fits
+Warning  PHOTTAB `oref$15o1440ro_pht.fits' not found or can't open.
+ERROR    One reference file was missing.
+         Calibration file(s) missing.
+calstis0 failed.
+
+*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    04-Mar-2019 17:22:47 CST
+
+Input    noflare_raw.fits
+Outroot  noflare
+Wavecal  noflare_dump/odlm21050_wav.fits
+Warning  PHOTTAB `oref$15o1440ro_pht.fits' not found or can't open.
+ERROR    One reference file was missing.
+         Calibration file(s) missing.
+calstis0 failed.

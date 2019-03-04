@@ -1,0 +1,12 @@
+
+*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    04-Mar-2019 17:12:49 CST
+
+Input    noflare_raw.fits
+Outroot  noflare
+Wavecal  odlm21050_wav.fits
+         HSTIO error 114:  Filename odlm21050_wav.fits EXTNAME  EXTVER 0 CFITSIO status 104
+failed to find or open the following file: (ffopen)odlm21050_wav.fits[0]
+Error opening image array.
+         Open failed.
+calstis0 failed.
