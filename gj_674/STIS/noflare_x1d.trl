@@ -1,0 +1,29 @@
+
+*** CALSTIS-6 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    06-Mar-2019 11:59:43 CST
+2019065115943-I--------------- CALSTIS-6 started -------------------------------
+
+Warning  Grating-aperture throughput correction table (GACTAB) was not found,
+         and no gac corrections will be applied
+Input    noflare_raw.fits
+Output   noflare.fits
+Rootname odlm21050
+OBSMODE  TIME-TAG
+APERTURE 52X0.2
+OPT_ELEM G140L
+DETECTOR FUV-MAMA
+
+XTRACTAB oref$n7p10323o_1dx.fits
+XTRACTAB PEDIGREE=INFLIGHT 29/05/97
+XTRACTAB DESCRIP =Analysis from prop. 7064 and ground data
+XTRACTAB DESCRIP =Analysis from prop. 7064
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/1997 06/02/1999
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+
+Imset 1  Begin 11:59:43 CST
+Error processing noflare_raw.fits.
+         HSTIO error 114:  Filename noflare_raw.fits EXTNAME DQ EXTVER 1 CFITSIO status 0
+
+Sci array has wrong number of dimensions.
+         Open failed.
