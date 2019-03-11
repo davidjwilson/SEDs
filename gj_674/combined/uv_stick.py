@@ -122,8 +122,10 @@ plt.subplots_adjust(top = 0.95, right = 0.99, left = 0.07, bottom = 0.11)
 #G130M
 data = readsav('../COS/GJ674_COS130M_Mm1_NOSCL_03apr18.sav')
 #mask = data['Flux'] > 0
-lymask = (data['Wave'] <1207)|(data['Wave'] >1225) #mask out lya
-plt.step(data['Wave'][lymask], data['Flux'][lymask])
+#lymask = (data['Wave'] <1207)|(data['Wave'] >1225) #mask out lya
+glowmask = (data['Wave'] <1207)|(data['Wave'] >1225)&(data['Wave'] <1304)|(data['Wave'] >1304.5)&(data['Wave'] <1355)|(data['Wave'] >1356)   #mask out lya, airglow
+
+plt.step(data['Wave'][glowmask], data['Flux'][glowmask])
 #plt.step(data['Wave'], data['Flux'])
 cos_end = data['Wave'][-1]
 
@@ -139,7 +141,7 @@ plt.step(data['WAVELENGTH'][lyinc], data['FLUX'][lyinc])
 #G140L
 data = fits.getdata('../STIS/GJ674_G140L_noflare_x1d.fits', 1)[0]
 #mask = data['FLUX'] > 0
-mask = data['WAVELENGTH']>cos_end #only need the bit not covered by COS
+mask = (data['WAVELENGTH'] >1304)&(data['WAVELENGTH'] <1304.5)|(data['WAVELENGTH'] >1355)&(data['WAVELENGTH'] <1356)|(data['WAVELENGTH']>cos_end) #only need the bit not covered by COS, and airglow filler
 
 plt.step(data['WAVELENGTH'][mask], data['FLUX'][mask])
 #plt.step(data['WAVELENGTH'], data['FLUX'])
@@ -165,7 +167,7 @@ mask = data['WAVELENGTH'][:clip_end]>g230L_end
 plt.step(data['WAVELENGTH'][:clip_end][mask], data['FLUX'][:clip_end][mask])
 
 #plt.xscale('log')
-plt.yscale('log')
+#plt.yscale('log')
 plt.xlabel('Wavelength (\AA)', size=20)
 plt.ylabel('Flux (erg s$^{-1}$cm$^{-2}$\AA$^{-1}$)', size=20)
 plt.axhline(0, ls='--', c='k')
