@@ -1,0 +1,23 @@
+Table 5 
+Line Fluxes (10^-18 erg s^-1 cm^-2) of Select Computed Chromosphere and Transition Region Lines
+
+
+Species	lambda (angst)	Model 1A	Model 2A	Model 2B	
+Si II	1264.73	110.83	0.12	24.45	
+Si III	1298.95	0.29	0.05	0.10	
+O I	1302.17	5.01	0.03	0.73	
+O I	1304.86	4.52	0.02	0.48	
+O I	1306.03	3.54	0.01	0.24	
+Si II	1309.28	103.09	7.91	26.08	
+C II	1335.71	36.60	0.18	5.42	
+Fe II	1391.08	210.72	36.87	75.94	
+Si II	1526.71	44.29	0.09	5.92	
+Si II	1533.43	47.67	0.20	6.94	
+C IV	1550.77	17.12	8.34	9.83	
+Al II	1670.79	310.14	0.11	101.20	
+Al I	1766.39	470.93	151.80	158.00	
+Mg II k	2796.35	6919.41	1281.44	8274.69	
+Mg II h	2803.53	11297.31	286.99	4432.94	
+Ca II K	3934.78	389.44	1.06	50.74	
+Ca II H	3969.59	302.74	0.79	34.15	
+Note. Computed line flux for Lyalpha is given in Table 4.
