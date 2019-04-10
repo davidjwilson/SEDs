@@ -33,29 +33,31 @@ cos_end = data['Wave'][-1]
 
 #STIS
 #G140M
+stis_scale = 1.8 #scaled to COS data
 data = Table.read('../STIS/GJ674_G140M_coadd.ecsv')
 #mask = data['FLUX'] > 0
 lyinc = (data['WAVELENGTH'] >1207)&(data['WAVELENGTH'] <1225) #include just lya
-plt.step(data['WAVELENGTH'][lyinc], data['FLUX'][lyinc])
+plt.step(data['WAVELENGTH'][lyinc], data['FLUX'][lyinc]*stis_scale)
 #plt.step(data['WAVELENGTH'], data['FLUX'])
 
 #G140L
 data = fits.getdata('../STIS/GJ674_G140L_noflare_x1d.fits', 1)[0]
 #mask = data['FLUX'] > 0
-mask = (data['WAVELENGTH'] >1304)&(data['WAVELENGTH'] <1304.5)|(data['WAVELENGTH'] >1355)&(data['WAVELENGTH'] <1356)|(data['WAVELENGTH']>cos_end) #only need the bit not covered by COS, and airglow filler
+mask = (data['WAVELENGTH']>=cos_end) #only need the bit not covered by COS nb here no difference between > and >=, could change for other stars
 
-plt.step(data['WAVELENGTH'][mask], data['FLUX'][mask])
+plt.step(data['WAVELENGTH'][mask], data['FLUX'][mask]*stis_scale)
 #plt.step(data['WAVELENGTH'], data['FLUX'])
 g140L_end = data['WAVELENGTH'][-1]
 
 
 #G230L
+nuv_scale = 0.86
 data = fits.getdata('../STIS/GJ674_G230L_x1d.fits')[0]
 #clip_st, clip_end = 30,-6 
 clip_end = -6 #don't need to clip the start any more
 #mask = data['FLUX'][clipLst:clip_end] > 0
 mask = data['WAVELENGTH'][:clip_end]>g140L_end
-plt.step(data['WAVELENGTH'][:clip_end][mask], data['FLUX'][:clip_end][mask])
+plt.step(data['WAVELENGTH'][:clip_end][mask], data['FLUX'][:clip_end][mask]*nuv_scale)
 #plt.step(data['WAVELENGTH'][clip_st:clip_end], data['FLUX'][clip_st:clip_end])
 g230L_end = data['WAVELENGTH'][clip_end] 
 
@@ -66,6 +68,7 @@ data = fits.getdata(ccd)[0]
 clip_end = -1 #don't need to clip the start any more
 #mask = data['FLUX'][clipLst:clip_end] > 0
 mask = data['WAVELENGTH'][:clip_end]>g230L_end
+#mask = data['WAVELENGTH'][:clip_end]>3500.
 plt.step(data['WAVELENGTH'][:clip_end][mask], data['FLUX'][:clip_end][mask]*scale)
 w_end = data['WAVELENGTH'][:clip_end][mask][-1]
 
@@ -74,13 +77,19 @@ data = Table.read('../photometry/scaled_03400-4.50-0.0_phoenix_gj674.ecsv')
 mask = data['WAVELENGTH'] > w_end
 mw, mf = data['WAVELENGTH'][mask], data['FLUX'][mask]
 #mw, mf = data['WAVELENGTH'], data['FLUX']
-plt.step(mw, mf, zorder=-10)
+plt.step(mw, mf, zorder=-10, )
+#plt.plot(mw, mf, zorder=-10, c='0.5', ls='--')
+#xmm
+xdt = fits.getdata('../xmm/GJ674.fits',1)
+plt.step(xdt['wave'], xdt['cflux'])
+
 
 plt.xscale('log')
 plt.yscale('log')
 plt.xlabel('Wavelength (\AA)', size=20)
 plt.ylabel('Flux (erg s$^{-1}$cm$^{-2}$\AA$^{-1}$)', size=20)
 plt.axhline(0, ls='--', c='k')
+
 
 
 
