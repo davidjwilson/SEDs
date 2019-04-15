@@ -131,7 +131,7 @@ dq_full = e_full[arr1inds]
 n_full = n_full[arr1inds]
 i_full = i_full[arr1inds]
 
-#data = Table([w_full*u.AA, f_full*u.erg/u.cm**2/u.s/u.AA, e_full*u.erg/u.cm**2/u.s/u.AA, n_full], names = ['WAVELENGTH', 'FLUX', 'ERROR', 'NORMFAC'] )
-#ascii.write(data, star+'_data+phoenix_v1.ecsv', delimiter=',', format='ecsv', overwrite=True)
+data = Table([w_full*u.AA, f_full*u.erg/u.cm**2/u.s/u.AA, e_full*u.erg/u.cm**2/u.s/u.AA, dq_full, n_full, i_full], names = ['WAVELENGTH', 'FLUX', 'ERROR', 'DQ', 'NORMFAC', 'INSTRUMENT'] )
+ascii.write(data, star+'_hst+phoenix_v1.ecsv', delimiter=',', format='ecsv', overwrite=True)
 
 plt.show()
