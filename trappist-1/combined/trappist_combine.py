@@ -114,8 +114,8 @@ plt.step(mw, mf, zorder=-10, )
 w_full, f_full, e_full, dq_full, n_full, i_full = add_spec(w_full, f_full, e_full, dq_full, n_full,i_full, 
                                                    mw,mf, np.zeros(len(mw)),np.zeros(len(mw), dtype=int), m_scale, instrument)
 
-plt.xscale('log')
-plt.yscale('log')
+#plt.xscale('log')
+#plt.yscale('log')
 plt.xlabel('Wavelength (\AA)', size=20)
 plt.ylabel('Flux (erg s$^{-1}$cm$^{-2}$\AA$^{-1}$)', size=20)
 plt.axhline(0, ls='--', c='k')
