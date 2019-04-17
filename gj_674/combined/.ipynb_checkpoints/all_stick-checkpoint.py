@@ -38,14 +38,23 @@ f_full = np.concatenate((f_full, data['Flux'][glowmask]))
 e_full = np.concatenate((e_full, data['Err'][glowmask]))
 n_full = np.concatenate((n_full, np.full(len(data['Wave'][glowmask]), 1.0)))
 
-
+#lya
+stis_scale = 1.8 #scaled to COS data
+lya = Table.read('../lya/GJ674_intrinsic_LyA_profile.txt', format='ascii')
+plt.plot(lya['WAVELENGTH'], lya['FLUX']*stis_scale)
+#lyast, lyaed = lya['WAVELENGTH'][0], lya['WAVELENGTH'][-1]
+w_full = np.concatenate((w_full, lya['WAVELENGTH']*stis_scale))
+f_full = np.concatenate((f_full, lya['FLUX']))
+e_full = np.concatenate((e_full, np.zeros(len(lya['WAVELENGTH']))))
+n_full = np.concatenate((n_full, np.full(len(lya['WAVELENGTH']), stis_scale)))
+             
 #STIS
 #G140M
-stis_scale = 1.8 #scaled to COS data
 data = Table.read('../STIS/GJ674_G140M_coadd.ecsv')
 #mask = data['FLUX'] > 0
-lyinc = (data['WAVELENGTH'] >1207)&(data['WAVELENGTH'] <1225) #include just lya
-plt.step(data['WAVELENGTH'][lyinc], data['FLUX'][lyinc]*stis_scale)
+lyinc = (data['WAVELENGTH'] >1207)&(data['WAVELENGTH'] <lya['WAVELENGTH'][0])|(data['WAVELENGTH'] >lya['WAVELENGTH'][-1])&(data['WAVELENGTH'] <1225) #include just bits not covered by cos or lya reconstruction
+#lyinc = (data['WAVELENGTH'] >1207)&(data['WAVELENGTH'] <1225)
+plt.step(data['WAVELENGTH'][lyinc], data['FLUX'][lyinc])
 #plt.step(data['WAVELENGTH'], data['FLUX'])
 
 w_full = np.concatenate((w_full, data['WAVELENGTH'][lyinc]))
@@ -128,6 +137,16 @@ f_full = np.concatenate((f_full, xdt['cflux']))
 e_full = np.concatenate((e_full, xdt['cflux_err']))
 n_full = np.concatenate((n_full, np.full(len(xdt['wave']), 1.0)))
 
+#euv estimates
+euv = Table.read('GJ674_1Aeuv_estimate.ecsv')
+plt.step(euv['WAVELENGTH'], euv['FLUX'])
+
+
+w_full = np.concatenate((w_full, euv['WAVELENGTH']))
+f_full = np.concatenate((f_full, euv['FLUX']))
+e_full = np.concatenate((e_full, np.full(len(euv['WAVELENGTH']), 0.0)))
+n_full = np.concatenate((n_full, np.full(len(euv['WAVELENGTH']), 1.0)))
+
 
 #plt.xscale('log')
 #plt.yscale('log')
@@ -143,7 +162,7 @@ f_full = f_full[arr1inds]
 e_full = e_full[arr1inds]
 n_full = n_full[arr1inds]
 
-data = Table([w_full*u.AA, f_full*u.erg/u.cm**2/u.s/u.AA, e_full*u.erg/u.cm**2/u.s/u.AA, n_full], names = ['WAVELENGTH', 'FLUX', 'ERROR', 'NORMFAC'] )
-ascii.write(data, 'gj674_data+phoenix_v1.ecsv', delimiter=',', format='ecsv', overwrite=True)
+#data = Table([w_full*u.AA, f_full*u.erg/u.cm**2/u.s/u.AA, e_full*u.erg/u.cm**2/u.s/u.AA, n_full], names = ['WAVELENGTH', 'FLUX', 'ERROR', 'NORMFAC'] )
+#ascii.write(data, 'gj674_data+phoenix_v1.ecsv', delimiter=',', format='ecsv', overwrite=True)
 
 plt.show()
