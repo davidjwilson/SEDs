@@ -77,7 +77,8 @@ cnw = np.array([], dtype=float)
 cnf = np.array([], dtype=float)
 cne = np.array([], dtype=float)
 cndq = np.array([], dtype=int)
-for dt in fits.getdata(specpath,1)[0:2]:
+ndata = fits.getdata(specpath,1)[0:2]
+for dt in ndata:
     cnw= np.concatenate((cnw, dt['WAVELENGTH']))
     cnf = np.concatenate((cnf, dt['FLUX']))
     cne = np.concatenate((cne, dt['ERROR']))
@@ -88,7 +89,8 @@ plt.step(cnw, cnf)
 w_full, f_full, e_full, dq_full, n_full, i_full = add_spec(w_full, f_full, e_full, dq_full, n_full,i_full, 
                                                    cnw,cnf, cne, cndq, 1.0, instrument)
 nuv_end = cnw[-1]
-
+nuv_gap = [ndata[0]['WAVELENGTH'][-1], ndata[1]['WAVELENGTH'][0]] #gap in nuv spectrum to be filled with model.
+#print(nuv_gap)
 #ccd
 instrument = 'STIS_G430L'
 stis_opt = '../../../trappist-1/hst/data/odlm41010_sx1.fits'
@@ -106,7 +108,8 @@ w_end = w[-1]
 m_scale = 4.71774681e-28
 instrument = 'PHOENIX'
 data = Table.read('../optical/scaled_02560-5.00-0.0_phoenix_trappist-1.ecsv')
-mask = data['WAVELENGTH'] > w_end
+#mask = (data['WAVELENGTH']> nuv_gap[0]) & (data['WAVELENGTH'] < nuv_gap[1])|(data['WAVELENGTH'] > w_end)
+mask = (data['WAVELENGTH'] > w_end)
 mw, mf = data['WAVELENGTH'][mask], data['FLUX'][mask]
 #mw, mf = data['WAVELENGTH'], data['FLUX']
 plt.step(mw, mf, zorder=-10, )
@@ -114,8 +117,8 @@ plt.step(mw, mf, zorder=-10, )
 w_full, f_full, e_full, dq_full, n_full, i_full = add_spec(w_full, f_full, e_full, dq_full, n_full,i_full, 
                                                    mw,mf, np.zeros(len(mw)),np.zeros(len(mw), dtype=int), m_scale, instrument)
 
-#plt.xscale('log')
-#plt.yscale('log')
+plt.xscale('log')
+plt.yscale('log')
 plt.xlabel('Wavelength (\AA)', size=20)
 plt.ylabel('Flux (erg s$^{-1}$cm$^{-2}$\AA$^{-1}$)', size=20)
 plt.axhline(0, ls='--', c='k')
