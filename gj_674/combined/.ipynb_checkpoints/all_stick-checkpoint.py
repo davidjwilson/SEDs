@@ -32,7 +32,7 @@ glowmask = (data['Wave'] <1207)|(data['Wave'] >1225)&(data['Wave'] <1304)|(data[
 
 plt.step(data['Wave'][glowmask], data['Flux'][glowmask])
 #plt.step(data['Wave'], data['Flux'])
-cos_end = data['Wave'][-1]
+cos_start, cos_end = data['Wave'][0], data['Wave'][-1]
 w_full = np.concatenate((w_full, data['Wave'][glowmask]))
 f_full = np.concatenate((f_full, data['Flux'][glowmask]))
 e_full = np.concatenate((e_full, data['Err'][glowmask]))
@@ -131,6 +131,7 @@ n_full = np.concatenate((n_full, np.full(len(mw), 3.19143165e-26)))
 #xmm
 xdt = fits.getdata('../xmm/GJ674.fits',1)
 plt.step(xdt['wave'], xdt['cflux'])
+xray_end = xdt['wave'][-1]
 
 w_full = np.concatenate((w_full, xdt['wave']))
 f_full = np.concatenate((f_full, xdt['cflux']))
@@ -139,14 +140,24 @@ n_full = np.concatenate((n_full, np.full(len(xdt['wave']), 1.0)))
 
 #euv estimates
 euv = Table.read('GJ674_1Aeuv_estimate.ecsv')
-plt.step(euv['WAVELENGTH'], euv['FLUX'])
-
+mask = (euv['WAVELENGTH'] < cos_start)
+plt.step(euv['WAVELENGTH'][mask], euv['FLUX'][mask])
+euv_start = euv['WAVELENGTH'][0]
 
 w_full = np.concatenate((w_full, euv['WAVELENGTH']))
 f_full = np.concatenate((f_full, euv['FLUX']))
 e_full = np.concatenate((e_full, np.full(len(euv['WAVELENGTH']), 0.0)))
 n_full = np.concatenate((n_full, np.full(len(euv['WAVELENGTH']), 1.0)))
 
+#xray model
+xdt = fits.getdata('../xmm/GJ674.fits',2)
+mask = (xdt['wave'] > xray_end) & (xdt['wave'] < euv_start)
+plt.step(xdt['wave'][mask], xdt['flux'][mask])
+
+w_full = np.concatenate((w_full, xdt['wave'][mask]))
+f_full = np.concatenate((f_full, xdt['flux'][mask]))
+e_full = np.concatenate((e_full, np.full(len(xdt['wave'][mask]), 0.0)))
+n_full = np.concatenate((n_full, np.full(len(xdt['wave'][mask]), 1.0)))
 
 #plt.xscale('log')
 #plt.yscale('log')
@@ -162,7 +173,7 @@ f_full = f_full[arr1inds]
 e_full = e_full[arr1inds]
 n_full = n_full[arr1inds]
 
-#data = Table([w_full*u.AA, f_full*u.erg/u.cm**2/u.s/u.AA, e_full*u.erg/u.cm**2/u.s/u.AA, n_full], names = ['WAVELENGTH', 'FLUX', 'ERROR', 'NORMFAC'] )
-#ascii.write(data, 'gj674_data+phoenix_v1.ecsv', delimiter=',', format='ecsv', overwrite=True)
+data = Table([w_full*u.AA, f_full*u.erg/u.cm**2/u.s/u.AA, e_full*u.erg/u.cm**2/u.s/u.AA, n_full], names = ['WAVELENGTH', 'FLUX', 'ERROR', 'NORMFAC'] )
+ascii.write(data, 'gj674_data+models_v1.ecsv', delimiter=',', format='ecsv', overwrite=True)
 
 plt.show()
