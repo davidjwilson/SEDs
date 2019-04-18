@@ -21,26 +21,34 @@ log[F(delta lambda) /F(lya)]=
 
 """
 
-def euv_estimator(star, lya, save=True, plot=True):
+def euv_estimator(star, lya, distance, save=True, plot=True):
+    
+    distance_conversion = ((1*u.au.to(u.m))/(distance*u.pc.to(u.m)))**2
+    
+    lya_1au = lya / distance_conversion
 
-    w1 = np.array([100,200,300,400,500,600,700,80,912], dtype=float) #A
+    w1 = np.array([100,200,300,400,500,600,700,800,912], dtype=float) #A
     w2 = np.array([200,300,400,500,600,700,800,912,1170], dtype=float)
+    bandwidth = w2-w1
 
     a = np.array([-0.491,-0.548,-0.602,-2.294,-2.098,-1.920,-1.894,-1.811,-1.004], dtype=float)
     b = np.array([ 0.,    0.,    0.,    0.258, 0.572, 0.240, 0.518, 0.764, 0.065], dtype=float)
 
     #log(f/lya) = a + b *log(lya)
-    #f = lya*10**fr
-    #solved f = 10**a*lya*(b+1)
-    f = np.array([(((10**ai)*(lya**(bi+1.)))/(w2i-w1i)) for ai, bi, w1i, w2i in zip(a, b, w1, w2)])
-
+    f = a + b*np.log10(lya_1au)
+    
+    print('Total EUV=',np.sum(f))
+    f = (lya_1au * 10**f)/bandwidth
+    
+    f *= distance_conversion
+                           
     for w1i, w2i, fi in zip(w1, w2, f):
         print(w1i, w2i, fi)
 
     #extrapolate onto 1A grid
     wav = np.arange((w1[0])+0.5, (w2[-1])+0.5, 1.0)
     flux = []
-    for w1i, w2i, fi in zip(w1., w2.,f):
+    for w1i, w2i, fi in zip(w1, w2,f):
         for wi in wav:
             if wi > w1i and wi < w2i :
                 flux.append(fi)
@@ -60,11 +68,14 @@ def euv_estimator(star, lya, save=True, plot=True):
         plt.yscale('log')
         plt.show()
         
-#star = 'GJ674'
-#lya = 1.8*2.06e-12 #erg /s/cm2 for GJ674, 2.9 is flux scaling factor 
+star = 'GJ674'
+lya = 2.9*2.06e-12 #erg /s/cm2 for GJ674, 2.9 is flux scaling factor 
+distance = 4.54
 #star = 'GJ176'
 #lya = 3.9e-13
-star = 'HD_97658'
-lya = 9.1e-13
+#distance = 9.3 
+#star = 'HD_97658'
+#lya = 9.1e-13
+#distance = 21.1
 #print(lya)
-euv_estimator(star, lya, save=False)
+euv_estimator(star, lya,  distance)

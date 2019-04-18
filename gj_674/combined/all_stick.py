@@ -43,8 +43,9 @@ g140m_scale = 2.9 #1.8 #scaled to COS data
 lya = Table.read('../lya/GJ674_intrinsic_LyA_profile.txt', format='ascii')
 plt.plot(lya['WAVELENGTH'], lya['FLUX']*g140m_scale)
 #lyast, lyaed = lya['WAVELENGTH'][0], lya['WAVELENGTH'][-1]
-w_full = np.concatenate((w_full, lya['WAVELENGTH']*g140m_scale))
-f_full = np.concatenate((f_full, lya['FLUX']))
+
+w_full = np.concatenate((w_full, lya['WAVELENGTH']))
+f_full = np.concatenate((f_full, lya['FLUX']*g140m_scale))
 e_full = np.concatenate((e_full, np.zeros(len(lya['WAVELENGTH']))))
 n_full = np.concatenate((n_full, np.full(len(lya['WAVELENGTH']),g140m_scale)))
              
