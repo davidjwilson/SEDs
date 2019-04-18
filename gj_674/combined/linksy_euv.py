@@ -23,6 +23,24 @@ log[F(delta lambda) /F(lya)]=
 
 def euv_estimator(star, lya, distance, save=True, plot=True):
     
+"""
+Calculating the EUV fluxes using the relationships of Linsky + 14 (https://ui.adsabs.harvard.edu/abs/2014ApJ...780...61L/abstract)
+
+log[F(delta lambda) /F(lya)]=
+
+10–20 nm (stars) 	 	−0.491 	 
+20–30 nm (stars) 	 	−0.548 	 
+30–40 nm (stars) 		−0.602 	 
+40–50 nm (models) 	  	  	−2.294+0.258 log[f (Lyα)]
+50–60 nm (models) 	  	  	−2.098+0.572 log[f (Lyα)]
+60–70 nm (models) 	  	  	−1.920+0.240 log[f (Lyα)]
+70–80 nm (models) 	  	  	−1.894+0.518 log[f (Lyα)]
+80–91.2 nm (models) 	  	  	−1.811+0.764 log[f (Lyα)]
+91.2–117 nm (models) 	  	  	−1.004+0.065 log[f (Lyα)]
+
+"""
+
+    
     distance_conversion = ((1*u.au.to(u.m))/(distance*u.pc.to(u.m)))**2
     
     lya_1au = lya / distance_conversion
