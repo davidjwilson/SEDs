@@ -39,14 +39,14 @@ e_full = np.concatenate((e_full, data['Err'][glowmask]))
 n_full = np.concatenate((n_full, np.full(len(data['Wave'][glowmask]), 1.0)))
 
 #lya
-stis_scale = 1.8 #scaled to COS data
+g140m_scale = 2.9 #1.8 #scaled to COS data
 lya = Table.read('../lya/GJ674_intrinsic_LyA_profile.txt', format='ascii')
-plt.plot(lya['WAVELENGTH'], lya['FLUX']*stis_scale)
+plt.plot(lya['WAVELENGTH'], lya['FLUX']*g140m_scale)
 #lyast, lyaed = lya['WAVELENGTH'][0], lya['WAVELENGTH'][-1]
-w_full = np.concatenate((w_full, lya['WAVELENGTH']*stis_scale))
+w_full = np.concatenate((w_full, lya['WAVELENGTH']*g140m_scale))
 f_full = np.concatenate((f_full, lya['FLUX']))
 e_full = np.concatenate((e_full, np.zeros(len(lya['WAVELENGTH']))))
-n_full = np.concatenate((n_full, np.full(len(lya['WAVELENGTH']), stis_scale)))
+n_full = np.concatenate((n_full, np.full(len(lya['WAVELENGTH']),g140m_scale)))
              
 #STIS
 #G140M
@@ -54,29 +54,30 @@ data = Table.read('../STIS/GJ674_G140M_coadd.ecsv')
 #mask = data['FLUX'] > 0
 lyinc = (data['WAVELENGTH'] >1207)&(data['WAVELENGTH'] <lya['WAVELENGTH'][0])|(data['WAVELENGTH'] >lya['WAVELENGTH'][-1])&(data['WAVELENGTH'] <1225) #include just bits not covered by cos or lya reconstruction
 #lyinc = (data['WAVELENGTH'] >1207)&(data['WAVELENGTH'] <1225)
-plt.step(data['WAVELENGTH'][lyinc], data['FLUX'][lyinc])
+plt.step(data['WAVELENGTH'][lyinc], data['FLUX'][lyinc]*g140m_scale)
 #plt.step(data['WAVELENGTH'], data['FLUX'])
 
 w_full = np.concatenate((w_full, data['WAVELENGTH'][lyinc]))
-f_full = np.concatenate((f_full, data['FLUX'][lyinc]*stis_scale))
-e_full = np.concatenate((e_full, data['ERROR'][lyinc]*stis_scale))
-n_full = np.concatenate((n_full, np.full(len(data['WAVELENGTH'][lyinc]), stis_scale)))
+f_full = np.concatenate((f_full, data['FLUX'][lyinc]*g140m_scale))
+e_full = np.concatenate((e_full, data['ERROR'][lyinc]*g140m_scale))
+n_full = np.concatenate((n_full, np.full(len(data['WAVELENGTH'][lyinc]), g140m_scale)))
 
 
 #G140L
+g140l_scale = 3.5
 data = fits.getdata('../STIS/GJ674_G140L_noflare_x1d.fits', 1)[0]
 #mask = data['FLUX'] > 0
-mask = (data['WAVELENGTH']>=cos_end) #only need the bit not covered by COS nb here no difference between > and >=, could change for other stars
+mask = (data['WAVELENGTH'] > 1304)&(data['WAVELENGTH'] <1304.5)|(data['WAVELENGTH'] > 1355)&(data['WAVELENGTH'] < 1356)|(data['WAVELENGTH']>=cos_end) #only need the bit not covered by COS nb here no difference between > and >=, could change for other stars
 
-plt.step(data['WAVELENGTH'][mask], data['FLUX'][mask]*stis_scale)
+plt.step(data['WAVELENGTH'][mask], data['FLUX'][mask]*g140l_scale)
 #plt.step(data['WAVELENGTH'], data['FLUX'])
 g140L_end = data['WAVELENGTH'][-1]
 
 
 w_full = np.concatenate((w_full, data['WAVELENGTH'][mask]))
-f_full = np.concatenate((f_full, data['FLUX'][mask]*stis_scale))
-e_full = np.concatenate((e_full, data['ERROR'][mask]*stis_scale))
-n_full = np.concatenate((n_full, np.full(len(data['WAVELENGTH'][mask]), stis_scale)))
+f_full = np.concatenate((f_full, data['FLUX'][mask]*g140l_scale))
+e_full = np.concatenate((e_full, data['ERROR'][mask]*g140l_scale))
+n_full = np.concatenate((n_full, np.full(len(data['WAVELENGTH'][mask]), g140l_scale)))
 
 
 
@@ -92,9 +93,9 @@ plt.step(data['WAVELENGTH'][:clip_end][mask], data['FLUX'][:clip_end][mask]*nuv_
 g230L_end = data['WAVELENGTH'][clip_end] 
 
 w_full = np.concatenate((w_full, data['WAVELENGTH'][:clip_end][mask]))
-f_full = np.concatenate((f_full, data['FLUX'][:clip_end][mask]*stis_scale))
-e_full = np.concatenate((e_full, data['ERROR'][:clip_end][mask]*stis_scale))
-n_full = np.concatenate((n_full, np.full(len(data['WAVELENGTH'][:clip_end][mask]), stis_scale)))
+f_full = np.concatenate((f_full, data['FLUX'][:clip_end][mask]*nuv_scale))
+e_full = np.concatenate((e_full, data['ERROR'][:clip_end][mask]*nuv_scale))
+n_full = np.concatenate((n_full, np.full(len(data['WAVELENGTH'][:clip_end][mask]), nuv_scale)))
 
 #G430L nb normalise to photometry, PHOENIX
 ccd_scale = 1.11
@@ -159,8 +160,8 @@ f_full = np.concatenate((f_full, xdt['flux'][mask]))
 e_full = np.concatenate((e_full, np.full(len(xdt['wave'][mask]), 0.0)))
 n_full = np.concatenate((n_full, np.full(len(xdt['wave'][mask]), 1.0)))
 
-#plt.xscale('log')
-#plt.yscale('log')
+plt.xscale('log')
+plt.yscale('log')
 plt.xlabel('Wavelength (\AA)', size=20)
 plt.ylabel('Flux (erg s$^{-1}$cm$^{-2}$\AA$^{-1}$)', size=20)
 plt.axhline(0, ls='--', c='k')
