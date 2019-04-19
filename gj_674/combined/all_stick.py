@@ -7,7 +7,7 @@ from scipy.io.idl import readsav
 from astropy.table import Table
 from astropy.io import ascii
 import astropy.units as u
-
+from scipy import interpolate
 
 """
 Script to help stick Mega-Muscules COS and STIS spectra together.
@@ -177,5 +177,16 @@ n_full = n_full[arr1inds]
 
 data = Table([w_full*u.AA, f_full*u.erg/u.cm**2/u.s/u.AA, e_full*u.erg/u.cm**2/u.s/u.AA, n_full], names = ['WAVELENGTH', 'FLUX', 'ERROR', 'NORMFAC'] )
 ascii.write(data, 'gj674_data+models_v1.ecsv', delimiter=',', format='ecsv', overwrite=True)
+
+#plt.show()
+
+#1A
+#w1 = np.arange(w_full[0], w_full[-1]+1, 1)
+#f1 = interpolate.interp1d(w_full, f_full, fill_value='extrapolate')(w1)
+#e1 = interpolate.interp1d(w_full, e_full, fill_value='extrapolate')(w1)
+
+#plt.figure('1d')
+#plt.step(w1, f1)
+
 
 plt.show()
