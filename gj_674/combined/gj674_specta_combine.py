@@ -136,7 +136,7 @@ def wavelength_edges(w):
     w1 = w + diff/2.
     return w0, w1
 
-dict_builder{w0, w1, w, f, e, dq, exptime, expstart, expend, instrument_code}: 
+dict_builder(w0, w1, w, f, e, dq, exptime, expstart, expend, instrument_code): 
     """
     puts all the bits for each instrument into a dictionary. 
     w0, w1, w, f, e, dq, exptime are arrays of the same length
@@ -158,18 +158,47 @@ def read_idl(filepath):
     instruments = np.array([('hst_cos_'+str(i)[2:-1].lower()) for i in instrument_list])
     instrument_code = np.sum([inst.getinsti(i) for i in instrument_list])
     expstart, expend = 0, 0 #not in idl, placeholder.
-    idl_collection = dict_builder{w0, w1, w, f, e, dq, exptime, expstart, expend, instrument_code}
+    idl_collection = dict_builder(w0, w1, w, f, e, dq, exptime, expstart, expend, instrument_code)
     return idl_collection
 
-def read_x1d(filepath):
+def read_stis_x1d(filepath):
     """
-    Extracts data from a x1d file
+    Extracts data from a hst x1d file
     """
     hdul = fits.open(filepath)
     data = hdul[1].data
-    w, f, e, exptime = data['wave'], data['flux'], data['err']
-                    
+    w, f, e, dq = data['WAVELENGTH'], data['FLUX'], data['ERROR'], data['DQ']
+    w0, w1 = wavelength_edges(w)
+    hdr = hdul[0].header
+    exptime = np.full(len(w), hdr['TEXPTIME'])
+    expstart, expend = hdr['TEXPSTRT'], hdr['TEXPEND']
+    instrument_name = hdr['TELESCOP']+'_sts_'+hdr['OPT_ELM']  #nb STIS=sts in Pl code 
+    instrument_code = inst.getinsti(instrument_name.lower())
+    stis_x1d_collection = dict_builder(w0, w1, w, f, e, dq, exptime, expstart, expend, instrument_code)
+    hdul.close()
+    return stis_x1d_collection
 
+def read_ecsv(filepath):
+    """
+    reads an escv with a coadded spectrum. Not much in these yet, need to improve.
+    """
+    data = Table.read(filepath)#
+    w, f, e, dq = data['WAVELENGTH'], data['FLUX'], data['ERROR'], data['DQ']
+    w0, w1 = wavelength_edges(w)
+    #needs everything else!
+    ecsv_collection =  dict_builder(w0, w1, w, f, e, dq, np.zeros(len(w)), 0.,0, 0)
+    return ecsv_collection
+    
+def read_xmm(filepath):
+    """
+    collects data from CS's xmm outputs and for the apec models
+    """
+    hdul = fits.open(filepath)
+    data = hdul[1].data
+    w, f, e = data['Wave'], data['CFlux', data['CFLux_Err']]
+    w0, w1 = w - (data['bin_width']/2), w+(data['bin_width']/2)
+    
+    
 
     
 

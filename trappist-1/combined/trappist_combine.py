@@ -117,8 +117,8 @@ plt.step(mw, mf, zorder=-10, )
 w_full, f_full, e_full, dq_full, n_full, i_full = add_spec(w_full, f_full, e_full, dq_full, n_full,i_full, 
                                                    mw,mf, np.zeros(len(mw)),np.zeros(len(mw), dtype=int), m_scale, instrument)
 
-plt.xscale('log')
-plt.yscale('log')
+#plt.xscale('log')
+#plt.yscale('log')
 plt.xlabel('Wavelength (\AA)', size=20)
 plt.ylabel('Flux (erg s$^{-1}$cm$^{-2}$\AA$^{-1}$)', size=20)
 plt.axhline(0, ls='--', c='k')
@@ -134,7 +134,7 @@ dq_full = e_full[arr1inds]
 n_full = n_full[arr1inds]
 i_full = i_full[arr1inds]
 
-data = Table([w_full*u.AA, f_full*u.erg/u.cm**2/u.s/u.AA, e_full*u.erg/u.cm**2/u.s/u.AA, dq_full, n_full, i_full], names = ['WAVELENGTH', 'FLUX', 'ERROR', 'DQ', 'NORMFAC', 'INSTRUMENT'] )
-ascii.write(data, star+'_hst+phoenix_v1.ecsv', delimiter=',', format='ecsv', overwrite=True)
+#data = Table([w_full*u.AA, f_full*u.erg/u.cm**2/u.s/u.AA, e_full*u.erg/u.cm**2/u.s/u.AA, dq_full, n_full, i_full], names = ['WAVELENGTH', 'FLUX', 'ERROR', 'DQ', 'NORMFAC', 'INSTRUMENT'] )
+#ascii.write(data, star+'_hst+phoenix_v1.ecsv', delimiter=',', format='ecsv', overwrite=True)
 
 plt.show()
