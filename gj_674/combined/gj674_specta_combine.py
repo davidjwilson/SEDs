@@ -7,6 +7,7 @@ from scipy.io.idl import readsav
 from astropy.table import Table
 from astropy.io import ascii
 import astropy.units as u
+import instruments as inst #pl's istrument code, might just make a function here
 
 """
 v1 20190418
@@ -135,6 +136,16 @@ def wavelength_edges(w):
     w1 = w + diff/2.
     return w0, w1
 
+dict_builder{w0, w1, w, f, e, dq, exptime, expstart, expend, instrument_code}: 
+    """
+    puts all the bits for each instrument into a dictionary. 
+    w0, w1, w, f, e, dq, exptime are arrays of the same length
+    expstart, expend are floats
+    instrument_code is an integer
+    """
+    collection = {'w0':w0, 'w1':w1, 'w':w, 'f':f, 'e':e, 'dq':dq, 'exptime':exptime, 'expstart':expstart, 'expend':expend, 'instrument': instrument_code}
+    return collection
+
 def read_idl(filepath):
     """
     Extracts data from KF's IDL files
@@ -143,6 +154,24 @@ def read_idl(filepath):
     w, f, e, exptime = data['wave'], data['flux'], data['err'], data['exptime']
     dq = np.zeros(len(w)) #consult with kf on this
     w0, w1 = wavelength_edges(w)
+    instrument_list = np.unique(data['grating'])
+    instruments = np.array([('hst_cos_'+str(i)[2:-1].lower()) for i in instrument_list])
+    instrument_code = np.sum([inst.getinsti(i) for i in instrument_list])
+    expstart, expend = 0, 0 #not in idl, placeholder.
+    idl_collection = dict_builder{w0, w1, w, f, e, dq, exptime, expstart, expend, instrument_code}
+    return idl_collection
+
+def read_x1d(filepath):
+    """
+    Extracts data from a x1d file
+    """
+    hdul = fits.open(filepath)
+    data = hdul[1].data
+    w, f, e, exptime = data['wave'], data['flux'], data['err']
+                    
+
+
+    
 
 
 def get_data(file_path, file_format, data_type):
