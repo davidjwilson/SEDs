@@ -9,6 +9,8 @@ from astropy.io import ascii
 import astropy.units as u
 import instruments as inst #pl's istrument code, might just make a function here
 from astropy.time import Time
+from astropy.units import cds
+cds.enable()
 
 """
 v1 20190418
@@ -46,9 +48,10 @@ def add_spec(totals, additions):
 
 def sort_totals(totals):
     """sorts totals array by wavelength"""
-    arr1inds = totals[0].argsort()
-    for t in totals:
-        t = t[arr1inds]
+    arr1inds = totals[2].argsort()
+    totals = [t[arr1inds] for t in totals]
+    #for t in totals:
+     #   t = t[arr1inds]
     return totals
     
 def totals_setup():
@@ -101,7 +104,7 @@ def plot_spectrum(w, f):
     """plots a spectrum section"""
     plt.step(w,f)
 
-def euv_estimator(star, lya, distance, save=False, plot=False):
+def euv_estimator(lya, distance, star='', save=False, plot=False):
     """
     Calculating the EUV fluxes using the relationships of Linsky + 14 (https://ui.adsabs.harvard.edu/abs/2014ApJ...780...61L/abstract)
 
@@ -132,7 +135,7 @@ def euv_estimator(star, lya, distance, save=False, plot=False):
     #log(f/lya) = a + b *log(lya)
     f = a + b*np.log10(lya_1au)
 
-    print('Total EUV=',np.sum(f))
+   # print('Total EUV=',np.sum(f))
     f = (lya_1au * 10**f)/bandwidth
 
     f *= distance_conversion
@@ -157,8 +160,8 @@ def euv_estimator(star, lya, distance, save=False, plot=False):
         plt.ylabel('Flux (erg s$^{-1}$\AA$^{-1}$cm$^{-2}$)', size=20)
         plt.yscale('log')
         plt.show()
-
-    return(wav, flux) 
+    
+    return(wav, np.array(flux)) 
 
 def wavelength_edges(w):
     """
@@ -230,7 +233,7 @@ def read_xmm(filepath):
     hdul = fits.open(filepath)
     #spectrum
     data = hdul[1].data
-    w, f, e = data['Wave'], data['CFlux', data['CFLux_Err']]
+    w, f, e = data['Wave'], data['CFlux'], data['CFLux_Err']
     w0, w1 = w - (data['bin_width']/2), w+(data['bin_width']/2)
     hdr = hdul[0].header
     exptime = np.full(len(w), hdr['HIERARCH pn_DURATION'])
@@ -241,10 +244,11 @@ def read_xmm(filepath):
     xmm_collection = dict_builder(w0, w1, w, f, e, np.zeros(len(w)),exptime, expstart, expend, instrument_code)
     #model
     data = hdul[2].data
-    w, f, e = data['Wave'], data['Flux']
+    w, f = data['Wave'], data['Flux']
     w0, w1 = w - (data['bin_width']/2), w+(data['bin_width']/2)
-    hdr = hdul[0].header
-    instrument_code = inst.getinsiti('mod_apc_-----')
+   # hdr = hdul[0].header
+    instrument_code = inst.getinsti('mod_apc_-----')
+    exptime = np.full(len(w), hdr['HIERARCH pn_DURATION'])
     apec_collection = dict_builder(w0, w1, w, f, np.zeros(len(w)), np.zeros(len(w)),exptime, expstart, expend, instrument_code)
     hdul.close()
     return xmm_collection, apec_collection
@@ -271,6 +275,17 @@ def read_scaled_phoenix(filepath):
     phx_collection = dict_builder(w0,w1,w,f, np.zeros(len(w)), np.zeros(len(w)), np.zeros(len(w)), 0., 0., instrument_code)
     return phx_collection
     
+def read_phoenix(filepath, wavepath):
+    """
+    gather information from a phoenix model. Note that flux and wavelegth are in different files
+    """
+    w = fits.getdata(wavepath, 0)
+    f = fits.getdata(filepath)
+    w0, w1 = wavelength_edges(w)
+    instrument_code = inst.getinsti('mod_phx_-----')
+    phx_collection = dict_builder(w0,w1,w,f, np.zeros(len(w)), np.zeros(len(w)), np.zeros(len(w)), 0., 0., instrument_code)
+    return phx_collection
+    
 def read_stis_ccd(filepath):
     """
     collects data for a STIS ccd observation
@@ -286,10 +301,33 @@ def read_stis_ccd(filepath):
     stis_ccd_collection = dict_builder(w0, w1, w, f, e, dq, exptime, expstart, expend, instrument_code)
     return stis_ccd_collection
 
-#def make_euv(lya):
+def make_euv(lya, distance):
     """
     collects the bits for an euv estimation
     """
+    w, f = euv_estimator(lya, distance)
+    w0, w1 = wavelength_edges(w)
+    e, dq, exptime = np.zeros(len(w)), np.zeros(len(w)), np.zeros(len(w))
+    expstart, expend = 0., 0.
+    instrument_code = inst.getinsti('mod_euv_young')
+    euv_collection = dict_builder(w0, w1, w, f, e, dq, exptime, expstart, expend, instrument_code)
+    return euv_collection
+                                                                
+def save_to_ecsv(totals, names, star, version, save_path = ''):
+    """
+    saves the completed spectrum to an ecsv file. No bolflux for now.
+    names = ['WAVELENGTH','WAVELENGTH0', 'WAVELENGTH1','FLUX','ERROR','EXPTIME',
+             'DQ','EXPSTART','EXPEND','INSTRUMENT','NORMFAC']#,'BOLOFLUX' ,'BOLOERR']
+    """
+    data = Table([totals[0]*u.AA, totals[1]*u.AA, totals[2]*u.AA, 
+                  totals[3]*u.erg/u.s/u.AA/u.cm**2, totals[4]*u.erg/u.s/u.AA/u.cm**2,
+                  totals[5]*u.s, totals[6], totals[7]*cds.MJD, totals[8]*cds.MJD,
+                  totals[9], totals[10]],
+                names=names)
+    ascii.write(data, star+'_sed_var_res_'+version+'.ecsv', format = 'ecsv', overwrite=True)
+    
+    #data = Table([w_full*u.AA, f_full*u.erg/u.cm**2/u.s/u.AA, e_full*u.erg/u.cm**2/u.s/u.AA, n_full], names = ['WAVELENGTH', 'FLUX', 'ERROR', 'NORMFAC'] )
+#ascii.write(data, 'gj674_data+models_v1.ecsv', delimiter=',', format='ecsv', overwrite=True)
 
     
 """

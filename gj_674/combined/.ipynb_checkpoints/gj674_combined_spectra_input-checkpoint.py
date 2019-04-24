@@ -19,14 +19,16 @@ plt.figure(star+'_combined',figsize = (13, 7))
 plt.subplots_adjust(top = 0.95, right = 0.99, left = 0.07, bottom = 0.11)
 
 #file_locations
-filepaths = {'xmm':'xmm/GJ674.fits',
+filepaths = {'xmm':'/xmm/GJ674.fits',
              'cos_g130m':'/COS/GJ674_COS130M_Mm1_NOSCL_03apr18.sav',
              'lya':'/lya/GJ674_intrinsic_LyA_profile.txt',
              'stis_g140m':'/STIS/GJ674_G140M_coadd.ecsv',
              'stis_g140l':'/STIS/GJ674_G140L_noflare_x1d.fits',
              'stis_g230l':'/STIS/GJ674_G230L_x1d.fits',
              'stis_g430l':'/STIS/odlm21010_sx1.fits',
-             'phoenix':'/photometry/scaled_03400-4.50-0.0_phoenix_gj674.ecsv'}
+             'phoenix':'/PHOENIX/lte03400-4.50-0.0.PHOENIX-ACES-AGSS-COND-2011-HiRes.fits',
+             'phoenix_wave' :'/PHOENIX/WAVE_PHOENIX-ACES-AGSS-COND-2011.fits' }
+
 
 #COS
 #G130M
@@ -73,8 +75,28 @@ g430l_clip = [0,-1]
 mask = (w > g230l_end)
 g430l_start, g430l_end, totals = sc.make_section(totals, g430l_data, mask =mask, normfac=g430l_normfac, clip = g430l_clip)
 
+#phoenix
+phoenix_normfac = 3.19143165e-26
+phx_data = sc.read_phoenix(path+filepaths['phoenix'], path+filepaths['phoenix_wave'])
+w = phx_data['w']
+mask = (w > g430l_end)
+phx_start, phx_end, totals = sc.make_section(totals, phx_data, mask=mask, normfac=phoenix_normfac)
 
+#xmm and apec
+xmm_data, apec_data = sc.read_xmm(path+filepaths['xmm'])
+xmm_start, xmm_end, totals = sc.make_section(totals, xmm_data)
+w = apec_data['w']
+mask = (w > xmm_end)
+apec_start, apec_end, totals = sc.make_section(totals, apec_data, mask=mask)
 
+#euv
+lya_flux = 2.06e-12
+lya_flux *= g140m_normfac
+distance = 4.54 #pc
+euv_data = sc.make_euv(lya_flux, distance)
+w = euv_data['w']
+mask = (w > apec_end) & (w < g130m_start)
+euv_start, euv_end, totals = sc.make_section(totals, euv_data, mask=mask)
 
 #plt.xscale('log')
 #plt.yscale('log')
@@ -83,6 +105,7 @@ plt.ylabel('Flux (erg s$^{-1}$cm$^{-2}$\AA$^{-1}$)', size=20)
 plt.axhline(0, ls='--', c='k')
 
 totals = sc.sort_totals(totals)
-#print(totals)
+
+sc.save_to_ecsv(totals, names, star, 'v2')
 
 plt.show()
