@@ -21,10 +21,10 @@ log[F(delta lambda) /F(lya)]=
 
 """
 
-def euv_estimator(star, lya, distance, save=True, plot=True):
-    
+def euv_estimator(lya, distance, star='', save=False, plot=False):
+        
     distance_conversion = ((1*u.au.to(u.m))/(distance*u.pc.to(u.m)))**2
-    
+
     lya_1au = lya / distance_conversion
 
     w1 = np.array([100,200,300,400,500,600,700,800,912], dtype=float) #A
@@ -36,14 +36,11 @@ def euv_estimator(star, lya, distance, save=True, plot=True):
 
     #log(f/lya) = a + b *log(lya)
     f = a + b*np.log10(lya_1au)
-    
-    print('Total EUV=',np.sum(f))
+
+   # print('Total EUV=',np.sum(f))
     f = (lya_1au * 10**f)/bandwidth
-    
+
     f *= distance_conversion
-                           
-    for w1i, w2i, fi in zip(w1, w2, f):
-        print(w1i, w2i, fi)
 
     #extrapolate onto 1A grid
     wav = np.arange((w1[0])+0.5, (w2[-1])+0.5, 1.0)
@@ -52,13 +49,11 @@ def euv_estimator(star, lya, distance, save=True, plot=True):
         for wi in wav:
             if wi > w1i and wi < w2i :
                 flux.append(fi)
-                
-    print('Total EUV=',np.trapz(flux,wav))
-    
+
     if save == True:
         data = Table([wav*u.AA,  flux*u.erg/u.s/u.cm**2], names=['WAVELENGTH', 'FLUX'])
         ascii.write(data, star+'_1Aeuv_estimate.ecsv', delimiter=',', format='ecsv', overwrite=True)
-       
+
     if plot == True:
         plt.figure(star+'_EUV', figsize=(8,6))
         plt.subplots_adjust(top=0.99, right=0.99)
@@ -67,10 +62,13 @@ def euv_estimator(star, lya, distance, save=True, plot=True):
         plt.ylabel('Flux (erg s$^{-1}$\AA$^{-1}$cm$^{-2}$)', size=20)
         plt.yscale('log')
         plt.show()
+    
+    return(wav, np.array(flux)) 
+
         
-star = 'GJ674'
-lya = 2.9*2.06e-12 #erg /s/cm2 for GJ674, 2.9 is flux scaling factor 
-distance = 4.54
+#star = 'GJ674'
+#lya = 2.9*2.06e-12 #erg /s/cm2 for GJ674, 2.9 is flux scaling factor 
+#distance = 4.54
 #star = 'GJ176'
 #lya = 3.9e-13
 #distance = 9.3 
@@ -78,4 +76,4 @@ distance = 4.54
 #lya = 9.1e-13
 #distance = 21.1
 #print(lya)
-euv_estimator(star, lya,  distance)
+#euv_estimator(lya,  distance, star=star, plot=True, save=False)
