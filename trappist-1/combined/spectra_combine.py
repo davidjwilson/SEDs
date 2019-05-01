@@ -14,7 +14,7 @@ from astropy.units import cds
 cds.enable()
 
 """
-v1 20190418
+v2 20190501
 Script to make Mega-Muscles spectra. Will develop over time.
 
 objectives for this version
@@ -191,8 +191,7 @@ def read_xmm(filepath):
     w0, w1 = w - (data['bin_width']/2), w+(data['bin_width']/2)
    # hdr = hdul[0].header
     instrument_code = inst.getinsti('mod_apc_-----')
-    exptime = np.full(len(w), hdr['HIERARCH pn_DURATION'])
-    apec_collection = dict_builder(w0, w1, w, f, np.zeros(len(w)), np.zeros(len(w)),exptime, expstart, expend, instrument_code)
+    apec_collection = dict_builder(w0, w1, w, f, np.zeros(len(w)), np.zeros(len(w)),np.zeros(len(w)), 0., 0., instrument_code)
     hdul.close()
     return xmm_collection, apec_collection
 
@@ -210,6 +209,17 @@ def read_lyamod(filepath):
 def read_scaled_phoenix(filepath):
     """
     gather information from a pre-scaled phoenix model
+    """
+    data = Table.read(filepath)
+    w, f = data['WAVELENGTH'], data['FLUX']
+    w0, w1 = wavelength_edges(w)
+    instrument_code = inst.getinsti('mod_phx_-----')
+    phx_collection = dict_builder(w0,w1,w,f, np.zeros(len(w)), np.zeros(len(w)), np.zeros(len(w)), 0., 0., instrument_code)
+    return phx_collection
+
+def read_ecsv_phoenix(filepath):
+    """
+    gather information from a phoenix model saved as ecsv
     """
     data = Table.read(filepath)
     w, f = data['WAVELENGTH'], data['FLUX']
@@ -243,6 +253,54 @@ def read_stis_ccd(filepath):
     instrument_code = inst.getinsti(instrument_name.lower())
     stis_ccd_collection = dict_builder(w0, w1, w, f, e, dq, exptime, expstart, expend, instrument_code)
     return stis_ccd_collection
+
+def read_cos_nuv(filepath, fillgap=True):
+    """
+    collects data from a COS nuv observation. If fill gap =True, fits a polynomial to the gap and trims the zero-flux inner ends off the spectra
+    """
+    data = fits.getdata(filepath,1)[0:2] #not using reflected order
+    hdr0 = fits.getheader(filepath,0)
+    hdr1 = fits.getheader(filepath,1)
+    w = np.array([], dtype=float)
+    f = np.array([], dtype=float)
+    e = np.array([], dtype=float)
+    dq = np.array([], dtype=int)
+    if fillgap == True:
+        gap_w, gap_f = nuv_fill(data)
+        for dt in data:
+            mask = (dt['WAVELENGTH'] < gap_w[0]) | (dt['WAVELENGTH'] > gap_w[-1])
+            w= np.concatenate((w, dt['WAVELENGTH'][mask]))
+            f = np.concatenate((f, dt['FLUX'][mask]))
+            e = np.concatenate((e, dt['ERROR'][mask]))
+            dq = np.concatenate((dq, dt['DQ'][mask]))
+        gap_w0, gap_w1 = wavelength_edges(gap_w)
+        gap_code = inst.getinsti('oth_---_other')
+        gap_collection = dict_builder(gap_w0, gap_w1, gap_w, gap_f, np.zeros(len(gap_w)), np.zeros(len(gap_w)),np.zeros(len(gap_w)), 0., 0., gap_code)        
+    else:
+        for dt in data:
+            w= np.concatenate((w, dt['WAVELENGTH']))
+            f = np.concatenate((f, dt['FLUX']))
+            e = np.concatenate((e, dt['ERROR']))
+            dq = np.concatenate((dq, dt['DQ']))
+        gap_collection = {}
+    w0, w1 = wavelength_edges(w)
+    exptime = np.full(len(w), hdr1['EXPTIME'])
+    expstart, expend = hdr1['EXPSTART'], hdr1['EXPEND']
+    instrument_name = hdr0['TELESCOP']+'_cos_'+hdr0['OPT_ELEM']   
+    instrument_code = inst.getinsti(instrument_name.lower())
+    cos_nuv_collection = dict_builder(w0, w1, w, f, e, dq, exptime, expstart, expend, instrument_code)
+    return cos_nuv_collection, gap_collection
+    
+def nuv_fill(data):
+    """
+    fill in the gap in a cos nuv specturm with a polynomial
+    """
+    w1, f1 = data[0]['WAVELENGTH'][data[0]['DQ']==0], data[0]['FLUX'][data[0]['DQ']==0]
+    w2, f2 = data[1]['WAVELENGTH'][data[1]['DQ']==0], data[1]['FLUX'][data[1]['DQ']==0]
+    end_w, end_f = np.concatenate((w1,w2)), np.concatenate((f1,f2))
+    gap_w = np.arange(w1[-1],w2[0], 1.0)
+    gap_f = np.polyval((np.polyfit(end_w,end_f,2)), gap_w)
+    return gap_w, gap_f
 
 def make_euv(lya, distance):
     """

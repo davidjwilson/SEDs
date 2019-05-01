@@ -191,7 +191,7 @@ def read_xmm(filepath):
     w0, w1 = w - (data['bin_width']/2), w+(data['bin_width']/2)
    # hdr = hdul[0].header
     instrument_code = inst.getinsti('mod_apc_-----')
-    apec_collection = dict_builder(w0, w1, w, f, np.zeros(len(w)), np.zeros(len(w)),np.zeros(len(w)), 0., 0,, instrument_code)
+    apec_collection = dict_builder(w0, w1, w, f, np.zeros(len(w)), np.zeros(len(w)),np.zeros(len(w)), 0., 0., instrument_code)
     hdul.close()
     return xmm_collection, apec_collection
 
@@ -209,6 +209,17 @@ def read_lyamod(filepath):
 def read_scaled_phoenix(filepath):
     """
     gather information from a pre-scaled phoenix model
+    """
+    data = Table.read(filepath)
+    w, f = data['WAVELENGTH'], data['FLUX']
+    w0, w1 = wavelength_edges(w)
+    instrument_code = inst.getinsti('mod_phx_-----')
+    phx_collection = dict_builder(w0,w1,w,f, np.zeros(len(w)), np.zeros(len(w)), np.zeros(len(w)), 0., 0., instrument_code)
+    return phx_collection
+
+def read_ecsv_phoenix(filepath):
+    """
+    gather information from a phoenix model saved as ecsv
     """
     data = Table.read(filepath)
     w, f = data['WAVELENGTH'], data['FLUX']
@@ -247,24 +258,24 @@ def read_cos_nuv(filepath, fillgap=True):
     """
     collects data from a COS nuv observation. If fill gap =True, fits a polynomial to the gap and trims the zero-flux inner ends off the spectra
     """
-    data = fits.getdata[filepath,1][0:2] #not using reflected order
-    hdr0 = fits.getheader[filepath,0]
-    hdr1 = fits.getheader[filepath,1]
+    data = fits.getdata(filepath,1)[0:2] #not using reflected order
+    hdr0 = fits.getheader(filepath,0)
+    hdr1 = fits.getheader(filepath,1)
     w = np.array([], dtype=float)
     f = np.array([], dtype=float)
     e = np.array([], dtype=float)
     dq = np.array([], dtype=int)
-    if return_gap == True:
+    if fillgap == True:
         gap_w, gap_f = nuv_fill(data)
         for dt in data:
-            mask = (dt['WAVELENGHT'] < gap_w[0]) | (dt['WAVELENGHT'] > gap_w[-1])
+            mask = (dt['WAVELENGTH'] < gap_w[0]) | (dt['WAVELENGTH'] > gap_w[-1])
             w= np.concatenate((w, dt['WAVELENGTH'][mask]))
             f = np.concatenate((f, dt['FLUX'][mask]))
             e = np.concatenate((e, dt['ERROR'][mask]))
             dq = np.concatenate((dq, dt['DQ'][mask]))
         gap_w0, gap_w1 = wavelength_edges(gap_w)
         gap_code = inst.getinsti('oth_---_other')
-        gap_collection = dict_builder(gap_w0, gap_w1, gap_w, gap_f, np.zeros(len(gap_w)), np.zeros(len(gap_w)),np.zeros(len(gap_w)), 0., 0,, gap_code)        
+        gap_collection = dict_builder(gap_w0, gap_w1, gap_w, gap_f, np.zeros(len(gap_w)), np.zeros(len(gap_w)),np.zeros(len(gap_w)), 0., 0., gap_code)        
     else:
         for dt in data:
             w= np.concatenate((w, dt['WAVELENGTH']))
@@ -274,13 +285,13 @@ def read_cos_nuv(filepath, fillgap=True):
         gap_collection = {}
     w0, w1 = wavelength_edges(w)
     exptime = np.full(len(w), hdr1['EXPTIME'])
-    expstart, expend = hdr1['EXPSTRT'], hdr1['EXPEND']
+    expstart, expend = hdr1['EXPSTART'], hdr1['EXPEND']
     instrument_name = hdr0['TELESCOP']+'_cos_'+hdr0['OPT_ELEM']   
     instrument_code = inst.getinsti(instrument_name.lower())
     cos_nuv_collection = dict_builder(w0, w1, w, f, e, dq, exptime, expstart, expend, instrument_code)
     return cos_nuv_collection, gap_collection
     
-def nuv_fill(filepath):
+def nuv_fill(data):
     """
     fill in the gap in a cos nuv specturm with a polynomial
     """

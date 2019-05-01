@@ -21,13 +21,12 @@ plt.subplots_adjust(top = 0.95, right = 0.99, left = 0.07, bottom = 0.11)
 #file_locations
 filepaths = {'xmm':'/xmm/Trappist-1.fits',
              'cos_g130m':'/COS/TRAPPIST1_G130M_Mm1_NOSCL_10dec2018.sav',
-             'cos_g160m':'/COS/TRAPPIST1_G160M_3orb_Mm1_NOSCL_09dec2018.sav'
-             'lya':'/lya/GJ674_intrinsic_LyA_profile.txt',
-             'cos_g230l': '/COS/ldlm42010_x1dsum.fits'
+             'cos_g160m':'/COS/TRAPPIST1_G160M_3orb_Mm1_NOSCL_09dec2018.sav',
+             'cos_g230l': '/COS/ldlm42010_x1dsum.fits',
              'stis_g140m':'/STIS/TRAPPIST-1_G140M_mean.ecsv',
              'stis_g430l':'/STIS/odlm41010_sx1.fits',
              'phoenix':'/optical/unscaled_02560-5.00-0.0_phoenix_trappist-1.ecsv',
-             'phoenix_wave' :'/PHOENIX/WAVE_PHOENIX-ACES-AGSS-COND-2011.fits' }
+             'phoenix_wave' :'/optical/WAVE_PHOENIX-ACES-AGSS-COND-2011.fits' }
 
 
 #COS
@@ -51,23 +50,30 @@ g140m_normfac = 1.0 #to do - calculate scales in spectra_combine
 #lya_start, lya_end,totals = sc.make_section(totals, lya_data, normfac=g140m_normfac)
 
 #G140M
-g140m_data = sc.read_ecsv(path+filepaths['stis_g140m'])
-w = g140m_data['w']
-mask = (w >lya_edges[0])&(w <lya_start)|(w >lya_end)&(w < lya_edges[1]) #include just bits not co
-g140m_start, g140m_end, totals = sc.make_section(totals, g140m_data, mask =mask, normfac=g140m_normfac)
+#g140m_data = sc.read_ecsv(path+filepaths['stis_g140m'])
+#w = g140m_data['w']
+#mask = (w >lya_edges[0])&(w <lya_start)|(w >lya_end)&(w < lya_edges[1]) #include just bits not coverd by cos or lya model.
+#g140m_start, g140m_end, totals = sc.make_section(totals, g140m_data, mask =mask, normfac=g140m_normfac)
 
 #G230L
+g230l_data, gap_data = sc.read_cos_nuv(path+filepaths['cos_g230l']) 
+w = g230l_data['w']
+mask = (w > g160m_end)
+g230l_start, g230l_end, totals = sc.make_section(totals, g230l_data, mask=mask)
+gap_start, gap_end, totals = sc.make_section(totals, gap_data)
+
 
 #G430L 
 g430l_data = sc.read_stis_ccd(path+filepaths['stis_g430l'])
 w = g430l_data['w']
 g430l_clip = [0,-1]
-mask = (w > g230l_end)
+mask = (w > g230l_end) & (w < 5321) | (w > 5325) & (w < 5476.5) | (w > 5480.5) #cutting out overlap and cosmics
 g430l_start, g430l_end, totals = sc.make_section(totals, g430l_data, mask =mask, clip = g430l_clip)
 
 #phoenix
-phoenix_normfac = 3.19143165e-26
-phx_data = sc.read_phoenix(path+filepaths['phoenix'], path+filepaths['phoenix_wave'])
+phoenix_normfac = 2.8e-28
+#phx_data = sc.read_phoenix(path+filepaths['phoenix'], path+filepaths['phoenix_wave'])
+phx_data = sc.read_ecsv_phoenix(path+filepaths['phoenix'])
 w = phx_data['w']
 mask = (w > g430l_end)
 phx_start, phx_end, totals = sc.make_section(totals, phx_data, mask=mask, normfac=phoenix_normfac)
@@ -80,13 +86,13 @@ mask = (w > xmm_end)
 apec_start, apec_end, totals = sc.make_section(totals, apec_data, mask=mask)
 
 #euv
-lya_flux = 2.06e-12
-lya_flux *= g140m_normfac
-distance = 4.54 #pc
-euv_data = sc.make_euv(lya_flux, distance)
-w = euv_data['w']
-mask = (w > apec_end) & (w < g130m_start)
-euv_start, euv_end, totals = sc.make_section(totals, euv_data, mask=mask)
+#lya_flux = 2.06e-12
+#lya_flux *= g140m_normfac
+#distance = 4.54 #pc
+#euv_data = sc.make_euv(lya_flux, distance)
+#w = euv_data['w']
+#mask = (w > apec_end) & (w < g130m_start)
+#euv_start, euv_end, totals = sc.make_section(totals, euv_data, mask=mask)
 
 #plt.xscale('log')
 #plt.yscale('log')
