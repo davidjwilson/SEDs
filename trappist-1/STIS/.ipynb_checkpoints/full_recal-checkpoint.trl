@@ -1,0 +1,4434 @@
+
+*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:36 CDT
+
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/odhsb1040_raw.fits
+Outroot  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsb1040_new
+Wavecal  /home/david/work/muscles/trappist-1/hst/g140m_cals/test/od3v01020_wav.fits
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:36 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/odhsb1040_raw.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsb1040_new_flt.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 14:01:36 CDT
+         Heliocentric radial velocity = -29.181 (km/s)
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR PERFORM
+LORSCORR COMPLETE
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 14:01:36 CDT
+
+End      02-May-2019 14:01:36 CDT
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:36 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/test/od3v01020_wav.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsb1040_new_fwv_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 14:01:36 CDT
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR OMIT
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR OMIT
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 14:01:37 CDT
+
+End      02-May-2019 14:01:37 CDT
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:37 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsb1040_new_fwv_tmp.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsb1040_new_w2d_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:37 CDT
+
+Order 1  Begin 14:01:37 CDT
+         Delta = 0.00733 arcsec.
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/97 30/06/98
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 14:01:37 CDT
+Imset 1  End 14:01:37 CDT
+
+End      02-May-2019 14:01:37 CDT
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-4 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:37 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsb1040_new_w2d_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+         Wavecal parameters are: \
+         WL_TRIM1 = 0 \
+         WL_TRIM2 = 10 \
+         SP_TRIM1 = 10 \
+         SP_TRIM2 = 150 \
+         WL_RANGE = 103 \
+         SP_RANGE = 121
+
+Imset 1  Begin 14:01:37 CDT
+         Section to use for finding shift in dispersion direction: \
+             1:1201, 11:1191 \
+         Section to use for finding shift in spatial direction: \
+             11:1191, 151:1051 \
+         Image pixels are reference pixel size.
+
+WAVECORR PERFORM
+WCPTAB   oref$16j1600co_wcp.fits
+WCPTAB   PEDIGREE=INFLIGHT 09/11/1998 13/06/2017
+WCPTAB   DESCRIP =Force G140M and G230L SHIFTA2 into single-bar mode via SP_TRIM2.---
+WCPTAB   DESCRIP =TRIM values modified, WL_RANGE and SP_RANGE increased
+LAMPTAB  oref$l421050oo_lmp.fits
+LAMPTAB  PEDIGREE=GROUND
+LAMPTAB  DESCRIP =Ground+Inflight Cal PT lamp, 3.8 & 10 mA
+LAMPTAB  DESCRIP =Ground Cal for non-PRISM, PT lamp 10 mA
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+Warning  Skipping current occulting bar ... \
+Warning  Peak of cross correlation is 0 of the expected value, \
+Warning  which is outside the allowed range 0.5 to 1.5
+Warning  Bar 1 could not be found.
+         shift of bar 2 is 16.803, weight = 0.97909
+         Shift in dispersion direction is -1.911 pixels.
+         Shift in spatial direction is 16.803 pixels.
+WAVECORR COMPLETE
+Imset 1  End 14:01:37 CDT
+
+End      02-May-2019 14:01:37 CDT
+
+*** CALSTIS-4 complete ***
+
+*** CALSTIS-12 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:37 CDT
+Wavecal  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsb1040_new_w2d_tmp.fits
+Science  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsb1040_new_flt.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:37 CDT
+         SHIFTA1 set to -1.91058
+         SHIFTA2 set to 16.8027
+Imset 1  End 14:01:37 CDT
+
+End      02-May-2019 14:01:37 CDT
+
+*** CALSTIS-12 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:37 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsb1040_new_flt.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsb1040_new_x2d.fits
+INFO     'D1' has been appended to aperture
+OBSMODE  TIME-TAG
+APERTURE 52X0.05D1
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:37 CDT
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+Order 1  Begin 14:01:37 CDT
+         Delta = 0.00708 arcsec.
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Offset relative to row 900
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/97 30/06/98
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+
+FLUXCORR PERFORM
+PHOTTAB  oref$26p1601ko_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 28/02/2000 21/11/2001
+PHOTTAB  DESCRIP =Echelle mode post-SM4 blaze function shift time coefficients updated
+PHOTTAB  DESCRIP =Bostroem Sensitivity of 01-Nov-2011
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/5/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+PCTAB    DESCRIP = 2 STIS observations averaged
+TDSTAB   oref$13a1941fo_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 08/11/2016
+TDSTAB   DESCRIP =Updated time and temperature sensitivities for all optical elements.
+FLUXCORR COMPLETE
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 14:01:37 CDT
+Imset 1  End 14:01:37 CDT
+
+End      02-May-2019 14:01:37 CDT
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-6 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:37 CDT
+2019122140137-I--------------- CALSTIS-6 started -------------------------------
+
+INFO     'D1' has been appended to aperture
+Warning  Grating-aperture throughput correction table (GACTAB) was not found,
+         and no gac corrections will be applied
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsb1040_new_flt.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsb1040_new_x1d.fits
+Rootname odhsb1040
+OBSMODE  TIME-TAG
+APERTURE 52X0.05D1
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+XTRACTAB oref$new_bg_1dx.fits
+XTRACTAB PEDIGREE=INFLIGHT 29/05/97
+XTRACTAB DESCRIP =Analysis from prop. 7064 and ground data
+XTRACTAB DESCRIP =Analysis from prop. 7064
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/1997 06/02/1999
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+
+Imset 1  Begin 14:01:37 CDT
+         Input read into memory.
+Order 1  Begin 14:01:37 CDT
+X1DCORR  PERFORM
+         Cross correlation offset: 500.954 pixels
+BACKCORR PERFORM
+BACKCORR COMPLETE
+X1DCORR  COMPLETE
+         Spectrum extracted at y position = 554.656
+         Extraction box height = 11
+         Background box 1 height = 14 offset -13 from A2CENTER
+         Background box 2 height = 14 offset 13 from A2CENTER
+
+DISPCORR PERFORM
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Offset relative to row 900
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+         Delta = 0.00708 arcsec.
+DISPCORR COMPLETE
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+PHOTTAB  oref$26p1601ko_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 27/02/1997 10/01/2017
+PHOTTAB  DESCRIP =Echelle mode post-SM4 blaze function shift time coefficients updated
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/05/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+TDSTAB   oref$13a1941fo_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 08/11/2016
+TDSTAB   DESCRIP =Updated time and temperature sensitivities for all optical elements.
+FLUXCORR PERFORM
+FLUXCORR COMPLETE
+
+SGEOCORR OMIT
+
+         Row 1 written to disk.
+Order 1  End 14:01:37 CDT
+
+Imset 1  End 14:01:37 CDT
+
+Warning  Keyword `XTRACALG' is being added to header.
+End      02-May-2019 14:01:37 CDT
+
+*** CALSTIS-6 complete ***
+2019122140137-I--------------- CALSTIS-6 completed: ODHSB1040 ------------------
+
+End      02-May-2019 14:01:37 CDT
+
+*** CALSTIS-0 complete ***
+
+*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:37 CDT
+
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/odhs31040_raw.fits
+Outroot  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs31040_new
+Wavecal  /home/david/work/muscles/trappist-1/hst/g140m_cals/test/od3v01020_wav.fits
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:37 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/odhs31040_raw.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs31040_new_flt.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 14:01:37 CDT
+         Heliocentric radial velocity = 7.552 (km/s)
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR PERFORM
+LORSCORR COMPLETE
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 14:01:37 CDT
+
+End      02-May-2019 14:01:37 CDT
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:37 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/test/od3v01020_wav.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs31040_new_fwv_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 14:01:37 CDT
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR OMIT
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR OMIT
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 14:01:37 CDT
+
+End      02-May-2019 14:01:37 CDT
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:37 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs31040_new_fwv_tmp.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs31040_new_w2d_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:37 CDT
+
+Order 1  Begin 14:01:37 CDT
+         Delta = 0.00733 arcsec.
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/97 30/06/98
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 14:01:37 CDT
+Imset 1  End 14:01:37 CDT
+
+End      02-May-2019 14:01:37 CDT
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-4 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:37 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs31040_new_w2d_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+         Wavecal parameters are: \
+         WL_TRIM1 = 0 \
+         WL_TRIM2 = 10 \
+         SP_TRIM1 = 10 \
+         SP_TRIM2 = 150 \
+         WL_RANGE = 103 \
+         SP_RANGE = 121
+
+Imset 1  Begin 14:01:37 CDT
+         Section to use for finding shift in dispersion direction: \
+             1:1201, 11:1191 \
+         Section to use for finding shift in spatial direction: \
+             11:1191, 151:1051 \
+         Image pixels are reference pixel size.
+
+WAVECORR PERFORM
+WCPTAB   oref$16j1600co_wcp.fits
+WCPTAB   PEDIGREE=INFLIGHT 09/11/1998 13/06/2017
+WCPTAB   DESCRIP =Force G140M and G230L SHIFTA2 into single-bar mode via SP_TRIM2.---
+WCPTAB   DESCRIP =TRIM values modified, WL_RANGE and SP_RANGE increased
+LAMPTAB  oref$l421050oo_lmp.fits
+LAMPTAB  PEDIGREE=GROUND
+LAMPTAB  DESCRIP =Ground+Inflight Cal PT lamp, 3.8 & 10 mA
+LAMPTAB  DESCRIP =Ground Cal for non-PRISM, PT lamp 10 mA
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+Warning  Skipping current occulting bar ... \
+Warning  Peak of cross correlation is 0 of the expected value, \
+Warning  which is outside the allowed range 0.5 to 1.5
+Warning  Bar 1 could not be found.
+         shift of bar 2 is 16.803, weight = 0.97909
+         Shift in dispersion direction is -1.911 pixels.
+         Shift in spatial direction is 16.803 pixels.
+WAVECORR COMPLETE
+Imset 1  End 14:01:38 CDT
+
+End      02-May-2019 14:01:38 CDT
+
+*** CALSTIS-4 complete ***
+
+*** CALSTIS-12 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:38 CDT
+Wavecal  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs31040_new_w2d_tmp.fits
+Science  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs31040_new_flt.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:38 CDT
+         SHIFTA1 set to -1.91058
+         SHIFTA2 set to 16.8027
+Imset 1  End 14:01:38 CDT
+
+End      02-May-2019 14:01:38 CDT
+
+*** CALSTIS-12 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:38 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs31040_new_flt.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs31040_new_x2d.fits
+INFO     'D1' has been appended to aperture
+OBSMODE  TIME-TAG
+APERTURE 52X0.05D1
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:38 CDT
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+Order 1  Begin 14:01:38 CDT
+         Delta = 0.00708 arcsec.
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Offset relative to row 900
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/97 30/06/98
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+
+FLUXCORR PERFORM
+PHOTTAB  oref$26p1601ko_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 28/02/2000 21/11/2001
+PHOTTAB  DESCRIP =Echelle mode post-SM4 blaze function shift time coefficients updated
+PHOTTAB  DESCRIP =Bostroem Sensitivity of 01-Nov-2011
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/5/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+PCTAB    DESCRIP = 2 STIS observations averaged
+TDSTAB   oref$13a1941fo_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 08/11/2016
+TDSTAB   DESCRIP =Updated time and temperature sensitivities for all optical elements.
+FLUXCORR COMPLETE
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 14:01:38 CDT
+Imset 1  End 14:01:38 CDT
+
+End      02-May-2019 14:01:38 CDT
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-6 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:38 CDT
+2019122140138-I--------------- CALSTIS-6 started -------------------------------
+
+INFO     'D1' has been appended to aperture
+Warning  Grating-aperture throughput correction table (GACTAB) was not found,
+         and no gac corrections will be applied
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs31040_new_flt.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs31040_new_x1d.fits
+Rootname odhs31040
+OBSMODE  TIME-TAG
+APERTURE 52X0.05D1
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+XTRACTAB oref$new_bg_1dx.fits
+XTRACTAB PEDIGREE=INFLIGHT 29/05/97
+XTRACTAB DESCRIP =Analysis from prop. 7064 and ground data
+XTRACTAB DESCRIP =Analysis from prop. 7064
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/1997 06/02/1999
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+
+Imset 1  Begin 14:01:38 CDT
+         Input read into memory.
+Order 1  Begin 14:01:38 CDT
+X1DCORR  PERFORM
+         Cross correlation offset: 501.725 pixels
+BACKCORR PERFORM
+BACKCORR COMPLETE
+X1DCORR  COMPLETE
+         Spectrum extracted at y position = 555.428
+         Extraction box height = 11
+         Background box 1 height = 14 offset -13 from A2CENTER
+         Background box 2 height = 14 offset 13 from A2CENTER
+
+DISPCORR PERFORM
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Offset relative to row 900
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+         Delta = 0.00708 arcsec.
+DISPCORR COMPLETE
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+PHOTTAB  oref$26p1601ko_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 27/02/1997 10/01/2017
+PHOTTAB  DESCRIP =Echelle mode post-SM4 blaze function shift time coefficients updated
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/05/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+TDSTAB   oref$13a1941fo_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 08/11/2016
+TDSTAB   DESCRIP =Updated time and temperature sensitivities for all optical elements.
+FLUXCORR PERFORM
+FLUXCORR COMPLETE
+
+SGEOCORR OMIT
+
+         Row 1 written to disk.
+Order 1  End 14:01:38 CDT
+
+Imset 1  End 14:01:38 CDT
+
+Warning  Keyword `XTRACALG' is being added to header.
+End      02-May-2019 14:01:38 CDT
+
+*** CALSTIS-6 complete ***
+2019122140138-I--------------- CALSTIS-6 completed: ODHS31040 ------------------
+
+End      02-May-2019 14:01:38 CDT
+
+*** CALSTIS-0 complete ***
+
+*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:38 CDT
+
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/odhs31050_raw.fits
+Outroot  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs31050_new
+Wavecal  /home/david/work/muscles/trappist-1/hst/g140m_cals/test/od3v01020_wav.fits
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:38 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/odhs31050_raw.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs31050_new_flt.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 14:01:38 CDT
+         Heliocentric radial velocity = 7.584 (km/s)
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR PERFORM
+LORSCORR COMPLETE
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 14:01:38 CDT
+
+End      02-May-2019 14:01:38 CDT
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:38 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/test/od3v01020_wav.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs31050_new_fwv_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 14:01:38 CDT
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR OMIT
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR OMIT
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 14:01:38 CDT
+
+End      02-May-2019 14:01:38 CDT
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:38 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs31050_new_fwv_tmp.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs31050_new_w2d_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:38 CDT
+
+Order 1  Begin 14:01:38 CDT
+         Delta = 0.00733 arcsec.
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/97 30/06/98
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 14:01:38 CDT
+Imset 1  End 14:01:38 CDT
+
+End      02-May-2019 14:01:38 CDT
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-4 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:38 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs31050_new_w2d_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+         Wavecal parameters are: \
+         WL_TRIM1 = 0 \
+         WL_TRIM2 = 10 \
+         SP_TRIM1 = 10 \
+         SP_TRIM2 = 150 \
+         WL_RANGE = 103 \
+         SP_RANGE = 121
+
+Imset 1  Begin 14:01:38 CDT
+         Section to use for finding shift in dispersion direction: \
+             1:1201, 11:1191 \
+         Section to use for finding shift in spatial direction: \
+             11:1191, 151:1051 \
+         Image pixels are reference pixel size.
+
+WAVECORR PERFORM
+WCPTAB   oref$16j1600co_wcp.fits
+WCPTAB   PEDIGREE=INFLIGHT 09/11/1998 13/06/2017
+WCPTAB   DESCRIP =Force G140M and G230L SHIFTA2 into single-bar mode via SP_TRIM2.---
+WCPTAB   DESCRIP =TRIM values modified, WL_RANGE and SP_RANGE increased
+LAMPTAB  oref$l421050oo_lmp.fits
+LAMPTAB  PEDIGREE=GROUND
+LAMPTAB  DESCRIP =Ground+Inflight Cal PT lamp, 3.8 & 10 mA
+LAMPTAB  DESCRIP =Ground Cal for non-PRISM, PT lamp 10 mA
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+Warning  Skipping current occulting bar ... \
+Warning  Peak of cross correlation is 0 of the expected value, \
+Warning  which is outside the allowed range 0.5 to 1.5
+Warning  Bar 1 could not be found.
+         shift of bar 2 is 16.803, weight = 0.97909
+         Shift in dispersion direction is -1.911 pixels.
+         Shift in spatial direction is 16.803 pixels.
+WAVECORR COMPLETE
+Imset 1  End 14:01:38 CDT
+
+End      02-May-2019 14:01:38 CDT
+
+*** CALSTIS-4 complete ***
+
+*** CALSTIS-12 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:38 CDT
+Wavecal  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs31050_new_w2d_tmp.fits
+Science  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs31050_new_flt.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:38 CDT
+         SHIFTA1 set to -1.91058
+         SHIFTA2 set to 16.8027
+Imset 1  End 14:01:38 CDT
+
+End      02-May-2019 14:01:38 CDT
+
+*** CALSTIS-12 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:38 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs31050_new_flt.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs31050_new_x2d.fits
+INFO     'D1' has been appended to aperture
+OBSMODE  TIME-TAG
+APERTURE 52X0.05D1
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:38 CDT
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+Order 1  Begin 14:01:38 CDT
+         Delta = 0.00708 arcsec.
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Offset relative to row 900
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/97 30/06/98
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+
+FLUXCORR PERFORM
+PHOTTAB  oref$26p1601ko_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 28/02/2000 21/11/2001
+PHOTTAB  DESCRIP =Echelle mode post-SM4 blaze function shift time coefficients updated
+PHOTTAB  DESCRIP =Bostroem Sensitivity of 01-Nov-2011
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/5/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+PCTAB    DESCRIP = 2 STIS observations averaged
+TDSTAB   oref$13a1941fo_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 08/11/2016
+TDSTAB   DESCRIP =Updated time and temperature sensitivities for all optical elements.
+FLUXCORR COMPLETE
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 14:01:38 CDT
+Imset 1  End 14:01:38 CDT
+
+End      02-May-2019 14:01:38 CDT
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-6 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:38 CDT
+2019122140138-I--------------- CALSTIS-6 started -------------------------------
+
+INFO     'D1' has been appended to aperture
+Warning  Grating-aperture throughput correction table (GACTAB) was not found,
+         and no gac corrections will be applied
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs31050_new_flt.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs31050_new_x1d.fits
+Rootname odhs31050
+OBSMODE  TIME-TAG
+APERTURE 52X0.05D1
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+XTRACTAB oref$new_bg_1dx.fits
+XTRACTAB PEDIGREE=INFLIGHT 29/05/97
+XTRACTAB DESCRIP =Analysis from prop. 7064 and ground data
+XTRACTAB DESCRIP =Analysis from prop. 7064
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/1997 06/02/1999
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+
+Imset 1  Begin 14:01:38 CDT
+         Input read into memory.
+Order 1  Begin 14:01:38 CDT
+X1DCORR  PERFORM
+         Cross correlation offset: 502.044 pixels
+BACKCORR PERFORM
+BACKCORR COMPLETE
+X1DCORR  COMPLETE
+         Spectrum extracted at y position = 555.747
+         Extraction box height = 11
+         Background box 1 height = 14 offset -13 from A2CENTER
+         Background box 2 height = 14 offset 13 from A2CENTER
+
+DISPCORR PERFORM
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Offset relative to row 900
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+         Delta = 0.00708 arcsec.
+DISPCORR COMPLETE
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+PHOTTAB  oref$26p1601ko_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 27/02/1997 10/01/2017
+PHOTTAB  DESCRIP =Echelle mode post-SM4 blaze function shift time coefficients updated
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/05/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+TDSTAB   oref$13a1941fo_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 08/11/2016
+TDSTAB   DESCRIP =Updated time and temperature sensitivities for all optical elements.
+FLUXCORR PERFORM
+FLUXCORR COMPLETE
+
+SGEOCORR OMIT
+
+         Row 1 written to disk.
+Order 1  End 14:01:39 CDT
+
+Imset 1  End 14:01:39 CDT
+
+Warning  Keyword `XTRACALG' is being added to header.
+End      02-May-2019 14:01:39 CDT
+
+*** CALSTIS-6 complete ***
+2019122140139-I--------------- CALSTIS-6 completed: ODHS31050 ------------------
+
+End      02-May-2019 14:01:39 CDT
+
+*** CALSTIS-0 complete ***
+
+*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:39 CDT
+
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/odhs07020_raw.fits
+Outroot  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07020_new
+Wavecal  /home/david/work/muscles/trappist-1/hst/g140m_cals/test/od3v01020_wav.fits
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:39 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/odhs07020_raw.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07020_new_flt.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 14:01:39 CDT
+         Heliocentric radial velocity = -1.861 (km/s)
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR PERFORM
+LORSCORR COMPLETE
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 14:01:39 CDT
+
+End      02-May-2019 14:01:39 CDT
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:39 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/test/od3v01020_wav.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07020_new_fwv_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 14:01:39 CDT
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR OMIT
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR OMIT
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 14:01:39 CDT
+
+End      02-May-2019 14:01:39 CDT
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:39 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07020_new_fwv_tmp.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07020_new_w2d_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:39 CDT
+
+Order 1  Begin 14:01:39 CDT
+         Delta = 0.00733 arcsec.
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/97 30/06/98
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 14:01:39 CDT
+Imset 1  End 14:01:39 CDT
+
+End      02-May-2019 14:01:39 CDT
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-4 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:39 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07020_new_w2d_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+         Wavecal parameters are: \
+         WL_TRIM1 = 0 \
+         WL_TRIM2 = 10 \
+         SP_TRIM1 = 10 \
+         SP_TRIM2 = 150 \
+         WL_RANGE = 103 \
+         SP_RANGE = 121
+
+Imset 1  Begin 14:01:39 CDT
+         Section to use for finding shift in dispersion direction: \
+             1:1201, 11:1191 \
+         Section to use for finding shift in spatial direction: \
+             11:1191, 151:1051 \
+         Image pixels are reference pixel size.
+
+WAVECORR PERFORM
+WCPTAB   oref$16j1600co_wcp.fits
+WCPTAB   PEDIGREE=INFLIGHT 09/11/1998 13/06/2017
+WCPTAB   DESCRIP =Force G140M and G230L SHIFTA2 into single-bar mode via SP_TRIM2.---
+WCPTAB   DESCRIP =TRIM values modified, WL_RANGE and SP_RANGE increased
+LAMPTAB  oref$l421050oo_lmp.fits
+LAMPTAB  PEDIGREE=GROUND
+LAMPTAB  DESCRIP =Ground+Inflight Cal PT lamp, 3.8 & 10 mA
+LAMPTAB  DESCRIP =Ground Cal for non-PRISM, PT lamp 10 mA
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+Warning  Skipping current occulting bar ... \
+Warning  Peak of cross correlation is 0 of the expected value, \
+Warning  which is outside the allowed range 0.5 to 1.5
+Warning  Bar 1 could not be found.
+         shift of bar 2 is 16.803, weight = 0.97909
+         Shift in dispersion direction is -1.911 pixels.
+         Shift in spatial direction is 16.803 pixels.
+WAVECORR COMPLETE
+Imset 1  End 14:01:39 CDT
+
+End      02-May-2019 14:01:39 CDT
+
+*** CALSTIS-4 complete ***
+
+*** CALSTIS-12 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:39 CDT
+Wavecal  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07020_new_w2d_tmp.fits
+Science  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07020_new_flt.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:39 CDT
+         SHIFTA1 set to -1.91058
+         SHIFTA2 set to 16.8027
+Imset 1  End 14:01:39 CDT
+
+End      02-May-2019 14:01:39 CDT
+
+*** CALSTIS-12 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:39 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07020_new_flt.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07020_new_x2d.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:39 CDT
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+Order 1  Begin 14:01:39 CDT
+         Delta = 0.00733 arcsec.
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/97 30/06/98
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+
+FLUXCORR PERFORM
+PHOTTAB  oref$26p1601ko_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 28/02/2000 21/11/2001
+PHOTTAB  DESCRIP =Echelle mode post-SM4 blaze function shift time coefficients updated
+PHOTTAB  DESCRIP =Bostroem Sensitivity of 01-Nov-2011
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/5/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+PCTAB    DESCRIP = 2 STIS observations averaged
+TDSTAB   oref$13a1941fo_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 08/11/2016
+TDSTAB   DESCRIP =Updated time and temperature sensitivities for all optical elements.
+FLUXCORR COMPLETE
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 14:01:39 CDT
+Imset 1  End 14:01:39 CDT
+
+End      02-May-2019 14:01:39 CDT
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-6 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:39 CDT
+2019122140139-I--------------- CALSTIS-6 started -------------------------------
+
+Warning  Grating-aperture throughput correction table (GACTAB) was not found,
+         and no gac corrections will be applied
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07020_new_flt.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07020_new_x1d.fits
+Rootname odhs07020
+OBSMODE  TIME-TAG
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+XTRACTAB oref$new_bg_1dx.fits
+XTRACTAB PEDIGREE=INFLIGHT 29/05/97
+XTRACTAB DESCRIP =Analysis from prop. 7064 and ground data
+XTRACTAB DESCRIP =Analysis from prop. 7064
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/1997 06/02/1999
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+
+Imset 1  Begin 14:01:39 CDT
+         Input read into memory.
+Order 1  Begin 14:01:39 CDT
+X1DCORR  PERFORM
+         Cross correlation offset: 501.248 pixels
+BACKCORR PERFORM
+BACKCORR COMPLETE
+X1DCORR  COMPLETE
+         Spectrum extracted at y position = 554.951
+         Extraction box height = 11
+         Background box 1 height = 5 offset -300 from A2CENTER
+         Background box 2 height = 5 offset 300 from A2CENTER
+
+DISPCORR PERFORM
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+         Delta = 0.00733 arcsec.
+DISPCORR COMPLETE
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+PHOTTAB  oref$26p1601ko_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 27/02/1997 10/01/2017
+PHOTTAB  DESCRIP =Echelle mode post-SM4 blaze function shift time coefficients updated
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/05/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+TDSTAB   oref$13a1941fo_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 08/11/2016
+TDSTAB   DESCRIP =Updated time and temperature sensitivities for all optical elements.
+FLUXCORR PERFORM
+FLUXCORR COMPLETE
+
+SGEOCORR OMIT
+
+         Row 1 written to disk.
+Order 1  End 14:01:39 CDT
+
+Imset 1  End 14:01:39 CDT
+
+Warning  Keyword `XTRACALG' is being added to header.
+End      02-May-2019 14:01:39 CDT
+
+*** CALSTIS-6 complete ***
+2019122140139-I--------------- CALSTIS-6 completed: ODHS07020 ------------------
+
+End      02-May-2019 14:01:39 CDT
+
+*** CALSTIS-0 complete ***
+
+*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:39 CDT
+
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/odlm41030_raw.fits
+Outroot  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odlm41030_new
+Wavecal  /home/david/work/muscles/trappist-1/hst/g140m_cals/test/od3v01020_wav.fits
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:39 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/odlm41030_raw.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odlm41030_new_flt.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.1
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 14:01:39 CDT
+         Heliocentric radial velocity = 30.226 (km/s)
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR PERFORM
+LORSCORR COMPLETE
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 14:01:40 CDT
+
+End      02-May-2019 14:01:40 CDT
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:40 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/test/od3v01020_wav.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odlm41030_new_fwv_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 14:01:40 CDT
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR OMIT
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR OMIT
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 14:01:40 CDT
+
+End      02-May-2019 14:01:40 CDT
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:40 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odlm41030_new_fwv_tmp.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odlm41030_new_w2d_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:40 CDT
+
+Order 1  Begin 14:01:40 CDT
+         Delta = 0.00733 arcsec.
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/97 30/06/98
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 14:01:40 CDT
+Imset 1  End 14:01:40 CDT
+
+End      02-May-2019 14:01:40 CDT
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-4 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:40 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odlm41030_new_w2d_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+         Wavecal parameters are: \
+         WL_TRIM1 = 0 \
+         WL_TRIM2 = 10 \
+         SP_TRIM1 = 10 \
+         SP_TRIM2 = 150 \
+         WL_RANGE = 103 \
+         SP_RANGE = 121
+
+Imset 1  Begin 14:01:40 CDT
+         Section to use for finding shift in dispersion direction: \
+             1:1201, 11:1191 \
+         Section to use for finding shift in spatial direction: \
+             11:1191, 151:1051 \
+         Image pixels are reference pixel size.
+
+WAVECORR PERFORM
+WCPTAB   oref$16j1600co_wcp.fits
+WCPTAB   PEDIGREE=INFLIGHT 09/11/1998 13/06/2017
+WCPTAB   DESCRIP =Force G140M and G230L SHIFTA2 into single-bar mode via SP_TRIM2.---
+WCPTAB   DESCRIP =TRIM values modified, WL_RANGE and SP_RANGE increased
+LAMPTAB  oref$l421050oo_lmp.fits
+LAMPTAB  PEDIGREE=GROUND
+LAMPTAB  DESCRIP =Ground+Inflight Cal PT lamp, 3.8 & 10 mA
+LAMPTAB  DESCRIP =Ground Cal for non-PRISM, PT lamp 10 mA
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+Warning  Skipping current occulting bar ... \
+Warning  Peak of cross correlation is 0 of the expected value, \
+Warning  which is outside the allowed range 0.5 to 1.5
+Warning  Bar 1 could not be found.
+         shift of bar 2 is 16.803, weight = 0.97909
+         Shift in dispersion direction is -1.911 pixels.
+         Shift in spatial direction is 16.803 pixels.
+WAVECORR COMPLETE
+Imset 1  End 14:01:40 CDT
+
+End      02-May-2019 14:01:40 CDT
+
+*** CALSTIS-4 complete ***
+
+*** CALSTIS-12 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:40 CDT
+Wavecal  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odlm41030_new_w2d_tmp.fits
+Science  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odlm41030_new_flt.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.1
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:40 CDT
+         SHIFTA1 set to -1.91058
+         SHIFTA2 set to 16.8027
+Imset 1  End 14:01:40 CDT
+
+End      02-May-2019 14:01:40 CDT
+
+*** CALSTIS-12 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:40 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odlm41030_new_flt.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odlm41030_new_x2d.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.1
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:40 CDT
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+Order 1  Begin 14:01:40 CDT
+         Delta = 0 arcsec.
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/97 30/06/98
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+
+FLUXCORR PERFORM
+PHOTTAB  oref$26p1601ko_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 28/02/2000 21/11/2001
+PHOTTAB  DESCRIP =Echelle mode post-SM4 blaze function shift time coefficients updated
+PHOTTAB  DESCRIP =Bostroem Sensitivity of 01-Nov-2011
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/5/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+PCTAB    DESCRIP = 2 STIS observations averaged
+TDSTAB   oref$13a1941fo_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 08/11/2016
+TDSTAB   DESCRIP =Updated time and temperature sensitivities for all optical elements.
+FLUXCORR COMPLETE
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 14:01:40 CDT
+Imset 1  End 14:01:40 CDT
+
+End      02-May-2019 14:01:40 CDT
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-6 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:40 CDT
+2019122140140-I--------------- CALSTIS-6 started -------------------------------
+
+Warning  Grating-aperture throughput correction table (GACTAB) was not found,
+         and no gac corrections will be applied
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odlm41030_new_flt.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odlm41030_new_x1d.fits
+Rootname odlm41030
+OBSMODE  TIME-TAG
+APERTURE 52X0.1
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+XTRACTAB oref$new_bg_1dx.fits
+XTRACTAB PEDIGREE=INFLIGHT 29/05/97
+XTRACTAB DESCRIP =Analysis from prop. 7064 and ground data
+XTRACTAB DESCRIP =Analysis from prop. 7064
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/1997 06/02/1999
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+
+Imset 1  Begin 14:01:40 CDT
+         Input read into memory.
+Order 1  Begin 14:01:40 CDT
+X1DCORR  PERFORM
+         Cross correlation offset: 502.6 pixels
+BACKCORR PERFORM
+BACKCORR COMPLETE
+X1DCORR  COMPLETE
+         Spectrum extracted at y position = 556.302
+         Extraction box height = 11
+         Background box 1 height = 5 offset -300 from A2CENTER
+         Background box 2 height = 5 offset 300 from A2CENTER
+
+DISPCORR PERFORM
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+         Delta = 0 arcsec.
+DISPCORR COMPLETE
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+PHOTTAB  oref$26p1601ko_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 27/02/1997 10/01/2017
+PHOTTAB  DESCRIP =Echelle mode post-SM4 blaze function shift time coefficients updated
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/05/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+TDSTAB   oref$13a1941fo_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 08/11/2016
+TDSTAB   DESCRIP =Updated time and temperature sensitivities for all optical elements.
+FLUXCORR PERFORM
+FLUXCORR COMPLETE
+
+SGEOCORR OMIT
+
+         Row 1 written to disk.
+Order 1  End 14:01:40 CDT
+
+Imset 1  End 14:01:40 CDT
+
+Warning  Keyword `XTRACALG' is being added to header.
+End      02-May-2019 14:01:40 CDT
+
+*** CALSTIS-6 complete ***
+2019122140140-I--------------- CALSTIS-6 completed: ODLM41030 ------------------
+
+End      02-May-2019 14:01:40 CDT
+
+*** CALSTIS-0 complete ***
+
+*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:40 CDT
+
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/odhs07040_raw.fits
+Outroot  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07040_new
+Wavecal  /home/david/work/muscles/trappist-1/hst/g140m_cals/test/od3v01020_wav.fits
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:40 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/odhs07040_raw.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07040_new_flt.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 14:01:40 CDT
+         Heliocentric radial velocity = -1.795 (km/s)
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR PERFORM
+LORSCORR COMPLETE
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 14:01:41 CDT
+
+End      02-May-2019 14:01:41 CDT
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:41 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/test/od3v01020_wav.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07040_new_fwv_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 14:01:41 CDT
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR OMIT
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR OMIT
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 14:01:41 CDT
+
+End      02-May-2019 14:01:41 CDT
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:41 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07040_new_fwv_tmp.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07040_new_w2d_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:41 CDT
+
+Order 1  Begin 14:01:41 CDT
+         Delta = 0.00733 arcsec.
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/97 30/06/98
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 14:01:41 CDT
+Imset 1  End 14:01:41 CDT
+
+End      02-May-2019 14:01:41 CDT
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-4 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:41 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07040_new_w2d_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+         Wavecal parameters are: \
+         WL_TRIM1 = 0 \
+         WL_TRIM2 = 10 \
+         SP_TRIM1 = 10 \
+         SP_TRIM2 = 150 \
+         WL_RANGE = 103 \
+         SP_RANGE = 121
+
+Imset 1  Begin 14:01:41 CDT
+         Section to use for finding shift in dispersion direction: \
+             1:1201, 11:1191 \
+         Section to use for finding shift in spatial direction: \
+             11:1191, 151:1051 \
+         Image pixels are reference pixel size.
+
+WAVECORR PERFORM
+WCPTAB   oref$16j1600co_wcp.fits
+WCPTAB   PEDIGREE=INFLIGHT 09/11/1998 13/06/2017
+WCPTAB   DESCRIP =Force G140M and G230L SHIFTA2 into single-bar mode via SP_TRIM2.---
+WCPTAB   DESCRIP =TRIM values modified, WL_RANGE and SP_RANGE increased
+LAMPTAB  oref$l421050oo_lmp.fits
+LAMPTAB  PEDIGREE=GROUND
+LAMPTAB  DESCRIP =Ground+Inflight Cal PT lamp, 3.8 & 10 mA
+LAMPTAB  DESCRIP =Ground Cal for non-PRISM, PT lamp 10 mA
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+Warning  Skipping current occulting bar ... \
+Warning  Peak of cross correlation is 0 of the expected value, \
+Warning  which is outside the allowed range 0.5 to 1.5
+Warning  Bar 1 could not be found.
+         shift of bar 2 is 16.803, weight = 0.97909
+         Shift in dispersion direction is -1.911 pixels.
+         Shift in spatial direction is 16.803 pixels.
+WAVECORR COMPLETE
+Imset 1  End 14:01:41 CDT
+
+End      02-May-2019 14:01:41 CDT
+
+*** CALSTIS-4 complete ***
+
+*** CALSTIS-12 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:41 CDT
+Wavecal  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07040_new_w2d_tmp.fits
+Science  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07040_new_flt.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:41 CDT
+         SHIFTA1 set to -1.91058
+         SHIFTA2 set to 16.8027
+Imset 1  End 14:01:41 CDT
+
+End      02-May-2019 14:01:41 CDT
+
+*** CALSTIS-12 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:41 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07040_new_flt.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07040_new_x2d.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:41 CDT
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+Order 1  Begin 14:01:41 CDT
+         Delta = 0.00733 arcsec.
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/97 30/06/98
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+
+FLUXCORR PERFORM
+PHOTTAB  oref$26p1601ko_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 28/02/2000 21/11/2001
+PHOTTAB  DESCRIP =Echelle mode post-SM4 blaze function shift time coefficients updated
+PHOTTAB  DESCRIP =Bostroem Sensitivity of 01-Nov-2011
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/5/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+PCTAB    DESCRIP = 2 STIS observations averaged
+TDSTAB   oref$13a1941fo_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 08/11/2016
+TDSTAB   DESCRIP =Updated time and temperature sensitivities for all optical elements.
+FLUXCORR COMPLETE
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 14:01:41 CDT
+Imset 1  End 14:01:41 CDT
+
+End      02-May-2019 14:01:41 CDT
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-6 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:41 CDT
+2019122140141-I--------------- CALSTIS-6 started -------------------------------
+
+Warning  Grating-aperture throughput correction table (GACTAB) was not found,
+         and no gac corrections will be applied
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07040_new_flt.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07040_new_x1d.fits
+Rootname odhs07040
+OBSMODE  TIME-TAG
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+XTRACTAB oref$new_bg_1dx.fits
+XTRACTAB PEDIGREE=INFLIGHT 29/05/97
+XTRACTAB DESCRIP =Analysis from prop. 7064 and ground data
+XTRACTAB DESCRIP =Analysis from prop. 7064
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/1997 06/02/1999
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+
+Imset 1  Begin 14:01:41 CDT
+         Input read into memory.
+Order 1  Begin 14:01:41 CDT
+X1DCORR  PERFORM
+         Cross correlation offset: 500.99 pixels
+BACKCORR PERFORM
+BACKCORR COMPLETE
+X1DCORR  COMPLETE
+         Spectrum extracted at y position = 554.692
+         Extraction box height = 11
+         Background box 1 height = 5 offset -300 from A2CENTER
+         Background box 2 height = 5 offset 300 from A2CENTER
+
+DISPCORR PERFORM
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+         Delta = 0.00733 arcsec.
+DISPCORR COMPLETE
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+PHOTTAB  oref$26p1601ko_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 27/02/1997 10/01/2017
+PHOTTAB  DESCRIP =Echelle mode post-SM4 blaze function shift time coefficients updated
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/05/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+TDSTAB   oref$13a1941fo_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 08/11/2016
+TDSTAB   DESCRIP =Updated time and temperature sensitivities for all optical elements.
+FLUXCORR PERFORM
+FLUXCORR COMPLETE
+
+SGEOCORR OMIT
+
+         Row 1 written to disk.
+Order 1  End 14:01:41 CDT
+
+Imset 1  End 14:01:41 CDT
+
+Warning  Keyword `XTRACALG' is being added to header.
+End      02-May-2019 14:01:41 CDT
+
+*** CALSTIS-6 complete ***
+2019122140141-I--------------- CALSTIS-6 completed: ODHS07040 ------------------
+
+End      02-May-2019 14:01:41 CDT
+
+*** CALSTIS-0 complete ***
+
+*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:41 CDT
+
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/odhsd1010_raw.fits
+Outroot  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsd1010_new
+Wavecal  /home/david/work/muscles/trappist-1/hst/g140m_cals/test/od3v01020_wav.fits
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:41 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/odhsd1010_raw.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsd1010_new_flt.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 14:01:41 CDT
+         Heliocentric radial velocity = -25.369 (km/s)
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR PERFORM
+LORSCORR COMPLETE
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 14:01:42 CDT
+
+End      02-May-2019 14:01:42 CDT
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:42 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/test/od3v01020_wav.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsd1010_new_fwv_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 14:01:42 CDT
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR OMIT
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR OMIT
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 14:01:42 CDT
+
+End      02-May-2019 14:01:42 CDT
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:42 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsd1010_new_fwv_tmp.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsd1010_new_w2d_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:42 CDT
+
+Order 1  Begin 14:01:42 CDT
+         Delta = 0.00733 arcsec.
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/97 30/06/98
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 14:01:42 CDT
+Imset 1  End 14:01:42 CDT
+
+End      02-May-2019 14:01:42 CDT
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-4 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:42 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsd1010_new_w2d_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+         Wavecal parameters are: \
+         WL_TRIM1 = 0 \
+         WL_TRIM2 = 10 \
+         SP_TRIM1 = 10 \
+         SP_TRIM2 = 150 \
+         WL_RANGE = 103 \
+         SP_RANGE = 121
+
+Imset 1  Begin 14:01:42 CDT
+         Section to use for finding shift in dispersion direction: \
+             1:1201, 11:1191 \
+         Section to use for finding shift in spatial direction: \
+             11:1191, 151:1051 \
+         Image pixels are reference pixel size.
+
+WAVECORR PERFORM
+WCPTAB   oref$16j1600co_wcp.fits
+WCPTAB   PEDIGREE=INFLIGHT 09/11/1998 13/06/2017
+WCPTAB   DESCRIP =Force G140M and G230L SHIFTA2 into single-bar mode via SP_TRIM2.---
+WCPTAB   DESCRIP =TRIM values modified, WL_RANGE and SP_RANGE increased
+LAMPTAB  oref$l421050oo_lmp.fits
+LAMPTAB  PEDIGREE=GROUND
+LAMPTAB  DESCRIP =Ground+Inflight Cal PT lamp, 3.8 & 10 mA
+LAMPTAB  DESCRIP =Ground Cal for non-PRISM, PT lamp 10 mA
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+Warning  Skipping current occulting bar ... \
+Warning  Peak of cross correlation is 0 of the expected value, \
+Warning  which is outside the allowed range 0.5 to 1.5
+Warning  Bar 1 could not be found.
+         shift of bar 2 is 16.803, weight = 0.97909
+         Shift in dispersion direction is -1.911 pixels.
+         Shift in spatial direction is 16.803 pixels.
+WAVECORR COMPLETE
+Imset 1  End 14:01:42 CDT
+
+End      02-May-2019 14:01:42 CDT
+
+*** CALSTIS-4 complete ***
+
+*** CALSTIS-12 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:42 CDT
+Wavecal  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsd1010_new_w2d_tmp.fits
+Science  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsd1010_new_flt.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:42 CDT
+         SHIFTA1 set to -1.91058
+         SHIFTA2 set to 16.8027
+Imset 1  End 14:01:42 CDT
+
+End      02-May-2019 14:01:42 CDT
+
+*** CALSTIS-12 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:42 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsd1010_new_flt.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsd1010_new_x2d.fits
+INFO     'D1' has been appended to aperture
+OBSMODE  TIME-TAG
+APERTURE 52X0.05D1
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:42 CDT
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+Order 1  Begin 14:01:42 CDT
+         Delta = 0.00708 arcsec.
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Offset relative to row 900
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/97 30/06/98
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+
+FLUXCORR PERFORM
+PHOTTAB  oref$26p1601ko_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 28/02/2000 21/11/2001
+PHOTTAB  DESCRIP =Echelle mode post-SM4 blaze function shift time coefficients updated
+PHOTTAB  DESCRIP =Bostroem Sensitivity of 01-Nov-2011
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/5/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+PCTAB    DESCRIP = 2 STIS observations averaged
+TDSTAB   oref$13a1941fo_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 08/11/2016
+TDSTAB   DESCRIP =Updated time and temperature sensitivities for all optical elements.
+FLUXCORR COMPLETE
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 14:01:42 CDT
+Imset 1  End 14:01:42 CDT
+
+End      02-May-2019 14:01:42 CDT
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-6 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:42 CDT
+2019122140142-I--------------- CALSTIS-6 started -------------------------------
+
+INFO     'D1' has been appended to aperture
+Warning  Grating-aperture throughput correction table (GACTAB) was not found,
+         and no gac corrections will be applied
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsd1010_new_flt.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsd1010_new_x1d.fits
+Rootname odhsd1010
+OBSMODE  TIME-TAG
+APERTURE 52X0.05D1
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+XTRACTAB oref$new_bg_1dx.fits
+XTRACTAB PEDIGREE=INFLIGHT 29/05/97
+XTRACTAB DESCRIP =Analysis from prop. 7064 and ground data
+XTRACTAB DESCRIP =Analysis from prop. 7064
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/1997 06/02/1999
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+
+Imset 1  Begin 14:01:42 CDT
+         Input read into memory.
+Order 1  Begin 14:01:42 CDT
+X1DCORR  PERFORM
+         Cross correlation offset: 967.989 pixels
+BACKCORR PERFORM
+BACKCORR COMPLETE
+X1DCORR  COMPLETE
+         Spectrum extracted at y position = 1021.69
+         Extraction box height = 11
+         Background box 1 height = 14 offset -13 from A2CENTER
+         Background box 2 height = 14 offset 13 from A2CENTER
+
+DISPCORR PERFORM
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Offset relative to row 900
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+         Delta = 0.00708 arcsec.
+DISPCORR COMPLETE
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+PHOTTAB  oref$26p1601ko_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 27/02/1997 10/01/2017
+PHOTTAB  DESCRIP =Echelle mode post-SM4 blaze function shift time coefficients updated
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/05/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+TDSTAB   oref$13a1941fo_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 08/11/2016
+TDSTAB   DESCRIP =Updated time and temperature sensitivities for all optical elements.
+FLUXCORR PERFORM
+FLUXCORR COMPLETE
+
+SGEOCORR OMIT
+
+         Row 1 written to disk.
+Order 1  End 14:01:42 CDT
+
+Imset 1  End 14:01:42 CDT
+
+Warning  Keyword `XTRACALG' is being added to header.
+End      02-May-2019 14:01:42 CDT
+
+*** CALSTIS-6 complete ***
+2019122140142-I--------------- CALSTIS-6 completed: ODHSD1010 ------------------
+
+End      02-May-2019 14:01:42 CDT
+
+*** CALSTIS-0 complete ***
+
+*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:42 CDT
+
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/odhsc1010_raw.fits
+Outroot  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsc1010_new
+Wavecal  /home/david/work/muscles/trappist-1/hst/g140m_cals/test/od3v01020_wav.fits
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:42 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/odhsc1010_raw.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsc1010_new_flt.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 14:01:42 CDT
+         Heliocentric radial velocity = 1.581 (km/s)
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR PERFORM
+LORSCORR COMPLETE
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 14:01:43 CDT
+
+End      02-May-2019 14:01:43 CDT
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:43 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/test/od3v01020_wav.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsc1010_new_fwv_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 14:01:43 CDT
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR OMIT
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR OMIT
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 14:01:43 CDT
+
+End      02-May-2019 14:01:43 CDT
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:43 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsc1010_new_fwv_tmp.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsc1010_new_w2d_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:43 CDT
+
+Order 1  Begin 14:01:43 CDT
+         Delta = 0.00733 arcsec.
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/97 30/06/98
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 14:01:43 CDT
+Imset 1  End 14:01:43 CDT
+
+End      02-May-2019 14:01:43 CDT
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-4 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:43 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsc1010_new_w2d_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+         Wavecal parameters are: \
+         WL_TRIM1 = 0 \
+         WL_TRIM2 = 10 \
+         SP_TRIM1 = 10 \
+         SP_TRIM2 = 150 \
+         WL_RANGE = 103 \
+         SP_RANGE = 121
+
+Imset 1  Begin 14:01:43 CDT
+         Section to use for finding shift in dispersion direction: \
+             1:1201, 11:1191 \
+         Section to use for finding shift in spatial direction: \
+             11:1191, 151:1051 \
+         Image pixels are reference pixel size.
+
+WAVECORR PERFORM
+WCPTAB   oref$16j1600co_wcp.fits
+WCPTAB   PEDIGREE=INFLIGHT 09/11/1998 13/06/2017
+WCPTAB   DESCRIP =Force G140M and G230L SHIFTA2 into single-bar mode via SP_TRIM2.---
+WCPTAB   DESCRIP =TRIM values modified, WL_RANGE and SP_RANGE increased
+LAMPTAB  oref$l421050oo_lmp.fits
+LAMPTAB  PEDIGREE=GROUND
+LAMPTAB  DESCRIP =Ground+Inflight Cal PT lamp, 3.8 & 10 mA
+LAMPTAB  DESCRIP =Ground Cal for non-PRISM, PT lamp 10 mA
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+Warning  Skipping current occulting bar ... \
+Warning  Peak of cross correlation is 0 of the expected value, \
+Warning  which is outside the allowed range 0.5 to 1.5
+Warning  Bar 1 could not be found.
+         shift of bar 2 is 16.803, weight = 0.97909
+         Shift in dispersion direction is -1.911 pixels.
+         Shift in spatial direction is 16.803 pixels.
+WAVECORR COMPLETE
+Imset 1  End 14:01:43 CDT
+
+End      02-May-2019 14:01:43 CDT
+
+*** CALSTIS-4 complete ***
+
+*** CALSTIS-12 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:43 CDT
+Wavecal  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsc1010_new_w2d_tmp.fits
+Science  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsc1010_new_flt.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:43 CDT
+         SHIFTA1 set to -1.91058
+         SHIFTA2 set to 16.8027
+Imset 1  End 14:01:43 CDT
+
+End      02-May-2019 14:01:43 CDT
+
+*** CALSTIS-12 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:43 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsc1010_new_flt.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsc1010_new_x2d.fits
+INFO     'D1' has been appended to aperture
+OBSMODE  TIME-TAG
+APERTURE 52X0.05D1
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:43 CDT
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+Order 1  Begin 14:01:43 CDT
+         Delta = 0.00708 arcsec.
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Offset relative to row 900
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/97 30/06/98
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+
+FLUXCORR PERFORM
+PHOTTAB  oref$26p1601ko_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 28/02/2000 21/11/2001
+PHOTTAB  DESCRIP =Echelle mode post-SM4 blaze function shift time coefficients updated
+PHOTTAB  DESCRIP =Bostroem Sensitivity of 01-Nov-2011
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/5/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+PCTAB    DESCRIP = 2 STIS observations averaged
+TDSTAB   oref$13a1941fo_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 08/11/2016
+TDSTAB   DESCRIP =Updated time and temperature sensitivities for all optical elements.
+FLUXCORR COMPLETE
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 14:01:43 CDT
+Imset 1  End 14:01:43 CDT
+
+End      02-May-2019 14:01:43 CDT
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-6 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:43 CDT
+2019122140143-I--------------- CALSTIS-6 started -------------------------------
+
+INFO     'D1' has been appended to aperture
+Warning  Grating-aperture throughput correction table (GACTAB) was not found,
+         and no gac corrections will be applied
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsc1010_new_flt.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsc1010_new_x1d.fits
+Rootname odhsc1010
+OBSMODE  TIME-TAG
+APERTURE 52X0.05D1
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+XTRACTAB oref$new_bg_1dx.fits
+XTRACTAB PEDIGREE=INFLIGHT 29/05/97
+XTRACTAB DESCRIP =Analysis from prop. 7064 and ground data
+XTRACTAB DESCRIP =Analysis from prop. 7064
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/1997 06/02/1999
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+
+Imset 1  Begin 14:01:43 CDT
+         Input read into memory.
+Order 1  Begin 14:01:43 CDT
+X1DCORR  PERFORM
+         Cross correlation offset: 500.859 pixels
+BACKCORR PERFORM
+BACKCORR COMPLETE
+X1DCORR  COMPLETE
+         Spectrum extracted at y position = 554.562
+         Extraction box height = 11
+         Background box 1 height = 14 offset -13 from A2CENTER
+         Background box 2 height = 14 offset 13 from A2CENTER
+
+DISPCORR PERFORM
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Offset relative to row 900
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+         Delta = 0.00708 arcsec.
+DISPCORR COMPLETE
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+PHOTTAB  oref$26p1601ko_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 27/02/1997 10/01/2017
+PHOTTAB  DESCRIP =Echelle mode post-SM4 blaze function shift time coefficients updated
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/05/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+TDSTAB   oref$13a1941fo_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 08/11/2016
+TDSTAB   DESCRIP =Updated time and temperature sensitivities for all optical elements.
+FLUXCORR PERFORM
+FLUXCORR COMPLETE
+
+SGEOCORR OMIT
+
+         Row 1 written to disk.
+Order 1  End 14:01:43 CDT
+
+Imset 1  End 14:01:43 CDT
+
+Warning  Keyword `XTRACALG' is being added to header.
+End      02-May-2019 14:01:43 CDT
+
+*** CALSTIS-6 complete ***
+2019122140143-I--------------- CALSTIS-6 completed: ODHSC1010 ------------------
+
+End      02-May-2019 14:01:43 CDT
+
+*** CALSTIS-0 complete ***
+
+*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:43 CDT
+
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/odhs07030_raw.fits
+Outroot  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07030_new
+Wavecal  /home/david/work/muscles/trappist-1/hst/g140m_cals/test/od3v01020_wav.fits
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:43 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/odhs07030_raw.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07030_new_flt.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 14:01:43 CDT
+         Heliocentric radial velocity = -1.828 (km/s)
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR PERFORM
+LORSCORR COMPLETE
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 14:01:44 CDT
+
+End      02-May-2019 14:01:44 CDT
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:44 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/test/od3v01020_wav.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07030_new_fwv_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 14:01:44 CDT
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR OMIT
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR OMIT
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 14:01:44 CDT
+
+End      02-May-2019 14:01:44 CDT
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:44 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07030_new_fwv_tmp.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07030_new_w2d_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:44 CDT
+
+Order 1  Begin 14:01:44 CDT
+         Delta = 0.00733 arcsec.
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/97 30/06/98
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 14:01:44 CDT
+Imset 1  End 14:01:44 CDT
+
+End      02-May-2019 14:01:44 CDT
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-4 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:44 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07030_new_w2d_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+         Wavecal parameters are: \
+         WL_TRIM1 = 0 \
+         WL_TRIM2 = 10 \
+         SP_TRIM1 = 10 \
+         SP_TRIM2 = 150 \
+         WL_RANGE = 103 \
+         SP_RANGE = 121
+
+Imset 1  Begin 14:01:44 CDT
+         Section to use for finding shift in dispersion direction: \
+             1:1201, 11:1191 \
+         Section to use for finding shift in spatial direction: \
+             11:1191, 151:1051 \
+         Image pixels are reference pixel size.
+
+WAVECORR PERFORM
+WCPTAB   oref$16j1600co_wcp.fits
+WCPTAB   PEDIGREE=INFLIGHT 09/11/1998 13/06/2017
+WCPTAB   DESCRIP =Force G140M and G230L SHIFTA2 into single-bar mode via SP_TRIM2.---
+WCPTAB   DESCRIP =TRIM values modified, WL_RANGE and SP_RANGE increased
+LAMPTAB  oref$l421050oo_lmp.fits
+LAMPTAB  PEDIGREE=GROUND
+LAMPTAB  DESCRIP =Ground+Inflight Cal PT lamp, 3.8 & 10 mA
+LAMPTAB  DESCRIP =Ground Cal for non-PRISM, PT lamp 10 mA
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+Warning  Skipping current occulting bar ... \
+Warning  Peak of cross correlation is 0 of the expected value, \
+Warning  which is outside the allowed range 0.5 to 1.5
+Warning  Bar 1 could not be found.
+         shift of bar 2 is 16.803, weight = 0.97909
+         Shift in dispersion direction is -1.911 pixels.
+         Shift in spatial direction is 16.803 pixels.
+WAVECORR COMPLETE
+Imset 1  End 14:01:44 CDT
+
+End      02-May-2019 14:01:44 CDT
+
+*** CALSTIS-4 complete ***
+
+*** CALSTIS-12 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:44 CDT
+Wavecal  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07030_new_w2d_tmp.fits
+Science  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07030_new_flt.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:44 CDT
+         SHIFTA1 set to -1.91058
+         SHIFTA2 set to 16.8027
+Imset 1  End 14:01:44 CDT
+
+End      02-May-2019 14:01:44 CDT
+
+*** CALSTIS-12 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:44 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07030_new_flt.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07030_new_x2d.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:44 CDT
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+Order 1  Begin 14:01:44 CDT
+         Delta = 0.00733 arcsec.
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/97 30/06/98
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+
+FLUXCORR PERFORM
+PHOTTAB  oref$26p1601ko_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 28/02/2000 21/11/2001
+PHOTTAB  DESCRIP =Echelle mode post-SM4 blaze function shift time coefficients updated
+PHOTTAB  DESCRIP =Bostroem Sensitivity of 01-Nov-2011
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/5/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+PCTAB    DESCRIP = 2 STIS observations averaged
+TDSTAB   oref$13a1941fo_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 08/11/2016
+TDSTAB   DESCRIP =Updated time and temperature sensitivities for all optical elements.
+FLUXCORR COMPLETE
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 14:01:44 CDT
+Imset 1  End 14:01:44 CDT
+
+End      02-May-2019 14:01:44 CDT
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-6 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:44 CDT
+2019122140144-I--------------- CALSTIS-6 started -------------------------------
+
+Warning  Grating-aperture throughput correction table (GACTAB) was not found,
+         and no gac corrections will be applied
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07030_new_flt.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs07030_new_x1d.fits
+Rootname odhs07030
+OBSMODE  TIME-TAG
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+XTRACTAB oref$new_bg_1dx.fits
+XTRACTAB PEDIGREE=INFLIGHT 29/05/97
+XTRACTAB DESCRIP =Analysis from prop. 7064 and ground data
+XTRACTAB DESCRIP =Analysis from prop. 7064
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/1997 06/02/1999
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+
+Imset 1  Begin 14:01:44 CDT
+         Input read into memory.
+Order 1  Begin 14:01:44 CDT
+X1DCORR  PERFORM
+         Cross correlation offset: 970.921 pixels
+BACKCORR PERFORM
+BACKCORR COMPLETE
+X1DCORR  COMPLETE
+         Extraction box height = 11
+         Background box 1 height = 5 offset -300 from A2CENTER
+         Background box 2 height = 5 offset 300 from A2CENTER
+
+DISPCORR PERFORM
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+         Delta = 0.00733 arcsec.
+DISPCORR COMPLETE
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+PHOTTAB  oref$26p1601ko_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 27/02/1997 10/01/2017
+PHOTTAB  DESCRIP =Echelle mode post-SM4 blaze function shift time coefficients updated
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/05/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+TDSTAB   oref$13a1941fo_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 08/11/2016
+TDSTAB   DESCRIP =Updated time and temperature sensitivities for all optical elements.
+FLUXCORR PERFORM
+FLUXCORR COMPLETE
+
+SGEOCORR OMIT
+
+         Row 1 written to disk.
+Order 1  End 14:01:44 CDT
+
+Imset 1  End 14:01:44 CDT
+
+Warning  Keyword `XTRACALG' is being added to header.
+End      02-May-2019 14:01:44 CDT
+
+*** CALSTIS-6 complete ***
+2019122140144-I--------------- CALSTIS-6 completed: ODHS07030 ------------------
+
+End      02-May-2019 14:01:44 CDT
+
+*** CALSTIS-0 complete ***
+
+*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:44 CDT
+
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/odhs30040_raw.fits
+Outroot  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs30040_new
+Wavecal  /home/david/work/muscles/trappist-1/hst/g140m_cals/test/od3v01020_wav.fits
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:44 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/odhs30040_raw.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs30040_new_flt.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 14:01:44 CDT
+         Heliocentric radial velocity = 5.112 (km/s)
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR PERFORM
+LORSCORR COMPLETE
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 14:01:44 CDT
+
+End      02-May-2019 14:01:44 CDT
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:44 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/test/od3v01020_wav.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs30040_new_fwv_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 14:01:44 CDT
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR OMIT
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR OMIT
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 14:01:45 CDT
+
+End      02-May-2019 14:01:45 CDT
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:45 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs30040_new_fwv_tmp.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs30040_new_w2d_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:45 CDT
+
+Order 1  Begin 14:01:45 CDT
+         Delta = 0.00733 arcsec.
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/97 30/06/98
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 14:01:45 CDT
+Imset 1  End 14:01:45 CDT
+
+End      02-May-2019 14:01:45 CDT
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-4 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:45 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs30040_new_w2d_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+         Wavecal parameters are: \
+         WL_TRIM1 = 0 \
+         WL_TRIM2 = 10 \
+         SP_TRIM1 = 10 \
+         SP_TRIM2 = 150 \
+         WL_RANGE = 103 \
+         SP_RANGE = 121
+
+Imset 1  Begin 14:01:45 CDT
+         Section to use for finding shift in dispersion direction: \
+             1:1201, 11:1191 \
+         Section to use for finding shift in spatial direction: \
+             11:1191, 151:1051 \
+         Image pixels are reference pixel size.
+
+WAVECORR PERFORM
+WCPTAB   oref$16j1600co_wcp.fits
+WCPTAB   PEDIGREE=INFLIGHT 09/11/1998 13/06/2017
+WCPTAB   DESCRIP =Force G140M and G230L SHIFTA2 into single-bar mode via SP_TRIM2.---
+WCPTAB   DESCRIP =TRIM values modified, WL_RANGE and SP_RANGE increased
+LAMPTAB  oref$l421050oo_lmp.fits
+LAMPTAB  PEDIGREE=GROUND
+LAMPTAB  DESCRIP =Ground+Inflight Cal PT lamp, 3.8 & 10 mA
+LAMPTAB  DESCRIP =Ground Cal for non-PRISM, PT lamp 10 mA
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+Warning  Skipping current occulting bar ... \
+Warning  Peak of cross correlation is 0 of the expected value, \
+Warning  which is outside the allowed range 0.5 to 1.5
+Warning  Bar 1 could not be found.
+         shift of bar 2 is 16.803, weight = 0.97909
+         Shift in dispersion direction is -1.911 pixels.
+         Shift in spatial direction is 16.803 pixels.
+WAVECORR COMPLETE
+Imset 1  End 14:01:45 CDT
+
+End      02-May-2019 14:01:45 CDT
+
+*** CALSTIS-4 complete ***
+
+*** CALSTIS-12 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:45 CDT
+Wavecal  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs30040_new_w2d_tmp.fits
+Science  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs30040_new_flt.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:45 CDT
+         SHIFTA1 set to -1.91058
+         SHIFTA2 set to 16.8027
+Imset 1  End 14:01:45 CDT
+
+End      02-May-2019 14:01:45 CDT
+
+*** CALSTIS-12 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:45 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs30040_new_flt.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs30040_new_x2d.fits
+INFO     'D1' has been appended to aperture
+OBSMODE  TIME-TAG
+APERTURE 52X0.05D1
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:45 CDT
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+Order 1  Begin 14:01:45 CDT
+         Delta = 0.00708 arcsec.
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Offset relative to row 900
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/97 30/06/98
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+
+FLUXCORR PERFORM
+PHOTTAB  oref$26p1601ko_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 28/02/2000 21/11/2001
+PHOTTAB  DESCRIP =Echelle mode post-SM4 blaze function shift time coefficients updated
+PHOTTAB  DESCRIP =Bostroem Sensitivity of 01-Nov-2011
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/5/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+PCTAB    DESCRIP = 2 STIS observations averaged
+TDSTAB   oref$13a1941fo_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 08/11/2016
+TDSTAB   DESCRIP =Updated time and temperature sensitivities for all optical elements.
+FLUXCORR COMPLETE
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 14:01:45 CDT
+Imset 1  End 14:01:45 CDT
+
+End      02-May-2019 14:01:45 CDT
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-6 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:45 CDT
+2019122140145-I--------------- CALSTIS-6 started -------------------------------
+
+INFO     'D1' has been appended to aperture
+Warning  Grating-aperture throughput correction table (GACTAB) was not found,
+         and no gac corrections will be applied
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs30040_new_flt.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs30040_new_x1d.fits
+Rootname odhs30040
+OBSMODE  TIME-TAG
+APERTURE 52X0.05D1
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+XTRACTAB oref$new_bg_1dx.fits
+XTRACTAB PEDIGREE=INFLIGHT 29/05/97
+XTRACTAB DESCRIP =Analysis from prop. 7064 and ground data
+XTRACTAB DESCRIP =Analysis from prop. 7064
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/1997 06/02/1999
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+
+Imset 1  Begin 14:01:45 CDT
+         Input read into memory.
+Order 1  Begin 14:01:45 CDT
+X1DCORR  PERFORM
+         Cross correlation offset: 501.045 pixels
+BACKCORR PERFORM
+BACKCORR COMPLETE
+X1DCORR  COMPLETE
+         Spectrum extracted at y position = 554.748
+         Extraction box height = 11
+         Background box 1 height = 14 offset -13 from A2CENTER
+         Background box 2 height = 14 offset 13 from A2CENTER
+
+DISPCORR PERFORM
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Offset relative to row 900
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+         Delta = 0.00708 arcsec.
+DISPCORR COMPLETE
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+PHOTTAB  oref$26p1601ko_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 27/02/1997 10/01/2017
+PHOTTAB  DESCRIP =Echelle mode post-SM4 blaze function shift time coefficients updated
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/05/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+TDSTAB   oref$13a1941fo_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 08/11/2016
+TDSTAB   DESCRIP =Updated time and temperature sensitivities for all optical elements.
+FLUXCORR PERFORM
+FLUXCORR COMPLETE
+
+SGEOCORR OMIT
+
+         Row 1 written to disk.
+Order 1  End 14:01:45 CDT
+
+Imset 1  End 14:01:45 CDT
+
+Warning  Keyword `XTRACALG' is being added to header.
+End      02-May-2019 14:01:45 CDT
+
+*** CALSTIS-6 complete ***
+2019122140145-I--------------- CALSTIS-6 completed: ODHS30040 ------------------
+
+End      02-May-2019 14:01:45 CDT
+
+*** CALSTIS-0 complete ***
+
+*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:45 CDT
+
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/odhs32030_raw.fits
+Outroot  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs32030_new
+Wavecal  /home/david/work/muscles/trappist-1/hst/g140m_cals/test/od3v01020_wav.fits
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:45 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/odhs32030_raw.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs32030_new_flt.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 14:01:45 CDT
+         Heliocentric radial velocity = 10.396 (km/s)
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR PERFORM
+LORSCORR COMPLETE
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 14:01:45 CDT
+
+End      02-May-2019 14:01:45 CDT
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:45 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/test/od3v01020_wav.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs32030_new_fwv_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 14:01:45 CDT
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR OMIT
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR OMIT
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 14:01:46 CDT
+
+End      02-May-2019 14:01:46 CDT
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:46 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs32030_new_fwv_tmp.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs32030_new_w2d_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:46 CDT
+
+Order 1  Begin 14:01:46 CDT
+         Delta = 0.00733 arcsec.
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/97 30/06/98
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 14:01:46 CDT
+Imset 1  End 14:01:46 CDT
+
+End      02-May-2019 14:01:46 CDT
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-4 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:46 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs32030_new_w2d_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+         Wavecal parameters are: \
+         WL_TRIM1 = 0 \
+         WL_TRIM2 = 10 \
+         SP_TRIM1 = 10 \
+         SP_TRIM2 = 150 \
+         WL_RANGE = 103 \
+         SP_RANGE = 121
+
+Imset 1  Begin 14:01:46 CDT
+         Section to use for finding shift in dispersion direction: \
+             1:1201, 11:1191 \
+         Section to use for finding shift in spatial direction: \
+             11:1191, 151:1051 \
+         Image pixels are reference pixel size.
+
+WAVECORR PERFORM
+WCPTAB   oref$16j1600co_wcp.fits
+WCPTAB   PEDIGREE=INFLIGHT 09/11/1998 13/06/2017
+WCPTAB   DESCRIP =Force G140M and G230L SHIFTA2 into single-bar mode via SP_TRIM2.---
+WCPTAB   DESCRIP =TRIM values modified, WL_RANGE and SP_RANGE increased
+LAMPTAB  oref$l421050oo_lmp.fits
+LAMPTAB  PEDIGREE=GROUND
+LAMPTAB  DESCRIP =Ground+Inflight Cal PT lamp, 3.8 & 10 mA
+LAMPTAB  DESCRIP =Ground Cal for non-PRISM, PT lamp 10 mA
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+Warning  Skipping current occulting bar ... \
+Warning  Peak of cross correlation is 0 of the expected value, \
+Warning  which is outside the allowed range 0.5 to 1.5
+Warning  Bar 1 could not be found.
+         shift of bar 2 is 16.803, weight = 0.97909
+         Shift in dispersion direction is -1.911 pixels.
+         Shift in spatial direction is 16.803 pixels.
+WAVECORR COMPLETE
+Imset 1  End 14:01:46 CDT
+
+End      02-May-2019 14:01:46 CDT
+
+*** CALSTIS-4 complete ***
+
+*** CALSTIS-12 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:46 CDT
+Wavecal  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs32030_new_w2d_tmp.fits
+Science  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs32030_new_flt.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:46 CDT
+         SHIFTA1 set to -1.91058
+         SHIFTA2 set to 16.8027
+Imset 1  End 14:01:46 CDT
+
+End      02-May-2019 14:01:46 CDT
+
+*** CALSTIS-12 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:46 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs32030_new_flt.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs32030_new_x2d.fits
+INFO     'D1' has been appended to aperture
+OBSMODE  TIME-TAG
+APERTURE 52X0.05D1
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:46 CDT
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+Order 1  Begin 14:01:46 CDT
+         Delta = 0.00708 arcsec.
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Offset relative to row 900
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/97 30/06/98
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+
+FLUXCORR PERFORM
+PHOTTAB  oref$26p1601ko_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 28/02/2000 21/11/2001
+PHOTTAB  DESCRIP =Echelle mode post-SM4 blaze function shift time coefficients updated
+PHOTTAB  DESCRIP =Bostroem Sensitivity of 01-Nov-2011
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/5/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+PCTAB    DESCRIP = 2 STIS observations averaged
+TDSTAB   oref$13a1941fo_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 08/11/2016
+TDSTAB   DESCRIP =Updated time and temperature sensitivities for all optical elements.
+FLUXCORR COMPLETE
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 14:01:46 CDT
+Imset 1  End 14:01:46 CDT
+
+End      02-May-2019 14:01:46 CDT
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-6 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:46 CDT
+2019122140146-I--------------- CALSTIS-6 started -------------------------------
+
+INFO     'D1' has been appended to aperture
+Warning  Grating-aperture throughput correction table (GACTAB) was not found,
+         and no gac corrections will be applied
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs32030_new_flt.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhs32030_new_x1d.fits
+Rootname odhs32030
+OBSMODE  TIME-TAG
+APERTURE 52X0.05D1
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+XTRACTAB oref$new_bg_1dx.fits
+XTRACTAB PEDIGREE=INFLIGHT 29/05/97
+XTRACTAB DESCRIP =Analysis from prop. 7064 and ground data
+XTRACTAB DESCRIP =Analysis from prop. 7064
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/1997 06/02/1999
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+
+Imset 1  Begin 14:01:46 CDT
+         Input read into memory.
+Order 1  Begin 14:01:46 CDT
+X1DCORR  PERFORM
+         Cross correlation offset: 970.939 pixels
+BACKCORR PERFORM
+BACKCORR COMPLETE
+X1DCORR  COMPLETE
+         Extraction box height = 11
+         Background box 1 height = 14 offset -13 from A2CENTER
+         Background box 2 height = 14 offset 13 from A2CENTER
+
+DISPCORR PERFORM
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Offset relative to row 900
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+         Delta = 0.00708 arcsec.
+DISPCORR COMPLETE
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+PHOTTAB  oref$26p1601ko_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 27/02/1997 10/01/2017
+PHOTTAB  DESCRIP =Echelle mode post-SM4 blaze function shift time coefficients updated
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/05/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+TDSTAB   oref$13a1941fo_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 08/11/2016
+TDSTAB   DESCRIP =Updated time and temperature sensitivities for all optical elements.
+FLUXCORR PERFORM
+FLUXCORR COMPLETE
+
+SGEOCORR OMIT
+
+         Row 1 written to disk.
+Order 1  End 14:01:46 CDT
+
+Imset 1  End 14:01:46 CDT
+
+Warning  Keyword `XTRACALG' is being added to header.
+End      02-May-2019 14:01:46 CDT
+
+*** CALSTIS-6 complete ***
+2019122140146-I--------------- CALSTIS-6 completed: ODHS32030 ------------------
+
+End      02-May-2019 14:01:46 CDT
+
+*** CALSTIS-0 complete ***
+
+*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:46 CDT
+
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/odhsf1010_raw.fits
+Outroot  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsf1010_new
+Wavecal  /home/david/work/muscles/trappist-1/hst/g140m_cals/test/od3v01020_wav.fits
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:46 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/odhsf1010_raw.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsf1010_new_flt.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 14:01:46 CDT
+         Heliocentric radial velocity = 30.014 (km/s)
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR PERFORM
+LORSCORR COMPLETE
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 14:01:46 CDT
+
+End      02-May-2019 14:01:46 CDT
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:46 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/test/od3v01020_wav.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsf1010_new_fwv_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 14:01:46 CDT
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR OMIT
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR OMIT
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 14:01:46 CDT
+
+End      02-May-2019 14:01:46 CDT
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:46 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsf1010_new_fwv_tmp.fits
+Output   /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsf1010_new_w2d_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:46 CDT
+
+Order 1  Begin 14:01:46 CDT
+         Delta = 0.00733 arcsec.
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$q8l14504o_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/97 30/06/98
+SPTRCTAB DESCRIP =New G140L traces and updated Echelle A2CENTER values
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 14:01:47 CDT
+Imset 1  End 14:01:47 CDT
+
+End      02-May-2019 14:01:47 CDT
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-4 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:47 CDT
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsf1010_new_w2d_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+         Wavecal parameters are: \
+         WL_TRIM1 = 0 \
+         WL_TRIM2 = 10 \
+         SP_TRIM1 = 10 \
+         SP_TRIM2 = 150 \
+         WL_RANGE = 103 \
+         SP_RANGE = 121
+
+Imset 1  Begin 14:01:47 CDT
+         Section to use for finding shift in dispersion direction: \
+             1:1201, 11:1191 \
+         Section to use for finding shift in spatial direction: \
+             11:1191, 151:1051 \
+         Image pixels are reference pixel size.
+
+WAVECORR PERFORM
+WCPTAB   oref$16j1600co_wcp.fits
+WCPTAB   PEDIGREE=INFLIGHT 09/11/1998 13/06/2017
+WCPTAB   DESCRIP =Force G140M and G230L SHIFTA2 into single-bar mode via SP_TRIM2.---
+WCPTAB   DESCRIP =TRIM values modified, WL_RANGE and SP_RANGE increased
+LAMPTAB  oref$l421050oo_lmp.fits
+LAMPTAB  PEDIGREE=GROUND
+LAMPTAB  DESCRIP =Ground+Inflight Cal PT lamp, 3.8 & 10 mA
+LAMPTAB  DESCRIP =Ground Cal for non-PRISM, PT lamp 10 mA
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+Warning  Skipping current occulting bar ... \
+Warning  Peak of cross correlation is 0 of the expected value, \
+Warning  which is outside the allowed range 0.5 to 1.5
+Warning  Bar 1 could not be found.
+         shift of bar 2 is 16.803, weight = 0.97909
+         Shift in dispersion direction is -1.911 pixels.
+         Shift in spatial direction is 16.803 pixels.
+WAVECORR COMPLETE
+Imset 1  End 14:01:47 CDT
+
+End      02-May-2019 14:01:47 CDT
+
+*** CALSTIS-4 complete ***
+
+*** CALSTIS-12 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 14:01:47 CDT
+Wavecal  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsf1010_new_w2d_tmp.fits
+Science  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/new_extraction/odhsf1010_new_flt.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.05
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 14:01:47 CDT
+         SHIFTA1 set to -1.91058
+         SHIFTA2 set to 16.8027
+Imset 1  End 14:01:47 CDT
+
+End      02-May-2019 14:01:47 CDT
+
+*** CALSTIS-12 complete ***
