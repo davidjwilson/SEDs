@@ -1,0 +1,36 @@
+
+*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 10:55:56 CDT
+
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/test/od3v02010_raw.fits
+Outroot  /home/david/work/muscles/trappist-1/hst/g140m_cals/test/new_x1ds/new
+Wavecal  od3v02010_wav.fits
+         HSTIO error 114:  Filename od3v02010_wav.fits EXTNAME  EXTVER 0 CFITSIO status 104
+failed to find or open the following file: (ffopen)od3v02010_wav.fits[0]
+Error opening image array.
+         Open failed.
+calstis0 failed.
+
+*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 10:55:56 CDT
+
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/test/od3v01020_raw.fits
+Outroot  /home/david/work/muscles/trappist-1/hst/g140m_cals/test/new_x1ds/new
+Wavecal  od3v01020_wav.fits
+         HSTIO error 114:  Filename od3v01020_wav.fits EXTNAME  EXTVER 0 CFITSIO status 104
+failed to find or open the following file: (ffopen)od3v01020_wav.fits[0]
+Error opening image array.
+         Open failed.
+calstis0 failed.
+
+*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-May-2019 10:55:56 CDT
+
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/test/od3v01010_raw.fits
+Outroot  /home/david/work/muscles/trappist-1/hst/g140m_cals/test/new_x1ds/new
+Wavecal  od3v01010_wav.fits
+         HSTIO error 114:  Filename od3v01010_wav.fits EXTNAME  EXTVER 0 CFITSIO status 104
+failed to find or open the following file: (ffopen)od3v01010_wav.fits[0]
+Error opening image array.
+         Open failed.
+calstis0 failed.
