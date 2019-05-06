@@ -1,0 +1,9 @@
+
+*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    06-May-2019 11:33:10 CDT
+
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/odhs08020_x2d.fits
+Outroot  odhs08020_2d_check
+Warning  WAVECAL was specified, but WAVECORR is not PERFORM.
+ERROR    Input file was already rectified (x2d).
+calstis0 failed.
