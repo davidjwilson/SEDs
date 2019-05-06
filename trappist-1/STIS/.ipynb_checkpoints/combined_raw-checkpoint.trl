@@ -1,0 +1,11 @@
+
+*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    06-May-2019 13:39:52 CDT
+
+Input    /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/combined_raw.fits
+Outroot  combined_raw_x1d
+Wavecal  /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/od3v01020_wav.fits
+Warning  XTRACTAB `n7p10323o_1dx.fits' not found or can't open.
+ERROR    One reference file was missing.
+         Calibration file(s) missing.
+calstis0 failed.
