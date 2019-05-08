@@ -21,12 +21,13 @@ plt.subplots_adjust(top = 0.95, right = 0.99, left = 0.07, bottom = 0.11)
 #file_locations
 filepaths = {'xmm':'/xmm/Trappist-1.fits',
              'cos_g130m':'/COS/TRAPPIST1_G130M_Mm1_NOSCL_10dec2018.sav',
+             'lya':'/combined/bourrier_lya.txt',
              'cos_g160m':'/COS/TRAPPIST1_G160M_3orb_Mm1_NOSCL_09dec2018.sav',
              'cos_g230l': '/COS/ldlm42010_x1dsum.fits',
              'stis_g140m':'/STIS/TRAPPIST-1_G140M_mean.ecsv',
              'stis_g430l':'/STIS/odlm41010_sx1.fits',
              'phoenix':'/optical/unscaled_02560-5.00-0.0_phoenix_trappist-1.ecsv',
-             'phoenix_wave' :'/optical/WAVE_PHOENIX-ACES-AGSS-COND-2011.fits' }
+             'phoenix_wave' :'/optical/WAVE_PHOENIX-ACES-AGSS-COND-2011.fits'}
 
 
 #COS
@@ -46,8 +47,8 @@ g160m_start, g160m_end, totals = sc.make_section(totals, g160m_data, mask =mask)
 
 #lya 
 g140m_normfac = 1.0 #to do - calculate scales in spectra_combine
-#lya_data = sc.read_lyamod(path+filepaths['lya'])
-#lya_start, lya_end,totals = sc.make_section(totals, lya_data, normfac=g140m_normfac)
+lya_data = sc.read_lyamod(path+filepaths['lya'])
+lya_start, lya_end,totals = sc.make_section(totals, lya_data, normfac=g140m_normfac)
 
 #G140M
 #g140m_data = sc.read_ecsv(path+filepaths['stis_g140m'])
@@ -67,7 +68,7 @@ gap_start, gap_end, totals = sc.make_section(totals, gap_data)
 g430l_data = sc.read_stis_ccd(path+filepaths['stis_g430l'])
 w = g430l_data['w']
 g430l_clip = [0,-1]
-mask = (w > g230l_end) & (w < 5321) | (w > 5325) & (w < 5476.5) | (w > 5480.5) #cutting out overlap and cosmics
+mask = (w > g230l_end) & (w < 3345) | (w > 3361) & (w < 5321) | (w > 5325) & (w < 5476.5) | (w > 5480.5) #cutting out overlap and cosmics
 g430l_start, g430l_end, totals = sc.make_section(totals, g430l_data, mask =mask, clip = g430l_clip)
 
 #phoenix
@@ -86,13 +87,13 @@ mask = (w > xmm_end)
 apec_start, apec_end, totals = sc.make_section(totals, apec_data, mask=mask)
 
 #euv
-#lya_flux = 2.06e-12
-#lya_flux *= g140m_normfac
-#distance = 4.54 #pc
-#euv_data = sc.make_euv(lya_flux, distance)
-#w = euv_data['w']
-#mask = (w > apec_end) & (w < g130m_start)
-#euv_start, euv_end, totals = sc.make_section(totals, euv_data, mask=mask)
+lya_flux = 8e-15
+lya_flux *= g140m_normfac
+distance = 12.1 #pc
+euv_data = sc.make_euv(lya_flux, distance)
+w = euv_data['w']
+mask = (w > apec_end) & (w < g130m_start)
+euv_start, euv_end, totals = sc.make_section(totals, euv_data, mask=mask)
 
 #plt.xscale('log')
 #plt.yscale('log')
