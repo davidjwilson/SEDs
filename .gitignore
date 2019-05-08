@@ -1,5 +1,5 @@
 #ignore big ecsv files
 gj_674/combined/gj_674_sed_var_res_v2.ecsv
-
+trappist-1/combined/trappist-1_sed_var_res_blya.ecsv
 #ignore fits files
 *x2d.fits
