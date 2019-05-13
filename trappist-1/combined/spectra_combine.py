@@ -11,6 +11,7 @@ import instruments as inst #pl's istrument code, might just make a function here
 from astropy.time import Time
 from linsky_euv import euv_estimator
 from astropy.units import cds
+from craftroom import resample
 cds.enable()
 
 """
@@ -314,7 +315,7 @@ def make_euv(lya, distance):
     euv_collection = dict_builder(w0, w1, w, f, e, dq, exptime, expstart, expend, instrument_code)
     return euv_collection
                                                                 
-def save_to_ecsv(totals, names, star, version, save_path = ''):
+def save_to_ecsv(totals, names, star, version, save_path = '', save_1A = False):
     """
     saves the completed spectrum to an ecsv file. No bolflux for now.
     names = ['WAVELENGTH','WAVELENGTH0', 'WAVELENGTH1','FLUX','ERROR','EXPTIME',
@@ -326,11 +327,29 @@ def save_to_ecsv(totals, names, star, version, save_path = ''):
                   totals[9], totals[10]],
                 names=names)
     ascii.write(data, star+'_sed_var_res_'+version+'.ecsv', format = 'ecsv', overwrite=True)
+    if save_1A == True:
+        save_1A(totals, names, star, version, save_path = '')
+        
+def save_basic(totals, names, star, version, save_path = '', save_1A = False):
+    """
+    save just wavelength, flux, error to an ascii file.
+    """
+    data = Table([totals[0]*u.AA, 
+                  totals[3]*u.erg/u.s/u.AA/u.cm**2, totals[4]*u.erg/u.s/u.AA/u.cm**2],
+                names=[names[0], names[3], names[4]])
+    ascii.write(data, star+'_basic_sed_var_res_'+version+'.ecsv', format = 'ecsv', overwrite=True)
+   
     
-    #data = Table([w_full*u.AA, f_full*u.erg/u.cm**2/u.s/u.AA, e_full*u.erg/u.cm**2/u.s/u.AA, n_full], names = ['WAVELENGTH', 'FLUX', 'ERROR', 'NORMFAC'] )
-#ascii.write(data, 'gj674_data+models_v1.ecsv', delimiter=',', format='ecsv', overwrite=True)
 
-    
+def save_1A(totals, names, star, version, save_path = ''):
+    """
+    Saves a spectrum binned to 1A using ZBT's craftroom.resample module
+    """
+    w, f = resample.bintogrid(totals[0],totals[3],  dx=1.0)
+    w, e = resample.bintogrid(totals[0],totals[4],  dx=1.0)
+    w0, w1 = wavelength_edges(w)
+    #need to dig around in Parke's scripts for the rest of it
+
 """
 Information I need to provide for each spectrum:
 -where to get the data

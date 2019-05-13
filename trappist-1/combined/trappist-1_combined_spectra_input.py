@@ -103,6 +103,8 @@ plt.axhline(0, ls='--', c='k')
 
 totals = sc.sort_totals(totals)
 
-sc.save_to_ecsv(totals, names, star, 'blya')
+#sc.save_to_ecsv(totals, names, star, 'blya')
+
+sc.save_basic(totals, names, star, 'v01')
 
 plt.show()

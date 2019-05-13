@@ -315,7 +315,7 @@ def make_euv(lya, distance):
     euv_collection = dict_builder(w0, w1, w, f, e, dq, exptime, expstart, expend, instrument_code)
     return euv_collection
                                                                 
-def save_to_ecsv(totals, names, star, version, save_path = '', save_1A =False):
+def save_to_ecsv(totals, names, star, version, save_path = '', save_1A = False):
     """
     saves the completed spectrum to an ecsv file. No bolflux for now.
     names = ['WAVELENGTH','WAVELENGTH0', 'WAVELENGTH1','FLUX','ERROR','EXPTIME',
@@ -327,8 +327,18 @@ def save_to_ecsv(totals, names, star, version, save_path = '', save_1A =False):
                   totals[9], totals[10]],
                 names=names)
     ascii.write(data, star+'_sed_var_res_'+version+'.ecsv', format = 'ecsv', overwrite=True)
-    if save_1A = True:
+    if save_1A == True:
         save_1A(totals, names, star, version, save_path = '')
+        
+def save_basic(totals, names, star, version, save_path = '', save_1A = False):
+    """
+    save just wavelength, flux, error to an ascii file.
+    """
+    data = Table([totals[0]*u.AA, 
+                  totals[3]*u.erg/u.s/u.AA/u.cm**2, totals[4]*u.erg/u.s/u.AA/u.cm**2],
+                names=[names[0], names[3], names[4]])
+    ascii.write(data, star+'_basic_sed_var_res_'+version+'.ecsv', format = 'ecsv', overwrite=True)
+   
     
 
 def save_1A(totals, names, star, version, save_path = ''):
