@@ -1,0 +1,10 @@
+# %ECSV 0.9
+# ---
+# datatype:
+# - name: ROOTNAME
+#   datatype: string
+# - name: A2CENTER
+#   datatype: float64
+# schema: astropy-2.0
+ROOTNAME A2CENTER
+oddv01030 392.99525428910374
