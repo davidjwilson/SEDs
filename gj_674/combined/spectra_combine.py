@@ -50,7 +50,7 @@ def add_spec(totals, additions):
 
 def sort_totals(totals):
     """sorts totals array by wavelength"""
-    arr1inds = totals[2].argsort()
+    arr1inds = totals[0].argsort()
     totals = [t[arr1inds] for t in totals]
     #for t in totals:
      #   t = t[arr1inds]
