@@ -298,7 +298,8 @@ def nuv_fill(data):
     """
     w1, f1 = data[0]['WAVELENGTH'][data[0]['DQ']==0], data[0]['FLUX'][data[0]['DQ']==0]
     w2, f2 = data[1]['WAVELENGTH'][data[1]['DQ']==0], data[1]['FLUX'][data[1]['DQ']==0]
-    end_w, end_f = np.concatenate((w1,w2)), np.concatenate((f1,f2))
+    mgii_mask = (w2 < 2790)|(w2 > 2805) #remove mgii line
+    end_w, end_f = np.concatenate((w1,w2[mgii_mask])), np.concatenate((f1,f2)[mgii_mask])
     gap_w = np.arange(w1[-1],w2[0], 1.0)
     gap_f = np.polyval((np.polyfit(end_w,end_f,2)), gap_w)
     return gap_w, gap_f
