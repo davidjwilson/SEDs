@@ -152,7 +152,7 @@ for i in range(len(plotlines)):
    # else:
     #    lines_model = lines_model + gg_fit
 for a,b, c, d in zip(plot_name,lines,gauss_int,gauss_e):
-    print(a,b,c,d)
+    print(a,'&',b,'&',c*100,'$\pm$',d*100,'\\\\')
 
 #print(gauss_e)
 savdat = Table([plot_name, lines, gauss_int, gauss_e, np.array(line_edges)[:,0], np.array(line_edges)[:,1]], names = ['Species', 'lambda', 'int_flux', 'int_error', 'blue_edge', 'red_edge'])
