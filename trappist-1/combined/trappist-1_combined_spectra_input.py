@@ -27,7 +27,8 @@ filepaths = {'xmm':'/xmm/Trappist-1.fits',
              'stis_g140m':'/STIS/TRAPPIST-1_G140M_mean.ecsv',
              'stis_g430l':'/STIS/odlm41010_sx1.fits',
              'phoenix':'/optical/unscaled_02560-5.00-0.0_phoenix_trappist-1.ecsv',
-             'phoenix_wave' :'/optical/WAVE_PHOENIX-ACES-AGSS-COND-2011.fits'}
+             'phoenix_wave' :'/optical/WAVE_PHOENIX-ACES-AGSS-COND-2011.fits',
+             'dem': '/dem/trappist-1_dem_spectra.fits'}
 
 
 #COS
@@ -87,16 +88,22 @@ mask = (w > xmm_end)
 apec_start, apec_end, totals = sc.make_section(totals, apec_data, mask=mask)
 
 #euv
-lya_flux = 8e-15
-lya_flux *= g140m_normfac
-distance = 12.1 #pc
-euv_data = sc.make_euv(lya_flux, distance)
-w = euv_data['w']
-mask = (w > apec_end) & (w < g130m_start)
-euv_start, euv_end, totals = sc.make_section(totals, euv_data, mask=mask)
+#lya_flux = 8e-15
+#lya_flux *= g140m_normfac
+#distance = 12.1 #pc
+#euv_data = sc.make_euv(lya_flux, distance)
+#w = euv_data['w']
+#mask = (w > apec_end) & (w < g130m_start)
+#euv_start, euv_end, totals = sc.make_section(totals, euv_data, mask=mask)
 
-#plt.xscale('log')
-#plt.yscale('log')
+#dem
+dem_data = sc.read_dem(path+filepaths['dem'])
+w = dem_data['w']
+mask = (w > apec_end) & (w < g130m_start)
+dem_start, dem_end, totals = sc.make_section(totals, dem_data, mask=mask)
+
+plt.xscale('log')
+plt.yscale('log')
 plt.xlabel('Wavelength (\AA)', size=20)
 plt.ylabel('Flux (erg s$^{-1}$cm$^{-2}$\AA$^{-1}$)', size=20)
 plt.axhline(0, ls='--', c='k')
@@ -105,6 +112,6 @@ totals = sc.sort_totals(totals)
 
 #sc.save_to_ecsv(totals, names, star, 'blya')
 
-sc.save_basic(totals, names, star, 'v01')
+sc.save_basic(totals, names, star, 'v02')
 
 plt.show()

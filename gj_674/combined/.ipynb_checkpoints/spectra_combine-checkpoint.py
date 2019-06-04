@@ -299,7 +299,7 @@ def nuv_fill(data):
     w1, f1 = data[0]['WAVELENGTH'][data[0]['DQ']==0], data[0]['FLUX'][data[0]['DQ']==0]
     w2, f2 = data[1]['WAVELENGTH'][data[1]['DQ']==0], data[1]['FLUX'][data[1]['DQ']==0]
     mgii_mask = (w2 < 2790)|(w2 > 2805) #remove mgii line
-    end_w, end_f = np.concatenate((w1,w2[mgii_mask])), np.concatenate((f1,f2)[mgii_mask])
+    end_w, end_f = np.concatenate((w1,w2[mgii_mask])), np.concatenate((f1,f2[mgii_mask]))
     gap_w = np.arange(w1[-1],w2[0], 1.0)
     gap_f = np.polyval((np.polyfit(end_w,end_f,2)), gap_w)
     return gap_w, gap_f
@@ -315,6 +315,22 @@ def make_euv(lya, distance):
     instrument_code = inst.getinsti('mod_euv_young')
     euv_collection = dict_builder(w0, w1, w, f, e, dq, exptime, expstart, expend, instrument_code)
     return euv_collection
+
+def read_dem(filepath):
+    """
+    adds a dem model to the EUV
+    """
+    data = fits.getdata(filepath,1)
+    w, bin_f, bin_e = data['Wavelength'], data['Bin-Integrated Flux'], data['Error']
+    w0, w1 = wavelength_edges(w)
+    f, e = bin_f/(w1-w0), bin_e/(w1-w0) #convert from bin-intergrated flux to flux 
+    w, f, e = resample.bintogrid(w, f, unc=e, dx=1.0) #upsample to 1A 
+    w0, w1 = wavelength_edges(w) #remake bin edges
+    dq, exptime = np.zeros(len(w)), np.zeros(len(w))
+    expstart, expend = 0., 0.
+    instrument_code = inst.getinsti('oth_---_other')
+    dem_collection = dict_builder(w0, w1, w, f, e, dq, exptime, expstart, expend, instrument_code)
+    return dem_collection
                                                                 
 def save_to_ecsv(totals, names, star, version, save_path = '', save_1A = False):
     """
