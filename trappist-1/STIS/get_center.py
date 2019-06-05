@@ -34,8 +34,9 @@ for flt in flts:
     #if rootname in o_roots:
     roots.append(rootname)
     data = fits.getdata(flt,1)
-    fig = plt.figure(rootname, figsize=(10,10))
+    fig = plt.figure(rootname, figsize=(13,13))
     plt.imshow(data, cmap=cm.gray_r, norm = LogNorm())
+    plt.tight_layout()
     #plt.axhline(500, c='r', ls ='--')
     #plt.xlim(300, 600)
     #plt.ylim(350,650)
