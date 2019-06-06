@@ -28,7 +28,7 @@ flts = glob.glob(path +'*flt.fits')
 roots = []
 o_roots = ['od3v02010', 'od3v03010', 'od3v01020', 'od3v01010']
 i = 1
-for flt in flts:
+for flt in flts[0:1]:
     print(i)
     rootname = fits.getheader(flt,0)['ROOTNAME']
     #if rootname in o_roots:
