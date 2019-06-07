@@ -7,28 +7,30 @@ from astropy.io import ascii
 from pylab import cm  
 from matplotlib.colors import LogNorm
 
-x1, x2 = [], []
+y1, y2, x1 = [], [], []
 
 def on_key(event):
-    global x1, x2
+    global y1, y2, x1
     if event.key == 'w':
-        x1.append(event.ydata)
-        x2.append(0.0)
-        print('%.3f' %event.ydata)
+        y1.append(event.ydata)
+        y2.append(0.0)
+        x1.append(event.xdata)
+        print('%.3f' %event.xdata, '%.3f' %event.ydata)
         plt.close()
     if event.key == 'e':
-        x2.append(event.ydata)
-        x1.append(0.0)
-        print('%.3f' %event.ydata)
+        y2.append(event.ydata)
+        y1.append(0.0)
+        x1.append(event.xdata)
+        print('%.3f' %event.xdata, '%.3f' %event.ydata)
         plt.close()
     
 path = '/home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/'
 flts = glob.glob(path +'*flt.fits')
 
 roots = []
-o_roots = ['od3v02010', 'od3v03010', 'od3v01020', 'od3v01010']
+#o_roots = ['od3v02010', 'od3v03010', 'od3v01020', 'od3v01010']
 i = 1
-for flt in flts[0:1]:
+for flt in flts:
     print(i)
     rootname = fits.getheader(flt,0)['ROOTNAME']
     #if rootname in o_roots:
@@ -47,5 +49,5 @@ for flt in flts[0:1]:
     i+=1
 
     
-savedat = Table([roots, x1, x2], names=['ROOTNAME', 'A2CENTER', 'UNCERTAIN'])
+savedat = Table([roots, x1, y1, y2], names=['ROOTNAME', 'XCOL', 'A2CENTER', 'UNCERTAIN'])
 ascii.write(savedat, 'new_trace_centers.ecsv', format='ecsv', overwrite=True)
