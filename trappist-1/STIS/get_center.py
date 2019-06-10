@@ -30,7 +30,7 @@ flts = glob.glob(path +'*flt.fits')
 roots = []
 #o_roots = ['od3v02010', 'od3v03010', 'od3v01020', 'od3v01010']
 i = 1
-for flt in flts:
+for flt in flts[0:5]:
     print(i)
     rootname = fits.getheader(flt,0)['ROOTNAME']
     #if rootname in o_roots:
@@ -49,5 +49,5 @@ for flt in flts:
     i+=1
 
     
-savedat = Table([roots, x1, y1, y2], names=['ROOTNAME', 'XCOL', 'A2CENTER', 'UNCERTAIN'])
-ascii.write(savedat, 'new_trace_centers.ecsv', format='ecsv', overwrite=True)
+#savedat = Table([roots, x1, y1, y2], names=['ROOTNAME', 'XCOL', 'A2CENTER', 'UNCERTAIN'])
+#ascii.write(savedat, 'new_trace_centers.ecsv', format='ecsv', overwrite=True)
