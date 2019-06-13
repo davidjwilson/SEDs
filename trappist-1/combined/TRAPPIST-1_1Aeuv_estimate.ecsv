@@ -1,12 +1,8 @@
 # %ECSV 0.9
 # ---
 # datatype:
-# - name: WAVELENGTH
-#   unit: Angstrom
-#   datatype: float64
-# - name: FLUX
-#   unit: erg / (cm2 s)
-#   datatype: float64
+# - {name: WAVELENGTH, unit: Angstrom, datatype: float64}
+# - {name: FLUX, unit: erg / (cm2 s), datatype: float64}
 # delimiter: ','
 # schema: astropy-2.0
 WAVELENGTH,FLUX

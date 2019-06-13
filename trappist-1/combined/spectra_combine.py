@@ -12,6 +12,7 @@ from astropy.time import Time
 from linsky_euv import euv_estimator
 from astropy.units import cds
 from craftroom import resample
+from scipy.interpolate import interp1d
 cds.enable()
 
 """
@@ -316,6 +317,15 @@ def make_euv(lya, distance):
     euv_collection = dict_builder(w0, w1, w, f, e, dq, exptime, expstart, expend, instrument_code)
     return euv_collection
 
+def dem_to_1A(w,f):
+    """
+    Converts a DEM model at 5A resolution to 1A resolution
+    """
+    w1 = np.arange(w[0], w[-1], 1.)
+    f1 = interp1d(w, f, fill_value='extrapolate', kind='nearest')(w1)
+    return w1, f1
+
+
 def read_dem(filepath):
     """
     adds a dem model to the EUV
@@ -323,10 +333,10 @@ def read_dem(filepath):
     data = fits.getdata(filepath,1)
     w, bin_f, bin_e = data['Wavelength'], data['Bin-Integrated Flux'], data['Error']
     w0, w1 = wavelength_edges(w)
-    f, e = bin_f/(w1-w0), bin_e/(w1-w0) #convert from bin-intergrated flux to flux 
-    w, f, e = resample.bintogrid(w, f, unc=e, dx=1.0) #upsample to 1A 
+    f = bin_f/(w1-w0) #convert from bin-intergrated flux to flux 
+    w, f = dem_to_1A(w,f)
     w0, w1 = wavelength_edges(w) #remake bin edges
-    dq, exptime = np.zeros(len(w)), np.zeros(len(w))
+    e, dq, exptime = np.zeros(len(w)), np.zeros(len(w)), np.zeros(len(w))
     expstart, expend = 0., 0.
     instrument_code = inst.getinsti('oth_---_other')
     dem_collection = dict_builder(w0, w1, w, f, e, dq, exptime, expstart, expend, instrument_code)
