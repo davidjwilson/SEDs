@@ -11,7 +11,8 @@ from astropy.time import Time
 import spectra_combine as sc
 
 
-names, totals = sc.totals_setup()
+
+totals = sc.totals_setup()
 star = 'gj_674' #as it appears in the filepath
 path = '/home/david/work/muscles/SEDs/'+star
 
@@ -78,8 +79,9 @@ g430l_start, g430l_end, totals = sc.make_section(totals, g430l_data, mask =mask,
 #phoenix
 phoenix_normfac = 3.19143165e-26
 phx_data = sc.read_phoenix(path+filepaths['phoenix'], path+filepaths['phoenix_wave'])
-w = phx_data['w']
-mask = (w > g430l_end)
+phw = phx_data['w']
+phf = phx_data['f']
+mask = (phw > g430l_end)
 phx_start, phx_end, totals = sc.make_section(totals, phx_data, mask=mask, normfac=phoenix_normfac)
 
 #xmm and apec
@@ -106,6 +108,11 @@ plt.axhline(0, ls='--', c='k')
 
 totals = sc.sort_totals(totals)
 
-#sc.save_to_ecsv(totals, names, star, 'v2')
+#bolometric flux
+teff = 3400*u.K
+bolometric_flux, bf, be = sc.calculate_bolometric_flux(teff, totals, phw, phf, phoenix_normfac)
+
+
+sc.save_to_ecsv(totals, bf, be, star, 'v3')
 
 plt.show()

@@ -14,15 +14,11 @@ from astropy.units import cds
 from craftroom import resample
 from scipy.interpolate import interp1d
 from astropy.modeling.blackbody import blackbody_lambda
-import astropy.constants as const
+
 cds.enable()
 
 """
 v2 20190501
-v3 20190621, bolometric flux included, names removed as a global
-
-authour: David J Wilson
-
 Script to make Mega-Muscles spectra. Will develop over time.
 
 objectives for this version
@@ -65,15 +61,15 @@ def sort_totals(totals):
     
 def totals_setup():
     """set up arrays to keep running totals of data"""
-    #names = ['WAVELENGTH','WAVELENGTH0', 'WAVELENGTH1','FLUX','ERROR','EXPTIME',
-     #        'DQ','EXPSTART','EXPEND','INSTRUMENT','NORMFAC']#,'BOLOFLUX' ,'BOLOERR'] #bolos are done when spectrum is compleate
+    names = ['WAVELENGTH','WAVELENGTH0', 'WAVELENGTH1','FLUX','ERROR','EXPTIME',
+             'DQ','EXPSTART','EXPEND','INSTRUMENT','NORMFAC']#,'BOLOFLUX' ,'BOLOERR'] #bolos are done when spectrum is compleate
     totals = []
     i = 0
-    while i < 11:
+    while i < len(names):
         totals.append([])
         i += 1
     totals = np.array(totals, dtype = float)
-    return totals
+    return names, totals
 
 def make_section(totals, data, mask =[], normfac=1.0, clip=[], plot=True):
     """
@@ -348,30 +344,28 @@ def read_dem(filepath):
     dem_collection = dict_builder(w0, w1, w, f, e, dq, exptime, expstart, expend, instrument_code)
     return dem_collection
                                                                 
-def save_to_ecsv(totals, bolo_flux, bolo_error, star,  version, save_path = '', save_1A = False):
+def save_to_ecsv(totals, names, star, version, save_path = '', save_1A = False):
     """
     saves the completed spectrum to an ecsv file. No bolflux for now.
     names = ['WAVELENGTH','WAVELENGTH0', 'WAVELENGTH1','FLUX','ERROR','EXPTIME',
              'DQ','EXPSTART','EXPEND','INSTRUMENT','NORMFAC','BOLOFLUX' ,'BOLOERR']
     """
-    names = ['WAVELENGTH','WAVELENGTH0', 'WAVELENGTH1','FLUX','ERROR','EXPTIME',
-             'DQ','EXPSTART','EXPEND','INSTRUMENT','NORMFAC','BOLOFLUX' ,'BOLOERR']
     data = Table([totals[0]*u.AA, totals[1]*u.AA, totals[2]*u.AA, 
                   totals[3]*u.erg/u.s/u.AA/u.cm**2, totals[4]*u.erg/u.s/u.AA/u.cm**2,
                   totals[5]*u.s, totals[6], totals[7]*cds.MJD, totals[8]*cds.MJD,
-                  totals[9], totals[10], bolo_flux, bolo_error],
+                  totals[9], totals[10]],
                 names=names)
     ascii.write(data, star+'_sed_var_res_'+version+'.ecsv', format = 'ecsv', overwrite=True)
     if save_1A == True:
         save_1A(totals, names, star, version, save_path = '')
         
-def save_basic(totals, star, version, save_path = '', save_1A = False):
+def save_basic(totals, names, star, version, save_path = '', save_1A = False):
     """
     save just wavelength, flux, error to an ascii file.
     """
     data = Table([totals[0]*u.AA, 
                   totals[3]*u.erg/u.s/u.AA/u.cm**2, totals[4]*u.erg/u.s/u.AA/u.cm**2],
-                names=['WAVELENGTH', 'FLUX', 'ERROR'])
+                names=[names[0], names[3], names[4]])
     ascii.write(data, star+'_basic_sed_var_res_'+version+'.ecsv', format = 'ecsv', overwrite=True)
    
     
@@ -396,20 +390,15 @@ def bb_correct(teff, w_phoenix, f_phoenix):
     flux_correct = (bolometric_flux.value * scale.value) - int_phoenix
     return flux_correct    
 
-def calculate_bolometric_flux(teff, totals, w_phoenix, f_phoenix, normfac):
+def bolometric flux(teff, w, f, w_phoenix, f_phoenix, normfac):
     """
-    Calculates the bolometric flux. w, f are the full sed- this is the last step 
+    Caculates the bolometric flux. w, f are the full sed- this is the last step 
     """
-    w, f, e = totals[0], totals[3], totals[4]
     flux_correction =  bb_correct(teff, w_phoenix, f_phoenix*normfac)
     integrated_sed = np.trapz(f[np.isnan(f) == False], w[np.isnan(f) == False])
     bolometric_flux = integrated_sed + flux_correction
-    bolometric_normalised_flux = f/bolometric_flux
-    bolometric_error = np.zeros(len(e))
-    for i in range(len(e)):
-        if e[i] > 0:
-            bolometric_error[i] = (e[i]/f[i]) * bolometric_normalised_flux[i]
-    return bolometric_flux, bolometric_normalised_flux, bolometric_error
+    normalised_flux = f/bolometric_flux
+    return normalised_flux, bolometric_flux
 
 
 """
