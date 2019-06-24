@@ -359,7 +359,7 @@ def save_to_ecsv(totals, bolo_flux, bolo_error, star,  version, save_path = '', 
     data = Table([totals[0]*u.AA, totals[1]*u.AA, totals[2]*u.AA, 
                   totals[3]*u.erg/u.s/u.AA/u.cm**2, totals[4]*u.erg/u.s/u.AA/u.cm**2,
                   totals[5]*u.s, totals[6], totals[7]*cds.MJD, totals[8]*cds.MJD,
-                  totals[9], totals[10], bolo_flux, bolo_error],
+                  totals[9], totals[10], bolo_flux*1/u.AA, bolo_error*1/u.AA],
                 names=names)
     ascii.write(data, star+'_sed_var_res_'+version+'.ecsv', format = 'ecsv', overwrite=True)
     if save_1A == True:
