@@ -144,7 +144,7 @@ def read_idl(filepath):
     w0, w1 = wavelength_edges(w)
     instrument_list = np.unique(data['grating'])
     instruments = np.array([('hst_cos_'+str(i)[2:-1].lower()) for i in instrument_list])
-    instrument_code = np.sum([inst.getinsti(i) for i in instrument_list])
+    instrument_code = np.sum([inst.getinsti(i) for i in instruments])
     expstart, expend = 0, 0 #not in idl, placeholder.
     idl_collection = dict_builder(w0, w1, w, f, e, dq, exptime, expstart, expend, instrument_code)
     return idl_collection
@@ -166,7 +166,7 @@ def read_stis_x1d(filepath):
     hdul.close()
     return stis_x1d_collection
 
-def read_ecsv(filepath):
+def read_ecsv(filepath, instrument):
     """
     reads an escv with a coadded spectrum. Not much in these yet, need to improve.
     """
@@ -174,7 +174,8 @@ def read_ecsv(filepath):
     w, f, e, dq = data['WAVELENGTH'], data['FLUX'], data['ERROR'], data['DQ']
     w0, w1 = wavelength_edges(w)
     #needs everything else!
-    ecsv_collection =  dict_builder(w0, w1, w, f, e, dq, np.zeros(len(w)), 0.,0, 0)
+    instrument_code = inst.getinsti(instrument.lower())
+    ecsv_collection =  dict_builder(w0, w1, w, f, e, dq, np.zeros(len(w)), 0.,0, instrument_code)
     return ecsv_collection
     
 def read_xmm(filepath):

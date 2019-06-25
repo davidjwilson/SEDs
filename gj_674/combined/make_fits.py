@@ -25,8 +25,7 @@ def data_header(hdr):
     TDESC7  = 'data quality flags (HST data only)'                                  
     TDESC8  = 'modified julian date of start of first exposure'                     
     TDESC9  = 'modified julian date of end of last exposure'                        
-    TDESC10 = 'bitmask identifying the source instrument(s). See "instlgnd" &'      
-    #CONTINUE  'extension for a legend.'                                             
+    TDESC10 = 'bitmask identifying the source instrument(s). See "instlgnd" & extension for a legend.'                                             
     TDESC11 = 'normalization factor applied to the source spectrum'                 
     TDESC12 = 'flux density normalized by the bolometric flux'                      
     TDESC13 = 'error on bolometrically-normalized flux density'
@@ -44,7 +43,7 @@ def data_header(hdr):
                    'data quality flags (HST data only)',
                    'modified julian date of start of first exposure',
                    'modified julian date of end of last exposure',
-                   'bitmask identifying the source instrument(s). See "instlgnd" &',
+                   'bitmask identifying the source instrument(s). See "instlgnd" & extension for a legend.',
                    'normalization factor applied to the source spectrum',
                    'flux density normalized by the bolometric flux',
                    'error on bolometrically-normalized flux density')
@@ -53,11 +52,18 @@ def data_header(hdr):
     return hdr
 
 
-def data_table(table):
+def make_data_ext(table):
     """
     The table extension, takes an astroy table 
     """
     hdu = fits.table_to_hdu(table)
     hdu.header = data_header(hdu.header)
-    
     return hdu
+
+def make_primary_ext():
+    """
+    Make the primary header
+    """
+    hdr = fits.Header()
+    primary_hdu = fits.PrimaryHDU(header=hdr)
+    return primary_hdu

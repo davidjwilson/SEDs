@@ -11,7 +11,7 @@ instruments = ['hst_cos_g130m','hst_cos_g160m','hst_cos_g230l','hst_sts_g140m','
                'hst_sts_e230h','hst_sts_g230l','hst_sts_g430l','hst_sts_g430m','mod_gap_fill-',
                'xmm_epc_multi','xmm_epc_pn---', 'cxo_acs_-----', 'mod_euv_young', 'mod_apc_-----',
                'mod_lya_young','mod_phx_-----', 'oth_---_other', 'hst_sts_g230lb', 'hst_sts_g750l', 'hst_fos_g570h',
-               'hst_fos_g780h', 'hst_cos_g140l']
+               'hst_fos_g780h', 'hst_cos_g140l', 'hst_sts_g140l']
 instvals = [2**i for i in range(len(instruments))]
 default_order = ['hst_cos_g130m','hst_cos_g160m','hst_cos_g230l','hst_sts_g140m','hst_sts_e140m','hst_sts_e230m',
                  'hst_sts_e230h','hst_sts_g230l', 'hst_sts_g230lb', 'xmm_epc_multi','xmm_epc_pn---', 'cxo_acs_-----',

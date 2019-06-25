@@ -46,7 +46,7 @@ lya_data = sc.read_lyamod(path+filepaths['lya'])
 lya_start, lya_end,totals = sc.make_section(totals, lya_data, normfac=g140m_normfac)
 
 #G140M
-g140m_data = sc.read_ecsv(path+filepaths['stis_g140m'])
+g140m_data = sc.read_ecsv(path+filepaths['stis_g140m'], 'hst_sts_g140m')
 w = g140m_data['w']
 mask = (w >lya_edges[0])&(w <lya_start)|(w >lya_end)&(w < lya_edges[1]) #include just bits not co
 g140m_start, g140m_end, totals = sc.make_section(totals, g140m_data, mask =mask, normfac=g140m_normfac)
