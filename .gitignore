@@ -4,5 +4,6 @@ trappist-1/combined/trappist-1_sed_var_res_blya.ecsv
 *sed_var_res_v*.ecsv
 #ignore fits files
 *x2d.fits
+*.fits
 #ignore trl files
 *.trl
