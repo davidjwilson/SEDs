@@ -21,10 +21,10 @@ plt.subplots_adjust(top = 0.95, right = 0.99, left = 0.07, bottom = 0.11)
 #file_locations
 filepaths = {'xmm':'/xmm/Trappist-1.fits',
              'cos_g130m':'/COS/TRAPPIST1_G130M_Mm1_NOSCL_10dec2018.sav',
-             'lya':'/combined/bourrier_lya.txt',
+             'lya':'/lya/Trappist-1_lya_simple.txt',
              'cos_g160m':'/COS/TRAPPIST1_G160M_3orb_Mm1_NOSCL_09dec2018.sav',
              'cos_g230l': '/COS/ldlm42010_x1dsum.fits',
-             'stis_g140m':'/STIS/TRAPPIST-1_G140M_mean.ecsv',
+             'stis_g140m':'/STIS/extracted_spectra/TRAPPIST-1_G140M_fake_dq.ecsv',
              'stis_g430l':'/STIS/odlm41010_sx1.fits',
              'phoenix':'/optical/unscaled_02560-5.00-0.0_phoenix_trappist-1.ecsv',
              'phoenix_wave' :'/optical/WAVE_PHOENIX-ACES-AGSS-COND-2011.fits',
@@ -52,10 +52,11 @@ lya_data = sc.read_lyamod(path+filepaths['lya'])
 lya_start, lya_end,totals = sc.make_section(totals, lya_data, normfac=g140m_normfac)
 
 #G140M
-#g140m_data = sc.read_ecsv(path+filepaths['stis_g140m'])
-#w = g140m_data['w']
-#mask = (w >lya_edges[0])&(w <lya_start)|(w >lya_end)&(w < lya_edges[1]) #include just bits not coverd by cos or lya model.
-#g140m_start, g140m_end, totals = sc.make_section(totals, g140m_data, mask =mask, normfac=g140m_normfac)
+g140m_data = sc.read_ecsv(path+filepaths['stis_g140m'])
+w = g140m_data['w']
+mask = (w >lya_edges[0])&(w <lya_start)|(w >lya_end)&(w < lya_edges[1]) #include just bits not coverd by cos or lya model.
+#mask = (w > w[0])
+g140m_start, g140m_end, totals = sc.make_section(totals, g140m_data, mask =mask, normfac=g140m_normfac)
 
 #G230L
 g230l_data, gap_data = sc.read_cos_nuv(path+filepaths['cos_g230l']) 
@@ -112,6 +113,6 @@ totals = sc.sort_totals(totals)
 
 #sc.save_to_ecsv(totals, names, star, 'blya')
 
-sc.save_basic(totals, names, star, 'v02')
+#sc.save_basic(totals, names, star, 'v02')
 
 plt.show()
