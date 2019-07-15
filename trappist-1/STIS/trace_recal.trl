@@ -12554,3 +12554,133 @@ Warning  Keyword `XTRACALG' is being added to header.
 End      07-Jun-2019 17:33:13 CDT
 
 *** CALSTIS-6 complete ***
+
+*** CALSTIS-6 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    15-Jul-2019 12:05:15 CDT
+
+ERROR    SPTRCTAB `oref$q8l14504o_1dt.fits' not found
+ERROR    SDCTAB `oref$16j1600ao_sdc.fits' not found
+ERROR    XTRACTAB `oref$n7p10323o_1dx.fits' not found
+ERROR    APDESTAB `oref$16j16005o_apd.fits' not found
+ERROR    DISPTAB `oref$m7p16110o_dsp.fits' not found
+ERROR    INANGTAB `oref$h1v1541eo_iac.fits' not found
+ERROR    PHOTTAB `oref$26p1601ko_pht.fits' not found
+ERROR    APERTAB `oref$y2r1559to_apt.fits' not found
+Warning  Grating-aperture throughput correction table (GACTAB) was not found,
+         and no gac corrections will be applied
+Error processing /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/od3v01010_flt.fits.
+         Calibration file(s) missing.
+
+*** CALSTIS-6 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    15-Jul-2019 12:05:15 CDT
+
+ERROR    SPTRCTAB `oref$q8l14504o_1dt.fits' not found
+ERROR    SDCTAB `oref$16j1600ao_sdc.fits' not found
+ERROR    XTRACTAB `oref$n7p10323o_1dx.fits' not found
+ERROR    APDESTAB `oref$16j16005o_apd.fits' not found
+ERROR    DISPTAB `oref$m7p16110o_dsp.fits' not found
+ERROR    INANGTAB `oref$h1v1541eo_iac.fits' not found
+ERROR    PHOTTAB `oref$26p1601ko_pht.fits' not found
+ERROR    APERTAB `oref$y2r1559to_apt.fits' not found
+Warning  Grating-aperture throughput correction table (GACTAB) was not found,
+         and no gac corrections will be applied
+Error processing /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/od3v01020_flt.fits.
+         Calibration file(s) missing.
+
+*** CALSTIS-6 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    15-Jul-2019 12:05:15 CDT
+
+ERROR    SPTRCTAB `oref$q8l14504o_1dt.fits' not found
+ERROR    SDCTAB `oref$16j1600ao_sdc.fits' not found
+ERROR    XTRACTAB `oref$n7p10323o_1dx.fits' not found
+ERROR    APDESTAB `oref$16j16005o_apd.fits' not found
+ERROR    DISPTAB `oref$m7p16110o_dsp.fits' not found
+ERROR    INANGTAB `oref$h1v1541eo_iac.fits' not found
+ERROR    PHOTTAB `oref$26p1601ko_pht.fits' not found
+ERROR    APERTAB `oref$y2r1559to_apt.fits' not found
+Warning  Grating-aperture throughput correction table (GACTAB) was not found,
+         and no gac corrections will be applied
+Error processing /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/od3v02010_flt.fits.
+         Calibration file(s) missing.
+
+*** CALSTIS-6 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    15-Jul-2019 12:05:15 CDT
+
+INFO     'D1' has been appended to aperture
+ERROR    SPTRCTAB `oref$q8l14504o_1dt.fits' not found
+ERROR    SDCTAB `oref$16j1600ao_sdc.fits' not found
+ERROR    XTRACTAB `oref$n7p10323o_1dx.fits' not found
+ERROR    APDESTAB `oref$16j16005o_apd.fits' not found
+ERROR    DISPTAB `oref$m7p16110o_dsp.fits' not found
+ERROR    INANGTAB `oref$h1v1541eo_iac.fits' not found
+ERROR    PHOTTAB `oref$26p1601ko_pht.fits' not found
+ERROR    APERTAB `oref$y2r1559to_apt.fits' not found
+Warning  Grating-aperture throughput correction table (GACTAB) was not found,
+         and no gac corrections will be applied
+Error processing /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/od3v03010_flt.fits.
+         Calibration file(s) missing.
+
+*** CALSTIS-6 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    15-Jul-2019 12:05:34 CDT
+
+ERROR    SPTRCTAB `oref$q8l14504o_1dt.fits' not found
+ERROR    SDCTAB `oref$16j1600ao_sdc.fits' not found
+ERROR    XTRACTAB `oref$n7p10323o_1dx.fits' not found
+ERROR    APDESTAB `oref$16j16005o_apd.fits' not found
+ERROR    DISPTAB `oref$m7p16110o_dsp.fits' not found
+ERROR    INANGTAB `oref$h1v1541eo_iac.fits' not found
+ERROR    PHOTTAB `oref$26p1601ko_pht.fits' not found
+ERROR    APERTAB `oref$y2r1559to_apt.fits' not found
+Warning  Grating-aperture throughput correction table (GACTAB) was not found,
+         and no gac corrections will be applied
+Error processing /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/od3v01010_flt.fits.
+         Calibration file(s) missing.
+
+*** CALSTIS-6 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    15-Jul-2019 12:05:34 CDT
+
+ERROR    SPTRCTAB `oref$q8l14504o_1dt.fits' not found
+ERROR    SDCTAB `oref$16j1600ao_sdc.fits' not found
+ERROR    XTRACTAB `oref$n7p10323o_1dx.fits' not found
+ERROR    APDESTAB `oref$16j16005o_apd.fits' not found
+ERROR    DISPTAB `oref$m7p16110o_dsp.fits' not found
+ERROR    INANGTAB `oref$h1v1541eo_iac.fits' not found
+ERROR    PHOTTAB `oref$26p1601ko_pht.fits' not found
+ERROR    APERTAB `oref$y2r1559to_apt.fits' not found
+Warning  Grating-aperture throughput correction table (GACTAB) was not found,
+         and no gac corrections will be applied
+Error processing /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/od3v01020_flt.fits.
+         Calibration file(s) missing.
+
+*** CALSTIS-6 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    15-Jul-2019 12:05:34 CDT
+
+ERROR    SPTRCTAB `oref$q8l14504o_1dt.fits' not found
+ERROR    SDCTAB `oref$16j1600ao_sdc.fits' not found
+ERROR    XTRACTAB `oref$n7p10323o_1dx.fits' not found
+ERROR    APDESTAB `oref$16j16005o_apd.fits' not found
+ERROR    DISPTAB `oref$m7p16110o_dsp.fits' not found
+ERROR    INANGTAB `oref$h1v1541eo_iac.fits' not found
+ERROR    PHOTTAB `oref$26p1601ko_pht.fits' not found
+ERROR    APERTAB `oref$y2r1559to_apt.fits' not found
+Warning  Grating-aperture throughput correction table (GACTAB) was not found,
+         and no gac corrections will be applied
+Error processing /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/od3v02010_flt.fits.
+         Calibration file(s) missing.
+
+*** CALSTIS-6 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    15-Jul-2019 12:05:34 CDT
+
+INFO     'D1' has been appended to aperture
+ERROR    SPTRCTAB `oref$q8l14504o_1dt.fits' not found
+ERROR    SDCTAB `oref$16j1600ao_sdc.fits' not found
+ERROR    XTRACTAB `oref$n7p10323o_1dx.fits' not found
+ERROR    APDESTAB `oref$16j16005o_apd.fits' not found
+ERROR    DISPTAB `oref$m7p16110o_dsp.fits' not found
+ERROR    INANGTAB `oref$h1v1541eo_iac.fits' not found
+ERROR    PHOTTAB `oref$26p1601ko_pht.fits' not found
+ERROR    APERTAB `oref$y2r1559to_apt.fits' not found
+Warning  Grating-aperture throughput correction table (GACTAB) was not found,
+         and no gac corrections will be applied
+Error processing /home/david/work/muscles/trappist-1/hst/g140m_cals/all_obs/od3v03010_flt.fits.
+         Calibration file(s) missing.
