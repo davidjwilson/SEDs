@@ -16,7 +16,7 @@ from scipy.interpolate import interp1d
 cds.enable()
 
 """
-v2 20190501
+v3 20190724 trappist 1 only, depreciated
 Script to make Mega-Muscles spectra. Will develop over time.
 
 objectives for this version
@@ -331,7 +331,7 @@ def read_dem(filepath):
     adds a dem model to the EUV
     """
     data = fits.getdata(filepath,1)
-    w, bin_f, bin_e = data['Wavelength'], data['Bin-Integrated Flux'], data['Error']
+    w, bin_f, bin_el, bin_eu = data['Wavelength'], data['Bin-Integrated Flux'], data['Lower_Error_16'], data['Upper_Error_84']
     w0, w1 = wavelength_edges(w)
     f = bin_f/(w1-w0) #convert from bin-intergrated flux to flux 
     w, f = dem_to_1A(w,f)
