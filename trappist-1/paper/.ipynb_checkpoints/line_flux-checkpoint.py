@@ -112,10 +112,10 @@ for i in range(len(plotlines)):
     plt.subplot(3,4,i+1)
     if i < 11:
         f1 = convolve(f1,Box1DKernel(5))
-        e1 = convolve(e1,Box1DKernel(5))
+        e1 = convolve(e1,Box1DKernel(5)) / (5**0.5)
     f1 *= 1e16
     e1 *= 1e16
-    plt.step(w1, f1)
+    plt.step(w1, f1, where='mid')
     mask2 = (w1 > pl-xlims[i][0]) & (w1 < pl+xlims[i][1])
     top = max(f1[mask2])
     bottom = min(f1[mask2])
@@ -132,10 +132,12 @@ for i in range(len(plotlines)):
     guess_sigma = 0.05
     if i == 11:
         guess_sigma = 0.1
-    gg_init = models.Gaussian1D(1.0, all_lines[i][0]*dshift, guess_sigma)
+    gg_init = models.Gaussian1D(1.0, all_lines[i][0]*dshift, guess_sigma, bounds = {'mean': [all_lines[i][0]*dshift-1,  all_lines[i][0]*dshift+1], 'amplitude':[0, None] })
     for line in all_lines[i][1:]:
-        gg_init = gg_init + models.Gaussian1D(1.0, line*dshift, guess_sigma)
-    gg_fit = fitter(gg_init, w1, f1)
+        gg_init = gg_init + models.Gaussian1D(1.0, line*dshift, guess_sigma, bounds = {'mean': [all_lines[i][0]*dshift-1,  all_lines[i][0]*dshift+1], 'amplitude':[0, None]})
+    if i !=2:
+        gg_init = gg_init+ models.Const1D(-1)
+    gg_fit = fitter(gg_init, w1, f1, maxiter=1000)
     plt.plot(w1, gg_fit(w1))
     
     l_flux = np.trapz(gg_fit(w1)[(w1 > line_edges[i][0]) & (w1 < line_edges[i][1])], w1[(w1 > line_edges[i][0]) & (w1 < line_edges[i][1])])
@@ -156,7 +158,7 @@ for a,b, c, d in zip(plot_name,lines,gauss_int,gauss_e):
 
 #print(gauss_e)
 savdat = Table([plot_name, lines, gauss_int, gauss_e, np.array(line_edges)[:,0], np.array(line_edges)[:,1]], names = ['Species', 'lambda', 'int_flux', 'int_error', 'blue_edge', 'red_edge'])
-ascii.write(savdat, 'int_flux_table.ecsv', format='ecsv', overwrite=True)
+ascii.write(savdat, 'int_flux_with_const_table.ecsv', format='ecsv', overwrite=True)
     
 plt.show()
         
