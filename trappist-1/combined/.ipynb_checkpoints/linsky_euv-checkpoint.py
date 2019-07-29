@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from astropy.table import Table
 from astropy.io import ascii
 import astropy.units as u
+import scipy.interpolate as interpolate
 
 """
 Calculating the EUV fluxes using the relationships of Linsky + 14 (https://ui.adsabs.harvard.edu/abs/2014ApJ...780...61L/abstract)
@@ -44,11 +45,12 @@ def euv_estimator(lya, distance, star='', save=False, plot=False):
 
     #extrapolate onto 1A grid
     wav = np.arange((w1[0])+0.5, (w2[-1])+0.5, 1.0)
-    flux = []
-    for w1i, w2i, fi in zip(w1, w2,f):
-        for wi in wav:
-            if wi > w1i and wi < w2i :
-                flux.append(fi)
+    flux = interpolate.interp1d(np.mean([w1, w2], axis=0), f, kind='nearest', bounds_error=False)(wav)
+    #flux = []
+    #for w1i, w2i, fi in zip(w1, w2,f):
+     #   for wi in wav:
+      #      if wi > w1i and wi < w2i :
+       #         flux.append(fi)
 
     if save == True:
         data = Table([wav*u.AA,  flux*u.erg/u.s/u.cm**2], names=['WAVELENGTH', 'FLUX'])
@@ -76,7 +78,7 @@ def euv_estimator(lya, distance, star='', save=False, plot=False):
 #lya = 9.1e-13
 #distance = 21.1
 #print(lya)
-#star = 'TRAPPIST-1'
-#distance = 12.1
-#lya = 8e-15
-#euv_estimator(lya,  distance, star=star, plot=True, save=True)
+star = 'TRAPPIST-1'
+distance = 12.1
+lya = 2.12e-15
+euv_estimator(lya,  distance, star=star, plot=True, save=False)

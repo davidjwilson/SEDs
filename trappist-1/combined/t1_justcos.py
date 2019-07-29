@@ -15,7 +15,7 @@ f = convolve(data['flux'][mask],Box1DKernel(5))
 e = convolve(data['err'][mask],Box1DKernel(5))/(5**0.5)
 #plt.step(data['wave'][mask], data['flux'][mask])
 plt.step(data['wave'][mask],f, where='mid', c='C0')
-#plt.step(data['wave'][mask],e, where='mid', c='C1')
+plt.step(data['wave'][mask],e, where='mid', c='C1')
 
 end_130 = data['wave'][-1]
 
@@ -28,7 +28,7 @@ f = convolve(data['flux'][mask],Box1DKernel(5))
 e = convolve(data['err'][mask],Box1DKernel(5))/(5**0.5)
 #plt.step(data['wave'][mask], data['flux'][mask])
 plt.step(data['wave'][mask],f, where='mid', c='C0')
-#plt.step(data['wave'][mask],e, where='mid', c='C1')
+plt.step(data['wave'][mask],e, where='mid', c='C1')
 
 #plt.step(data['wave'][mask], data['err'][mask])
 end_160 = data['wave'][mask][-1]
@@ -58,7 +58,7 @@ dv = -56300 #Bourrier+17a
 c = const.c.value
 dshift = (1.0+(dv/c))
 [plt.axvline(line*dshift, ls='--',c='r') for line in lines]
-plt.ylim(5e-16,-3e-16)
+#plt.ylim(5e-16,-3e-16)
 
 plt.show()
 
