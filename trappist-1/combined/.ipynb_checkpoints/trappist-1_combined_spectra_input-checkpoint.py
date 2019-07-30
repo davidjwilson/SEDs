@@ -74,7 +74,7 @@ mask = (w > g230l_end) & (w < 3345) | (w > 3361) & (w < 5321) | (w > 5325) & (w 
 g430l_start, g430l_end, totals = sc.make_section(totals, g430l_data, mask =mask, clip = g430l_clip)
 
 #phoenix
-phoenix_normfac = 2.8e-28
+phoenix_normfac = 2.06e-28
 #phx_data = sc.read_phoenix(path+filepaths['phoenix'], path+filepaths['phoenix_wave'])
 phx_data = sc.read_ecsv_phoenix(path+filepaths['phoenix'])
 w = phx_data['w']
@@ -111,7 +111,7 @@ plt.axhline(0, ls='--', c='k')
 
 totals = sc.sort_totals(totals)
 
-sc.save_to_ecsv(totals, names, star, 'v03')
+sc.save_to_ecsv(totals, names, star, 'v04')
 
 #sc.save_basic(totals, names, star, 'v02')
 

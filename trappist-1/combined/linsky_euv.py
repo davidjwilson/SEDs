@@ -78,7 +78,7 @@ def euv_estimator(lya, distance, star='', save=False, plot=False):
 #lya = 9.1e-13
 #distance = 21.1
 #print(lya)
-star = 'TRAPPIST-1'
-distance = 12.1
-lya = 2.12e-15
-euv_estimator(lya,  distance, star=star, plot=True, save=False)
+#star = 'TRAPPIST-1'
+#distance = 12.1
+#lya = 2.12e-15
+#euv_estimator(lya,  distance, star=star, plot=True, save=False)
