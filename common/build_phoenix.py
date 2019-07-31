@@ -1,28 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-trappist-1combined
-Name
-Last Modified
-
 import numpy as np
 import matplotlib.pyplot as plt
 import astropy.io.fits as fits
@@ -215,6 +190,9 @@ def load_star_params(star_table_path, FeH=0.0, aM=0.0):
     star_params = {'Teff':data['Teff__0'], 'logg': logg, 'FeH': FeH, 'aM': aM}
     return star_params
 
+def residuals(scale, f, mf):
+    return f - mf/scale
+
 def phoenix_norm(star, w_phx, f_phx, ccd_path, plot=False, cut=2000): 
     """
     find the normalisation factor between the phoenix model and the stis ccd (ccd_path)
@@ -225,16 +203,20 @@ def phoenix_norm(star, w_phx, f_phx, ccd_path, plot=False, cut=2000):
     mask = (w > cut) & (f > 0) & (dq ==0)
     w1, f1 = w[mask], f[mask]
     norm_mask = (w_phx >= w1[0]) & (w_phx <= w1[-1])
-    phx_int_flux = np.trapz(f_phx[norm_mask], w_phx[norm_mask])
-    ccd_int_flux = np.trapz(f1, w1)
-    normfac = ccd_int_flux / phx_int_flux
+    phx_flux = interp1d(w_phx[norm_mask], f_phx[norm_mask], fill_value='extrapolate')(w1)
+    scale, flag = leastsq(residuals, 1., args=(f1, phx_flux))
+    normfac = 1/scale[0]
+
     if plot:
         plt.figure(star+'_scaled')
         plt.plot(w_phx, f_phx*normfac)
-        plt.step(w,f, where='mid')
+        #plt.step(w,f, where='mid')
         plt.step(w1, f1, where='mid')
         plt.xlabel('Wavelength (\AA)', size=20)
-        plt.ylabel('Flux (erg s$^{-1}$ cm$^{-2}$ \AA$^{-1})$)', size=20)
+        plt.ylabel('Flux (erg s$^{-1}$ cm$^{-2}$ \AA$^{-1}$)', size=20)
+        plt.xlim(2000, 6000)
+        plt.yscale('log')
+        plt.axvline(cut, c='r', ls='--')
         plt.tight_layout()
         plt.show()
     return normfac

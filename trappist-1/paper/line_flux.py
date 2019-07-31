@@ -159,6 +159,7 @@ for a,b, c, d in zip(plot_name,lines,gauss_int,gauss_e):
 #print(gauss_e)
 savdat = Table([plot_name, lines, gauss_int, gauss_e, np.array(line_edges)[:,0], np.array(line_edges)[:,1]], names = ['Species', 'lambda', 'int_flux', 'int_error', 'blue_edge', 'red_edge'])
 ascii.write(savdat, 'int_flux_with_const_table.ecsv', format='ecsv', overwrite=True)
-    
+
+plt.tight_layout()
 plt.show()
         
