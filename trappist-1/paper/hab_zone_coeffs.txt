@@ -1,0 +1,27 @@
+Table 1
+Coefficients to be Used in Equation (4)
+
+Constant	Recent	Runaway	Maximum	Early	
+Venus	Greenhouse	Greenhouse	Mars	
+S_effsun (1 M_oplus)	1.776	1.107	0.356	0.32	
+S_effsun (5 M_oplus)	 sdotsdotsdot 	1.188	 sdotsdotsdot 	 sdotsdotsdot 	
+S_effsun (0.1 M_oplus)	 sdotsdotsdot 	0.99 	 sdotsdotsdot 	 sdotsdotsdot 	
+	
+a (1 M_oplus)	 2.136 x 10^-4	 1.332 x 10^-4	 6.171 x 10^-5	 5.547 x 10^-5	
+a (5 M_oplus)	 sdotsdotsdot 	 1.433 x 10^-4	 sdotsdotsdot 	 sdotsdotsdot 	
+a (0.1 M_oplus)	 sdotsdotsdot 	 1.209 x 10^-4	 sdotsdotsdot 	 sdotsdotsdot 	
+	
+b (1 M_oplus)	 2.533 x 10^-8	  1.58 x 10^-8	 1.698 x 10^-9	 1.526 x 10^-9	
+b (5 M_oplus)	 sdotsdotsdot 	 1.707 x 10^-8	 sdotsdotsdot 	 sdotsdotsdot 	
+b (0.1 M_oplus)	 sdotsdotsdot 	 1.404 x 10^-8	 sdotsdotsdot 	 sdotsdotsdot 	
+	
+c (1 M_oplus)	-1.332 x 10^-11	-8.308 x 10^-12	-3.198 x 10^-12	-2.874 x 10^-12	
+c (5 M_oplus)	 sdotsdotsdot 	-8.968 x 10^-12	 sdotsdotsdot 	 sdotsdotsdot 	
+c (0.1 M_oplus)	 sdotsdotsdot 	-7.418 x 10^-12	 sdotsdotsdot 	 sdotsdotsdot 	
+	
+d (1 M_oplus)	-3.097 x 10^-15	-1.931 x 10^-15	-5.575 x 10^-16	-5.011 x 10^-16	
+d (5 M_oplus)	 sdotsdotsdot 	-2.084 x 10^-15	 sdotsdotsdot 	 sdotsdotsdot 	
+d (0.1 M_oplus)	 sdotsdotsdot 	-1.713 x 10^-15	 sdotsdotsdot 	 sdotsdotsdot 	
+
+Notes. The coefficients for recent Venus, maximum greenhouse, and early Mars are same for all the planetary masses. For 5 Moplus and 0.1 Moplus, the background N2 pressure is scaled according to the planetary mass. An ASCII file containing these coefficients can be downloaded in the electronic version of the Letter.
+(Supplemental data for this table are available in the online journal.)
