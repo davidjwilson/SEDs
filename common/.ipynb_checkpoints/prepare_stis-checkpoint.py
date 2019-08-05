@@ -134,7 +134,7 @@ def combine_x1ds(x1ds, correct_error=True):
 
     return new_data
  
-def make_metadata(x1ds, new_data):
+def make_metadata(x1ds, new_data, normfac):
     """
     Makes the metadata for the ecsv files- eventually will be converted into the fits file
     """
@@ -157,7 +157,7 @@ def make_metadata(x1ds, new_data):
                    'PR_INV_F','DATE-OBS','EXPSTART','EXPEND','EXPTIME','EXPDEFN','EXPMIN','EXPMAX','EXPMED','NORMFAC','WAVEMIN','WAVEMAX','WAVEUNIT','AIRORVAC','SPECRES','WAVERES','FLUXMIN',
                   'FLUXMAX','FLUXUNIT']
     meta_fill = ['','',hdr['OPT_ELEM'],'','','','','',muscles_name,'MUSCLES','David J. Wilson','','',min(dates),min(start_times),max(end_times),sum(exptimes),'SUM', 
-                min(exptimes), max(exptimes), np.median(exptimes),1.0,wavelength[0], wavelength[-1],'ang','vac',specres,waveres,np.min(flux[np.isnan(flux)==False]), np.max(flux[np.isnan(flux)==False]),'erg/s/cm2/ang']
+                min(exptimes), max(exptimes), np.median(exptimes),normfac,wavelength[0], wavelength[-1],'ang','vac',specres,waveres,np.min(flux[np.isnan(flux)==False]), np.max(flux[np.isnan(flux)==False]),'erg/s/cm2/ang']
     metadata = {}
     for name, filler in zip(meta_names, meta_fill):
         if filler == '':
@@ -185,7 +185,7 @@ def setup_list(x1ds):
                 collection.append(x1ds[i])
         if len(collection) > 0:
             x1ds_by_setup.append(collection)
-    return x1ds_by_setup
+    return setups, x1ds_by_setup
 
 def save_to_ecsv(data, metadata, save_path, version):
     """
@@ -201,7 +201,7 @@ def save_to_ecsv(data, metadata, save_path, version):
     
 def save_to_fits(data, metadata, dataset_hdu, savepath, version):
     """
-    Saves to a MUSCLES-standard fits file, minus the third extension which comes later
+    Saves to a MUSCLES-standard fits file
     """
     if os.path.exists(savepath) == False:
         os.mkdir(savepath)
@@ -265,9 +265,9 @@ def make_dataset_extension(x1ds):
     hdu.header['COMMENT'] = description_text
     return hdu
 
+    
 
-
-def make_stis_spectum(x1dpath, version,savepath = '', plot=False, save_ecsv=False, save_fits=False, return_data=False):
+def make_stis_spectum(x1dpath, version,savepath = '', plot=False, save_ecsv=False, save_fits=False, return_data=False, return_gratings = False, normfac=1.0):
     """
     main function
     """
@@ -275,11 +275,11 @@ def make_stis_spectum(x1dpath, version,savepath = '', plot=False, save_ecsv=Fals
     stis_x1ds = stis_clean(all_x1ds) #get rid of any not-stis x1ds
     
     if len(stis_x1ds) > 0:
-        x1ds_by_grating = setup_list(stis_x1ds)
+        gratings, x1ds_by_grating = setup_list(stis_x1ds)
         for x1ds in x1ds_by_grating:
             data = combine_x1ds(x1ds)
            # data = [wavelength*u.AA, flux*u.erg/u.s/u.cm**2/u.AA, error*u.erg/u.s/u.cm**2/u.AA, dq]
-            metadata = make_metadata(x1ds, data)
+            metadata = make_metadata(x1ds, data, normfac)
             if plot:
                 plot_spectrum(data, metadata)
             if save_ecsv:
@@ -289,6 +289,8 @@ def make_stis_spectum(x1dpath, version,savepath = '', plot=False, save_ecsv=Fals
                 save_to_fits(data, metadata, data_set_hdu, savepath, version)
     if return_data:
         return data
+    if return_gratings:
+        return gratings
 
 
 def test():

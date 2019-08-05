@@ -228,4 +228,4 @@ def test():
     savepath = 'test_files/'
     make_cos_spectrum(savpath, version,  x1dpath, savepath = savepath, plot=True, save_ecsv=True, save_fits=True)
     
-test()
+#test()
