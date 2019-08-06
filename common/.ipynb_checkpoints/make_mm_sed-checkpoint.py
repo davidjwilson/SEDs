@@ -92,6 +92,28 @@ def build_cos_fuv(cospath, airglow):
     
     return sed_table, instrument_list #sed table is the main thing.
 
+def fill_cos_airglow(sed_table, airglow, instrument_list):
+    """
+    Fills in the gaps in cos airglow if stis spectra are unavailable. Fits to specta 5A on either side.
+    """
+    b = airglow[::2]
+    r = airglow[1::2]
+    gap_w = np.array([], dtype=float)
+    gap_f = np.array([], dtype=float)
+    for i in range(len(b)):
+        mask = (sed_table['WAVELENGTH'] > b[i] - 5) & (sed_table['WAVELENGTH'] < r[i] + 5)
+        wi = np.arange(b[i], r[i], 1.0)
+        gap_w = np.concatenate((gap_w, wi))
+        fi = np.polyval((np.polyfit(sed_table['WAVELENGTH'][mask], sed_table['FLUX'][mask], 2)), wi)
+        gap_f = np.concatenate((gap_f, fi))
+    fill_table = Table([gap_w*u.AA, gap_f*u.erg/u.s/u.cm**2/u.AA], names=['WAVELENGTH', 'FLUX'], meta={'NORMFAC': 1.0})
+    instrument_code, fill_table = fill_model(fill_table, 'mod_gap_fill-')
+    sed_table = vstack([sed_table, fill_table], metadata_conflicts = 'silent')
+    instrument_list.append(instrument_code)
+    return sed_table, instrument_list
+    
+        
+
 def find_stis_normfac(component_repo, airglow):
     """
     Finds the normaliastion factor between the COS FUV data and the STIS G140L spectrum, if present
@@ -125,7 +147,7 @@ def fill_model(table, model_name):
         table[extra_names[i]] = fill_zeros#*units[i]
     #[table[name]=fill_zeros*unit for name, unit in zip(extra_names, units)]
     
-    inst_code = instruments.getinsti('mod_lya_young')
+    inst_code = instruments.getinsti(model_name)
     inst_array = np.full(table_length, inst_code, dtype=int)
     table['INSTRUMENT'] = inst_array 
     
@@ -138,7 +160,7 @@ def fill_model(table, model_name):
 
 def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, other_airglow):
     """
-    Add the stis spectra and lya modelto the sed
+    Add the stis fuv spectra and lya modelto the sed
     """
     g140l_path = glob.glob(component_repo+'*g140l*.ecsv')
     g140m_path = glob.glob(component_repo+'*g140m*.ecsv')
@@ -166,6 +188,8 @@ def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, othe
         g140l_mask |= (g140l['WAVELENGTH'] > max(sed_table['WAVELENGTH'])) #add in everything beyond COS range
         g140l = g140l[g140l_mask]
         sed_table = vstack([sed_table, g140l], metadata_conflicts = 'silent')
+        
+    
         
     return sed_table, instrument_list
 

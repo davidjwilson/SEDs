@@ -30,28 +30,42 @@ airglow (lya)
 """
 
 
-def make_sed(input_paths, savepath, version, lya_range, other_airglow):
+def make_sed(input_paths, savepath, version, lya_range, other_airglow, save_components = False):
     airglow = lya_range+other_airglow
     #COS FUV 
-    component_repo = savepath+'components' #directory where the component spectra are saved
-    prepare_cos.make_cos_spectrum(input_paths['COS_readsav'], version,  input_paths['COS_x1d'], savepath = component_repo, plot=False, save_ecsv=True, save_fits=True)
+    component_repo = savepath+'components/' #directory where the component spectra are saved
+    prepare_cos.make_cos_spectrum(input_paths['COS_readsav'], version,  input_paths['COS_x1d'], savepath = component_repo, plot=False, save_ecsv=save_components, save_fits=save_components)
     sed_table, instrument_list = sed.build_cos_fuv(component_repo, airglow)
     
     #STIS FUV and Lya
-    gratings = prepare_stis.make_stis_spectum(input_paths['STIS_FUV'], version, savepath = component_repo, save_ecsv=True, return_gratings=True, save_fits = True) 
+    gratings = prepare_stis.make_stis_spectum(input_paths['STIS_FUV'], version, savepath = component_repo, save_ecsv=save_components, return_gratings=True, save_fits = save_components)
+    print(gratings)
     if 'G140L' in gratings:
         stis_normfac = sed.find_stis_normfac(component_repo, airglow)
+        prepare_stis.make_stis_spectum(input_paths['STIS_FUV'], version, savepath = component_repo, save_ecsv=save_components, return_gratings=True, save_fits = save_components, normfac=stis_normfac)
     else:
         stis_normfac= 1.0
-    prepare_lya.make_lya_spectrum(input_paths['lya_model'], version, sed_table ,savepath = component_repo, save_ecsv=True, save_fits=True, normfac=stis_normfac)
+    prepare_lya.make_lya_spectrum(input_paths['lya_model'], version, sed_table ,savepath = component_repo, save_ecsv=save_components, save_fits=save_components, normfac=stis_normfac)
     sed_table, instrument_list = sed.add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, other_airglow)
+    if 'G140L' not in gratings:
+        print('adding polynomial fills')
+        sed_table, instrument_list = sed.fill_cos_airglow(sed_table, other_airglow, instrument_list)
     
-    #works to here, I think we need to sort it at this point
+    #works to here
+    #NUV- STIS or COS
+  #  if 'G230L' in gratings:
+        
+    
+    
+    
     sed_table.sort(['WAVELENGTH'])
                                               
     return sed_table, instrument_list
         
-def test():
+
+    
+    
+def gj_674_test():
     """
     Testing each stage with gj674
     """
@@ -65,14 +79,40 @@ def test():
     other_airglow = [1304, 1304.5, 1355, 1356] #oi airglow to remove
     save_path = path + 'test_files/'
     version = 1
+    sed_table, instrument_list = make_sed(input_paths, save_path, version, lya_range, other_airglow, save_components=True)
+    
+    #print(sed_table.sort('WAVELENGTH'))
+    plt.figure(star+'_test')
+    plt.step(sed_table['WAVELENGTH'], sed_table['FLUX'], where='mid')
+    plt.show()
+    
+    
+def trappist_1_test():
+    """
+    Testing each stage with trappist-1
+    """
+    star = 'trappist-1' #as it appears in the filepath
+    star_up = 'TRAPPIST-1'
+    path = '/home/david/work/muscles/SEDs/'+star+'/'
+    muscles_path = '/home/david/work/muscles/MegaMUSCLES/'+star_up+'/'
+    input_paths = dict(COS_readsav = path+'COS/', COS_x1d = '/home/david/work/muscles/trappist-1/hst/data/',
+                       STIS_FUV = '/home/david/work/muscles/trappist-1/hst/g140m_cals/picked_trace_extracts/' , 
+                       lya_model = path + 'lya/Trappist-1_lya_simple.txt')
+    lya_range = [1207, 1225] #lyman alpha region to remove
+    other_airglow =  [1273.9, 1287.3, 1301, 1307]  #oi airglow to remove
+    save_path = path + 'test_files/'
+    version = 1
     sed_table, instrument_list = make_sed(input_paths, save_path, version, lya_range, other_airglow)
     
     #print(sed_table.sort('WAVELENGTH'))
     plt.figure(star+'_test')
-    plt.plot(sed_table['WAVELENGTH'], sed_table['FLUX'])
+    plt.step(sed_table['WAVELENGTH'], sed_table['FLUX'], where='mid')
     plt.show()
     
-test()
+    
+    
+gj_674_test()
+#trappist_1_test()
                                               
     #filepaths = {'xmm':'/xmm/GJ674.fits',
      #        'cos_g130m':'/COS/GJ674_COS130M_Mm1_NOSCL_03apr18.sav',
