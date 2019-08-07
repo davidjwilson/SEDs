@@ -93,7 +93,45 @@ def make_cos_data(sav, x1dpath, correct_error=True):
    
 
     return new_data
- 
+
+def make_nuv_data(g230l_path, correct_error=True):
+    """
+    Turns a cos g230l file into a data array
+    """
+    hdul = fits.open(g230l_path) 
+    data = fits.getdata(filepath,1)[0:2] #not using reflected order
+    hdr0 = fits.getheader(filepath,0)
+    hdr1 = fits.getheader(filepath,1)
+    w = np.array([], dtype=float)
+    f = np.array([], dtype=float)
+    e = np.array([], dtype=float)
+    dq = np.array([], dtype=int)
+    if fillgap == True:
+        gap_w, gap_f = nuv_fill(data)
+        for dt in data:
+            mask = (dt['WAVELENGTH'] < gap_w[0]) | (dt['WAVELENGTH'] > gap_w[-1])
+            w= np.concatenate((w, dt['WAVELENGTH'][mask]))
+            f = np.concatenate((f, dt['FLUX'][mask]))
+            e = np.concatenate((e, dt['ERROR'][mask]))
+            dq = np.concatenate((dq, dt['DQ'][mask]))
+        gap_w0, gap_w1 = wavelength_edges(gap_w)
+        gap_code = inst.getinsti('oth_---_other')
+        gap_collection = dict_builder(gap_w0, gap_w1, gap_w, gap_f, np.zeros(len(gap_w)), np.zeros(len(gap_w)),np.zeros(len(gap_w)), 0., 0., gap_code)        
+    else:
+        for dt in data:
+            w= np.concatenate((w, dt['WAVELENGTH']))
+            f = np.concatenate((f, dt['FLUX']))
+            e = np.concatenate((e, dt['ERROR']))
+            dq = np.concatenate((dq, dt['DQ']))
+        gap_collection = {}
+    w0, w1 = wavelength_edges(w)
+    exptime = np.full(len(w), hdr1['EXPTIME'])
+    expstart, expend = hdr1['EXPSTART'], hdr1['EXPEND']
+    instrument_name = hdr0['TELESCOP']+'_cos_'+hdr0['OPT_ELEM']   
+    instrument_code = inst.getinsti(instrument_name.lower())
+    cos_nuv_collection = dict_builder(w0, w1, w, f, e, dq, exptime, expstart, expend, instrument_code)
+    return cos_nuv_collection, gap_collection
+
 def make_cos_metadata(sav, new_data, x1dpath):
     """
     Makes the metadata for the ecsv files- eventually will be converted into the fits file
@@ -216,7 +254,11 @@ def make_cos_spectrum(savpath, version, x1dpath,savepath = '', plot=False, save_
             data_set_hdu = make_dataset_extension(sav,x1dpath)
             save_to_fits(data, metadata, data_set_hdu, savepath, version)
         
-
+def make_cos_nuv():
+    """
+    Makes and saves an nuv spectrum
+    """
+    
 
 def test():
     """

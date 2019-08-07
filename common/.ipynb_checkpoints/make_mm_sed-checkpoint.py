@@ -112,27 +112,47 @@ def fill_cos_airglow(sed_table, airglow, instrument_list):
     instrument_list.append(instrument_code)
     return sed_table, instrument_list
     
-        
+def update_norm(ecsv_file, fits_file, normfac):
+    """
+    Updates the normalisation factors in stis ecsv and fits files
+    """
+    t = Table.read(ecsv_file)
+    t.meta['NORMFAC'] = normfac
+    t.write(ecsv_file, overwrite=True)
+    h = fits.open(fits_file)
+    h[0].header['NORMFAC'] = normfac
+    h.writeto(fits_file, overwrite=True)
+    h.close()
 
-def find_stis_normfac(component_repo, airglow):
+def find_stis_normfac(component_repo, airglow, band):
     """
-    Finds the normaliastion factor between the COS FUV data and the STIS G140L spectrum, if present
+    Finds the normaliastion factor between the COS FUV data and the STIS G140L spectrum, if present. Band is fuv or nuv. FUV normalises the G140L to G140M, nuv normalises the G220L to G430L 
     """
-    g140l = Table.read(glob.glob(component_repo+'*g140l*.ecsv')[0])
-    g130m = Table.read(glob.glob(component_repo+'*g130m*.ecsv')[0])
-    cw, cf, cdq = g130m['WAVELENGTH'], g130m['FLUX'], g130m['DQ']
-    sw, sf, sdq = g140l['WAVELENGTH'], g140l['FLUX'], g140l['DQ']
+    if band == 'fuv':
+        norm = Table.read(glob.glob(component_repo+'*g140l*.ecsv')[0])
+        base = Table.read(glob.glob(component_repo+'*g130m*.ecsv')[0])
+    if band == 'nuv':
+        norm = Table.read(glob.glob(component_repo+'*g230l*.ecsv')[0])
+        base = Table.read(glob.glob(component_repo+'*g430l*.ecsv')[0])
+    cw, cf, cdq = base['WAVELENGTH'], base['FLUX'], base['DQ']
+    sw, sf, sdq = norm['WAVELENGTH'], norm['FLUX'], norm['DQ']
     c_mask = (cw >= sw[0]) & (cw <=sw[-1]) & (cdq == 0)
     s_mask = (sw >= cw[0]) & (sw <=cw[-1]) & (sdq == 0)#mask to same same waveband and cut dq flags
     cw, cf, sw, sf = cw[c_mask], cf[c_mask], sw[s_mask], sf[s_mask]
     cw1, cf1 = resample.bintogrid(cw, cf, newx=sw) #rebin to stis wavelength grid
-    stis_airglow_mask = mask_maker(sw, airglow)
-    cos_airglow_mask = mask_maker(cw1, airglow)
-    sw, sf, cw1, cf1 = sw[stis_airglow_mask], sf[stis_airglow_mask], cw1[cos_airglow_mask], cf1[cos_airglow_mask] #remove airglow
+    if band == 'fuv':
+        stis_airglow_mask = mask_maker(sw, airglow)
+        cos_airglow_mask = mask_maker(cw1, airglow)
+        sw, sf, cw1, cf1 = sw[stis_airglow_mask], sf[stis_airglow_mask], cw1[cos_airglow_mask], cf1[cos_airglow_mask] #remove airglow
     c_int = np.trapz(cf1,cw1)
     s_int =  np.trapz(sf,sw)
     normfac = c_int/s_int
-    print('STIS normfac = ', normfac)
+    print('STIS normfac ('+band+') = ', normfac)
+    if band == 'fuv':
+        gratings = ['g140m', 'g140l'] #files to update
+    if band == 'nuv':
+        gratings = ['g230l']
+    [update_norm(glob.glob(component_repo+'*'+g+'*.ecsv')[0], glob.glob(component_repo+'*'+g+'*.fits')[0], normfac) for g in gratings]
     return normfac
 
 def fill_model(table, model_name): 
@@ -187,14 +207,25 @@ def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, othe
         g140l_mask = mask_maker(g140l['WAVELENGTH'], other_airglow, include=False) #fill in airglow gaps
         g140l_mask |= (g140l['WAVELENGTH'] > max(sed_table['WAVELENGTH'])) #add in everything beyond COS range
         g140l = g140l[g140l_mask]
+        g140l['FLUX'] = g140l['FLUX'] * g140l.meta['NORMFAC']
         sed_table = vstack([sed_table, g140l], metadata_conflicts = 'silent')
-        
-    
+            
         
     return sed_table, instrument_list
 
-    
-                                                               
+def add_stis_nuv(sed_table, component_repo, instrument_list):
+    """
+    Add a stis g230l spectrum to the end of whatever's there already.
+    """
+    g230l = Table.read(glob.glob(component_repo+'*g230l*.ecsv')[0])
+    instrument_code, g230l = hst_instrument_column(g230l)
+    instrument_list.append(instrument_code)
+    g230l = normfac_column(g230l)
+    g230l = g230l[g230l['WAVELENGTH'] > max(sed_table['WAVELENGTH'])]
+    g230l['FLUX'] *= g230l.meta['NORMFAC']
+    sed_table = vstack([sed_table, g230l], metadata_conflicts = 'silent')
+    return sed_table, instrument_list
+
         
         
         

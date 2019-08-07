@@ -41,8 +41,8 @@ def make_sed(input_paths, savepath, version, lya_range, other_airglow, save_comp
     gratings = prepare_stis.make_stis_spectum(input_paths['STIS_FUV'], version, savepath = component_repo, save_ecsv=save_components, return_gratings=True, save_fits = save_components)
     print(gratings)
     if 'G140L' in gratings:
-        stis_normfac = sed.find_stis_normfac(component_repo, airglow)
-        prepare_stis.make_stis_spectum(input_paths['STIS_FUV'], version, savepath = component_repo, save_ecsv=save_components, return_gratings=True, save_fits = save_components, normfac=stis_normfac)
+        stis_normfac = sed.find_stis_normfac(component_repo, airglow, 'fuv')
+       # prepare_stis.make_stis_spectum(input_paths['STIS_FUV'], version, savepath = component_repo, save_ecsv=save_components, return_gratings=True, save_fits = save_components, normfac=stis_normfac, sx1=False)
     else:
         stis_normfac= 1.0
     prepare_lya.make_lya_spectrum(input_paths['lya_model'], version, sed_table ,savepath = component_repo, save_ecsv=save_components, save_fits=save_components, normfac=stis_normfac)
@@ -50,6 +50,10 @@ def make_sed(input_paths, savepath, version, lya_range, other_airglow, save_comp
     if 'G140L' not in gratings:
         print('adding polynomial fills')
         sed_table, instrument_list = sed.fill_cos_airglow(sed_table, other_airglow, instrument_list)
+    if 'G230L' in gratings:
+        nuv_normfac = sed.find_stis_normfac(component_repo, airglow, 'nuv')
+        sed_table, instrument_list = sed.add_stis_nuv(sed_table, component_repo, instrument_list)
+       # print (nuv_normfac)
     
     #works to here
     #NUV- STIS or COS
@@ -84,6 +88,8 @@ def gj_674_test():
     #print(sed_table.sort('WAVELENGTH'))
     plt.figure(star+'_test')
     plt.step(sed_table['WAVELENGTH'], sed_table['FLUX'], where='mid')
+    plt.xscale('log')
+    plt.yscale('log')
     plt.show()
     
     

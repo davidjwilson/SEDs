@@ -78,7 +78,7 @@ def nan_clean(array):
 
 def combine_x1ds(x1ds, correct_error=True):
     """
-    coadds a collection of x1d fluxes and adds columns for exposure time detials. Input is a list of paths to x1d files with the same grating.
+    coadds a collection of x1d fluxes and adds columns for exposure time detials. Input is a list of paths to x1d files with the same grating. Also works for sx1 files
 
     """
     if len(x1ds) > 1:
@@ -90,7 +90,10 @@ def combine_x1ds(x1ds, correct_error=True):
         end = []
         w_new = build_wavelength(x1ds)
         for x in x1ds:
-            data = fits.getdata(x,1)[0]
+            data_extension = 1
+            if x[-8:-5] == 'sx1':
+                data_extension = 0
+            data = fits.getdata(x,data_extension)[0]
             hdr = fits.getheader(x,0)
             fi = interpolate.interp1d(data['WAVELENGTH'], data['FLUX'], bounds_error=False, fill_value=0.)(w_new)
             ei = interpolate.interp1d(data['WAVELENGTH'], data['ERROR'], bounds_error=False, fill_value=0.)(w_new)
@@ -120,7 +123,10 @@ def combine_x1ds(x1ds, correct_error=True):
         end = np.max(np.array(end), axis=0)
     
     else: #in the case where there's only one available spectrum
-        data = fits.getdata(x1ds[0],1)[0]
+        data_extension = 1
+        if x1ds[0][-8:-5] == 'sx1':
+            data_extension = 0
+        data = fits.getdata(x1ds[0],data_extension)[0]
         hdr = fits.getheader(x1ds[0],0)
         w_new, f_new, e_new, dq_new = data['WAVELENGTH'], data['FLUX'], data['ERROR'], data['DQ']
         exptime, start, end = np.full(len(data['WAVELENGTH']), hdr['TEXPTIME']), np.full(len(data['WAVELENGTH']), hdr['TEXPSTRT']), np.full(len(data['WAVELENGTH']), hdr['TEXPEND'])
@@ -133,6 +139,8 @@ def combine_x1ds(x1ds, correct_error=True):
    
 
     return new_data
+
+
  
 def make_metadata(x1ds, new_data, normfac):
     """
@@ -264,15 +272,17 @@ def make_dataset_extension(x1ds):
     hdu.header.insert(9, ('EXTNO',3))
     hdu.header['COMMENT'] = description_text
     return hdu
+ 
 
-    
-
-def make_stis_spectum(x1dpath, version,savepath = '', plot=False, save_ecsv=False, save_fits=False, return_data=False, return_gratings = False, normfac=1.0):
+def make_stis_spectum(x1dpath, version,savepath = '', plot=False, save_ecsv=False, save_fits=False, return_data=False, return_gratings = False, normfac=1.0, sx1 = True):
     """
     main function
     """
     all_x1ds = glob.glob(x1dpath+'*x1d.fits')
     stis_x1ds = stis_clean(all_x1ds) #get rid of any not-stis x1ds
+    if sx1:
+        all_sx1 = glob.glob(x1dpath+'*sx1.fits') #do the ccd as well
+        stis_x1ds = np.concatenate((stis_x1ds, all_sx1))
     
     if len(stis_x1ds) > 0:
         gratings, x1ds_by_grating = setup_list(stis_x1ds)
