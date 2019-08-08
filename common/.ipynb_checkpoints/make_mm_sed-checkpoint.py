@@ -28,6 +28,7 @@ import prepare_cos
 import prepare_stis
 from astropy.units import cds
 from scipy.io import readsav
+from scipy.optimize import leastsq
 cds.enable()
 
 
@@ -92,20 +93,28 @@ def build_cos_fuv(cospath, airglow):
     
     return sed_table, instrument_list #sed table is the main thing.
 
-def fill_cos_airglow(sed_table, airglow, instrument_list):
+def fill_cos_airglow(sed_table, airglow, instrument_list, nuv = False):
     """
-    Fills in the gaps in cos airglow if stis spectra are unavailable. Fits to specta 5A on either side.
+    Fills in the gaps in cos airglow if stis spectra are unavailable. Fits to specta 5A on either side. If nuv =True then it instead fills the gap in the NUV spectrum, which requires different treatment
     """
-    b = airglow[::2]
-    r = airglow[1::2]
-    gap_w = np.array([], dtype=float)
-    gap_f = np.array([], dtype=float)
-    for i in range(len(b)):
-        mask = (sed_table['WAVELENGTH'] > b[i] - 5) & (sed_table['WAVELENGTH'] < r[i] + 5)
-        wi = np.arange(b[i], r[i], 1.0)
-        gap_w = np.concatenate((gap_w, wi))
-        fi = np.polyval((np.polyfit(sed_table['WAVELENGTH'][mask], sed_table['FLUX'][mask], 2)), wi)
-        gap_f = np.concatenate((gap_f, fi))
+    if nuv:
+        b, r = airglow[0], airglow[1]
+        gap_w = np.arange(b, r, 1)
+        w, f = sed_table['WAVELENGTH'], sed_table['FLUX'] 
+        mask = (w > 1700) & (w < 2790) | (w > 2805) & (w < 3150) #cut to nuv range and remove mg ii
+        w, f = w[mask], f[mask]
+        gap_f = np.polyval((np.polyfit(w,f,2)), gap_w)
+    else:
+        b = airglow[::2]
+        r = airglow[1::2]
+        gap_w = np.array([], dtype=float)
+        gap_f = np.array([], dtype=float)
+        for i in range(len(b)):
+            mask = (sed_table['WAVELENGTH'] > b[i] - 5) & (sed_table['WAVELENGTH'] < r[i] + 5)
+            wi = np.arange(b[i], r[i], 1.0)
+            gap_w = np.concatenate((gap_w, wi))
+            fi = np.polyval((np.polyfit(sed_table['WAVELENGTH'][mask], sed_table['FLUX'][mask], 2)), wi)
+            gap_f = np.concatenate((gap_f, fi))
     fill_table = Table([gap_w*u.AA, gap_f*u.erg/u.s/u.cm**2/u.AA], names=['WAVELENGTH', 'FLUX'], meta={'NORMFAC': 1.0})
     instrument_code, fill_table = fill_model(fill_table, 'mod_gap_fill-')
     sed_table = vstack([sed_table, fill_table], metadata_conflicts = 'silent')
@@ -217,7 +226,7 @@ def add_stis_nuv(sed_table, component_repo, instrument_list):
     """
     Add a stis g230l spectrum to the end of whatever's there already.
     """
-    g230l = Table.read(glob.glob(component_repo+'*g230l*.ecsv')[0])
+    g230l = Table.read(glob.glob(component_repo+'*stis*g230l*.ecsv')[0])
     instrument_code, g230l = hst_instrument_column(g230l)
     instrument_list.append(instrument_code)
     g230l = normfac_column(g230l)
@@ -226,8 +235,85 @@ def add_stis_nuv(sed_table, component_repo, instrument_list):
     sed_table = vstack([sed_table, g230l], metadata_conflicts = 'silent')
     return sed_table, instrument_list
 
-        
-        
+def add_cos_nuv(sed_table, component_repo, instrument_list, gap_edges):
+    """
+    Add a cos g230l spectrum to the end of whatever's there already, filling in the gap with a polynomial
+    """
+    g230l = Table.read(glob.glob(component_repo+'*cos*g230l*.ecsv')[0])
+    gap_mask = mask_maker(g230l['WAVELENGTH'], gap_edges)
+    g230l = g230l[gap_mask] 
+    instrument_code, g230l = hst_instrument_column(g230l)
+    instrument_list.append(instrument_code)
+    g230l = normfac_column(g230l)
+    g230l = g230l[g230l['WAVELENGTH'] > max(sed_table['WAVELENGTH'])]
+    sed_table = vstack([sed_table, g230l], metadata_conflicts = 'silent')
+    sed_table, instrument_list = fill_cos_airglow(sed_table, gap_edges, instrument_list, nuv=True)
+    return sed_table, instrument_list
+    
+def add_stis_optical(sed_table, component_repo, instrument_list):
+    """
+    Adds the G430L spectrum
+    """
+    g430l_path = glob.glob(component_repo+'*g430l*.ecsv')
+    if len(g430l_path) > 0:
+        g430l = Table.read(g430l_path[0])
+        instrument_code, g430l = hst_instrument_column(g430l)
+        instrument_list.append(instrument_code)
+        g430l = normfac_column(g430l)
+        g430l = g430l[g430l['WAVELENGTH'] > max(sed_table['WAVELENGTH'])]
+        sed_table = vstack([sed_table, g430l], metadata_conflicts = 'silent')
+    return sed_table, instrument_list
+    
+def residuals(scale, f, mf):
+    return f - mf/scale
+    
+def phoenix_norm(component_repo, plot=False, cut=4000): 
+    """
+    find the normalisation factor between the phoenix model and the stis ccd (ccd_path)
+    """
+    norm = Table.read(glob.glob(component_repo+'*phx*.ecsv')[0])
+    base = Table.read(glob.glob(component_repo+'*g430l*.ecsv')[0])
+    cw, cf, cdq = base['WAVELENGTH'], base['FLUX'], base['DQ']
+    sw, sf = norm['WAVELENGTH'], norm['FLUX']
+    cw, cf, cdq = cw[cw >= cut], cf[cw >= cut], cdq[cw >= cut] #cut corona off
+    c_mask = (cw >= sw[0]) & (cw <=sw[-1]) & (cdq == 0)
+    s_mask = (sw >= cw[0]) & (sw <=cw[-1]) #mask to same same waveband and cut dq flags
+    cw, cf, sw, sf = cw[c_mask], cf[c_mask], sw[s_mask], sf[s_mask]
+    sw1, sf1 = resample.bintogrid(sw, sf, newx=cw) #rebin to stis wavelength grid
+
+    scale, flag = leastsq(residuals, 1., args=(cf, sf1))
+    normfac = 1/scale[0]
+    print('PHOENIX NORMFAC =', normfac)
+    update_norm(glob.glob(component_repo+'*phx*.ecsv')[0], glob.glob(component_repo+'*phx*.fits')[0], normfac)
+
+    if plot:
+        plt.figure(star+'_scaled')
+        plt.plot(w_phx, f_phx*normfac)
+        #plt.step(w,f, where='mid')
+        plt.step(w1, f1, where='mid')
+        plt.xlabel('Wavelength (\AA)', size=20)
+        plt.ylabel('Flux (erg s$^{-1}$ cm$^{-2}$ \AA$^{-1}$)', size=20)
+        plt.xlim(2000, 6000)
+        plt.yscale('log')
+        plt.axvline(cut, c='r', ls='--')
+        plt.tight_layout()
+        plt.show()
+    return normfac
+
+def add_stis_optical(sed_table, component_repo, instrument_list):
+    """
+    Adds the scaled phoenix spectrum
+    """
+    phx_path = glob.glob(component_repo+'*phx*.ecsv')
+    if len(phx_path) > 0:
+        phx = Table.read(phx_path[0])
+        instrument_code, phx = fill_model(phx, 'mod_phx_-----')
+        instrument_list.append(instrument_code)
+        phx = normfac_column(phx)
+        phx = phx[phx['WAVELENGTH'] > max(sed_table['WAVELENGTH'])]
+        phx['FLUX'] *= phx.meta['NORMFAC']
+        sed_table = vstack([sed_table, phx], metadata_conflicts = 'silent')
+    return sed_table, instrument_list
         
 
                      

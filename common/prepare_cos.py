@@ -94,43 +94,38 @@ def make_cos_data(sav, x1dpath, correct_error=True):
 
     return new_data
 
-def make_nuv_data(g230l_path, correct_error=True):
+def make_cos_nuv_data(g230l_path, correct_error=True, find_gap=False):
     """
-    Turns a cos g230l file into a data array
+    Turns a cos g230l file into a data array. Find gap finds the edges of the gap in wavelength coverage
     """
     hdul = fits.open(g230l_path) 
-    data = fits.getdata(filepath,1)[0:2] #not using reflected order
-    hdr0 = fits.getheader(filepath,0)
-    hdr1 = fits.getheader(filepath,1)
-    w = np.array([], dtype=float)
-    f = np.array([], dtype=float)
-    e = np.array([], dtype=float)
-    dq = np.array([], dtype=int)
-    if fillgap == True:
-        gap_w, gap_f = nuv_fill(data)
-        for dt in data:
-            mask = (dt['WAVELENGTH'] < gap_w[0]) | (dt['WAVELENGTH'] > gap_w[-1])
-            w= np.concatenate((w, dt['WAVELENGTH'][mask]))
-            f = np.concatenate((f, dt['FLUX'][mask]))
-            e = np.concatenate((e, dt['ERROR'][mask]))
-            dq = np.concatenate((dq, dt['DQ'][mask]))
-        gap_w0, gap_w1 = wavelength_edges(gap_w)
-        gap_code = inst.getinsti('oth_---_other')
-        gap_collection = dict_builder(gap_w0, gap_w1, gap_w, gap_f, np.zeros(len(gap_w)), np.zeros(len(gap_w)),np.zeros(len(gap_w)), 0., 0., gap_code)        
+    data = hdul[1].data[0:2] #not using reflected order
+    hdr1 = hdul[1].header
+    hdul.close()
+    w_new = f_new = e_new = np.array([], dtype=float)
+    dq_new = np.array([], dtype=int)
+    w_start = []
+    w_end = []
+    for dt in data:
+        w_new = np.concatenate((w_new, dt['WAVELENGTH']))
+        w_start.append(dt['WAVELENGTH'][dt['DQ']<5][0])
+        w_end.append(dt['WAVELENGTH'][dt['DQ']<5][-1])
+        f_new = np.concatenate((f_new, dt['FLUX']))
+        e_new = np.concatenate((e_new, dt['ERROR']))
+        dq_new = np.concatenate((dq_new, dt['DQ']))
+    w0, w1 = wavelength_edges(w_new)
+    if correct_error:
+        e_new = no_zero_errors(f_new, e_new)
+    exptime = np.full(len(w_new), hdr1['EXPTIME'])
+    start = np.full(len(w_new),hdr1['EXPSTART'])
+    end = np.full(len(w_new), hdr1['EXPEND'])
+    new_data = {'WAVELENGTH':w_new*u.AA,'WAVELENGTH0':w0*u.AA,'WAVELENGTH1':w1*u.AA,'FLUX':f_new*u.erg/u.s/u.cm**2/u.AA,
+                'ERROR':e_new*u.erg/u.s/u.cm**2/u.AA,'EXPTIME':exptime*u.s,'DQ':dq_new,'EXPSTART':start*cds.MJD,'EXPEND':end*cds.MJD}
+    if find_gap:
+        gap = [min(w_end), max(w_start)]
+        return new_data, gap
     else:
-        for dt in data:
-            w= np.concatenate((w, dt['WAVELENGTH']))
-            f = np.concatenate((f, dt['FLUX']))
-            e = np.concatenate((e, dt['ERROR']))
-            dq = np.concatenate((dq, dt['DQ']))
-        gap_collection = {}
-    w0, w1 = wavelength_edges(w)
-    exptime = np.full(len(w), hdr1['EXPTIME'])
-    expstart, expend = hdr1['EXPSTART'], hdr1['EXPEND']
-    instrument_name = hdr0['TELESCOP']+'_cos_'+hdr0['OPT_ELEM']   
-    instrument_code = inst.getinsti(instrument_name.lower())
-    cos_nuv_collection = dict_builder(w0, w1, w, f, e, dq, exptime, expstart, expend, instrument_code)
-    return cos_nuv_collection, gap_collection
+        return new_data
 
 def make_cos_metadata(sav, new_data, x1dpath):
     """
@@ -159,6 +154,33 @@ def make_cos_metadata(sav, new_data, x1dpath):
                   'FLUXMAX','FLUXUNIT']
     meta_fill = ['','',hdr0['OPT_ELEM'],'','','','','',muscles_name,'MUSCLES','David J. Wilson','','',min(dates),min(start_times),max(end_times),sum(exptimes),'SUM', 
                 min(exptimes), max(exptimes), np.median(exptimes),1.0,wavelength[0], wavelength[-1],'ang','vac',specres,waveres,np.min(flux[np.isnan(flux)==False]), np.max(flux[np.isnan(flux)==False]),'erg/s/cm2/ang']
+    metadata = {}
+    for name, filler in zip(meta_names, meta_fill):
+        if filler == '':
+            metadata[name] = hdr0[name]
+        else:
+            metadata[name] = filler
+    return metadata
+
+def make_cos_nuv_metadata(new_data, g230l_path):
+    """
+    Makes the metadata for the ecsv files- eventually will be converted into the fits file
+    """
+    wavelength, flux = new_data['WAVELENGTH'].value, new_data['FLUX'].value
+    mid = int(len(wavelength) / 2)
+    specres = wavelength[mid]
+    waveres = wavelength[mid+1] - wavelength[mid]
+    hdul = fits.open(g230l_path) 
+    data = hdul[1].data[0:2] #not using reflected order
+    hdr0 = hdul[0].header
+    hdr1 = hdul[1].header
+    hdul.close()
+    muscles_name = 'Measurements of the Ultraviolet Spectral Characteristics of Low-mass Exoplanet Host Stars'
+    meta_names =  ['TELESCOP', 'INSTRUME','GRATING','APERTURE','TARGNAME','RA_TARG','DEC_TARG','PROPOSID','HLSPNAME','HLSPACRN','HLSPLEAD','PR_INV_L',
+                   'PR_INV_F','DATE-OBS','EXPSTART','EXPEND','EXPTIME','EXPDEFN','EXPMIN','EXPMAX','EXPMED','NORMFAC','WAVEMIN','WAVEMAX','WAVEUNIT','AIRORVAC','SPECRES','WAVERES','FLUXMIN',
+                  'FLUXMAX','FLUXUNIT']
+    meta_fill = ['','',hdr0['OPT_ELEM'],'','','','','',muscles_name,'MUSCLES','David J. Wilson','','',hdr1['DATE-OBS'],hdr1['EXPSTART'],hdr1['EXPEND'],hdr1['EXPTIME'],'SUM', 
+                hdr1['EXPTIME'], hdr1['EXPTIME'], hdr1['EXPTIME'],1.0,wavelength[0], wavelength[-1],'ang','vac',specres,waveres,np.min(flux[np.isnan(flux)==False]), np.max(flux[np.isnan(flux)==False]),'erg/s/cm2/ang']
     metadata = {}
     for name, filler in zip(meta_names, meta_fill):
         if filler == '':
@@ -238,6 +260,24 @@ def make_dataset_extension(sav,x1dpath):
     hdu.header['COMMENT'] = description_text
     return hdu
 
+
+def make_nuv_dataset_extension(x1dpath):
+    """
+    Makes a fits extension containg a list of rootnames and dataset IDs used in the spectrum.
+    """
+    description_text = 'This extension contains a list of HST rootnames (9 character string in HST files downloaded from MAST) and dataset IDs of the exposures used to create this spectrum file. The dataset IDs can be used to directly locate the observations through the MAST HST data archive search interface. Multiple identifiers indicate the spectra were coadded. In some cases the spectra have been rextracted and will be different from those availbale from MAST.' 
+    
+
+    hdr = fits.getheader(x1dpath,0)
+    rootnames = [(hdr['ROOTNAME'],)]
+    datasets = [(hdr['ASN_ID'])]
+    dataset_table = Table([rootnames,datasets], names=[('ROOTNAME'),('DATASET_ID')])
+    hdu = fits.table_to_hdu(dataset_table)
+    hdu.header.insert(8, ('EXTNAME','SRCSPECS'))
+    hdu.header.insert(9, ('EXTNO',3))
+    hdu.header['COMMENT'] = description_text
+    return hdu
+
 def make_cos_spectrum(savpath, version, x1dpath,savepath = '', plot=False, save_ecsv=False, save_fits=False):
     """
     Main function. Take one of Kevin France's coadded x1d files (they come added by grating) and make it into a muscles fits file
@@ -254,10 +294,26 @@ def make_cos_spectrum(savpath, version, x1dpath,savepath = '', plot=False, save_
             data_set_hdu = make_dataset_extension(sav,x1dpath)
             save_to_fits(data, metadata, data_set_hdu, savepath, version)
         
-def make_cos_nuv():
+def make_cos_nuv(x1d_path, version, savepath = '', plot=False, save_ecsv=False, save_fits=False, find_gap=False):
     """
     Makes and saves an nuv spectrum
     """
+    x1ds = glob.glob(x1d_path+'*x1dsum.fits')
+    for x in x1ds:
+        if fits.getheader(x)['OPT_ELEM'] == 'G230L':
+            g230l_path = x
+    data, gap = make_cos_nuv_data(g230l_path, find_gap=True)
+    metadata = make_cos_nuv_metadata(data, g230l_path)
+    if plot:
+            plot_spectrum(data, metadata)
+    if save_ecsv:
+        save_to_ecsv(data, metadata, savepath, version)
+    if save_fits:
+        data_set_hdu = make_nuv_dataset_extension(g230l_path)
+        save_to_fits(data, metadata, data_set_hdu, savepath, version)
+    if find_gap:
+        return gap
+    
     
 
 def test():
