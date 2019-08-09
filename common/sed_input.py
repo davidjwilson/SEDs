@@ -22,6 +22,8 @@ import make_mm_sed as sed
 import prepare_cos
 import prepare_stis
 import prepare_model
+import prepare_xmm
+import prepare_euv
 
 #paths = some way of storing all the paths to the different spectra 
 """
@@ -30,7 +32,7 @@ airglow (lya)
 """
 
 
-def make_sed(input_paths, savepath, version, lya_range, other_airglow, save_components = False, star_params={}, phoenix_repo = '/home/david/work/muscles/phoenix/model_repo/', phoenix_wave = '/home/david/work/muscles/SEDs/common/wavegrid_hires.fits', phoenix_cut = 4000, do_phoenix=True):
+def make_sed(input_paths, savepath, version, lya_range, other_airglow, save_components = False, star_params={}, phoenix_repo = '/home/david/work/muscles/phoenix/model_repo/', phoenix_wave = '/home/david/work/muscles/SEDs/common/wavegrid_hires.fits', phoenix_cut = 4000, do_phoenix=True, euv_inputs={}):
     airglow = lya_range+other_airglow
     #COS FUV 
     component_repo = savepath+'components/' #directory where the component spectra are saved
@@ -72,7 +74,25 @@ def make_sed(input_paths, savepath, version, lya_range, other_airglow, save_comp
         prepare_model.make_model_spectrum(input_paths['PHOENIX']+os.listdir(input_paths['PHOENIX'])[0], version, sed_table ,savepath = component_repo, save_ecsv=save_components, save_fits=save_components, model_name='PHX')
         phoenix_normfac = sed.phoenix_norm(component_repo, cut=phoenix_cut)
         sed_table, instrument_list = sed.add_phx_spectrum(sed_table, component_repo, instrument_list)
-                                                                
+                     
+    #xray- xmm/chandra +model
+    if 'XMM_path' in input_paths:
+        prepare_xmm.make_xmm_spectra(input_paths['XMM_path'], component_repo, sed_table.meta, version, apec_repo=input_paths['APEC'], save_ecsv=save_components, save_fits=save_components)
+        scope = 'xmm'
+    prepare_model.make_model_spectrum(input_paths['APEC']+os.listdir(input_paths['APEC'])[0], version, sed_table ,savepath = component_repo, save_ecsv=save_components, save_fits=save_components, model_name='apec')
+    
+    sed_table, instrument_list, euv_gap = sed.add_xray_spectrum(sed_table, component_repo, instrument_list, scope, add_apec = True, find_gap=True)
+    
+    #EUV
+    dem_path = ''
+    euv_name = 'euv-scaling'
+    if 'DEM_path' in input_paths:
+        dem_path = input_paths['DEM_path']
+        euv_name = 'dem'
+    prepare_euv.make_euv(input_paths['EUV'], dem_path, euv_inputs=euv_inputs)
+    prepare_model.make_model_spectrum(input_paths['EUV']+os.listdir(input_paths['EUV'])[0], version, sed_table ,savepath = component_repo, save_ecsv=save_components, save_fits=save_components, model_name=euv_name)
+    
+    sed_table, instrument_list = sed.add_euv(sed_table, component_repo, instrument_list, euv_gap, euv_name)
         
     
     sed_table.sort(['WAVELENGTH'])
@@ -91,13 +111,21 @@ def gj_674_test():
     star_params = {'Teff':3400, 'logg':4.5, 'FeH':0.0 , 'aM':0.0 }
     path = '/home/david/work/muscles/SEDs/'+star+'/'
     muscles_path = '/home/david/work/muscles/MegaMUSCLES/'+star_up+'/'
-    input_paths = dict(COS_readsav = path+'COS/', COS_x1d = muscles_path+'HST/COS/',STIS_FUV = muscles_path+'HST/STIS/', 
-                       lya_model = path + 'lya/GJ674_intrinsic_LyA_profile.txt', PHOENIX=path+'phoenix_repo/')
+    input_paths = dict(COS_readsav = path+'COS/', 
+                       COS_x1d = muscles_path+'HST/COS/',
+                       STIS_FUV = muscles_path+'HST/STIS/', 
+                       lya_model = path + 'lya/GJ674_intrinsic_LyA_profile.txt', 
+                       PHOENIX= path+'phoenix_repo/',
+                       XMM_path = path+'xmm/GJ674.fits',
+                       APEC = path+'apec/',
+                       EUV = path+'euv_repo/'
+                       )
     lya_range = [1207, 1225] #lyman alpha region to remove
     other_airglow = [1304, 1304.5, 1355, 1356] #oi airglow to remove
     save_path = path + 'test_files/'
     version = 1
-    sed_table, instrument_list = make_sed(input_paths, save_path, version, lya_range, other_airglow, save_components=False, star_params=star_params)
+    euv_inputs = dict(lya=2.9*2.06e-12, distance=4.54 )
+    sed_table, instrument_list = make_sed(input_paths, save_path, version, lya_range, other_airglow, save_components=True, star_params=star_params, do_phoenix=False, euv_inputs = euv_inputs)
     #print(sed_table.sort('WAVELENGTH'))
     plt.figure(star+'_test')
     plt.step(sed_table['WAVELENGTH'], sed_table['FLUX'], where='mid')
@@ -114,24 +142,34 @@ def trappist_1_test():
     star_up = 'TRAPPIST-1'
     path = '/home/david/work/muscles/SEDs/'+star+'/'
     muscles_path = '/home/david/work/muscles/MegaMUSCLES/'+star_up+'/'
-    input_paths = dict(COS_readsav = path+'COS/', COS_x1d = '/home/david/work/muscles/trappist-1/hst/data/',
+    input_paths = dict(COS_readsav = path+'COS/', 
+                       COS_x1d = '/home/david/work/muscles/trappist-1/hst/data/',
                        STIS_FUV = '/home/david/work/muscles/trappist-1/hst/stis_collection/' , 
-                       lya_model = path + 'lya/Trappist-1_lya_simple.txt')
+                       lya_model = path + 'lya/Trappist-1_lya_simple.txt',
+                       PHOENIX= path+'phoenix_repo/',
+                       XMM_path = path+'xmm/Trappist-1.fits',
+                       APEC = path+'apec/',
+                       EUV = path+'euv_repo/',
+                       DEM_path = path + 'dem/trappist-1_dem_spectra.fits'
+                      )
     lya_range = [1207, 1225] #lyman alpha region to remove
     other_airglow =  [1273.9, 1287.3, 1301, 1307]  #oi airglow to remove
     save_path = path + 'test_files/'
     version = 1
-    sed_table, instrument_list = make_sed(input_paths, save_path, version, lya_range, other_airglow, save_components=True)
+    star_params = {'Teff':2560, 'logg':5.0, 'FeH':0.0 , 'aM':0.0 }
+    sed_table, instrument_list = make_sed(input_paths, save_path, version, lya_range, other_airglow, save_components=True, star_params=star_params, do_phoenix=False)
     
     #print(sed_table.sort('WAVELENGTH'))
     plt.figure(star+'_test')
     plt.step(sed_table['WAVELENGTH'], sed_table['FLUX'], where='mid')
+    plt.xscale('log')
+    plt.yscale('log')
     plt.show()
     
     
     
-gj_674_test()
-#trappist_1_test()
+#gj_674_test()
+trappist_1_test()
                                               
     #filepaths = {'xmm':'/xmm/GJ674.fits',
      #        'cos_g130m':'/COS/GJ674_COS130M_Mm1_NOSCL_03apr18.sav',

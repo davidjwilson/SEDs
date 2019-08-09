@@ -103,7 +103,7 @@ def fill_cos_airglow(sed_table, airglow, instrument_list, nuv = False):
         w, f = sed_table['WAVELENGTH'], sed_table['FLUX'] 
         mask = (w > 1700) & (w < 2790) | (w > 2805) & (w < 3150) #cut to nuv range and remove mg ii
         w, f = w[mask], f[mask]
-        gap_f = np.polyval((np.polyfit(w,f,2)), gap_w)
+        gap_f = np.polyval((np.polyfit(w,f,1)), gap_w)
     else:
         b = airglow[::2]
         r = airglow[1::2]
@@ -300,7 +300,7 @@ def phoenix_norm(component_repo, plot=False, cut=4000):
         plt.show()
     return normfac
 
-def add_stis_optical(sed_table, component_repo, instrument_list):
+def add_phx_spectrum(sed_table, component_repo, instrument_list):
     """
     Adds the scaled phoenix spectrum
     """
@@ -316,5 +316,51 @@ def add_stis_optical(sed_table, component_repo, instrument_list):
     return sed_table, instrument_list
         
 
-                     
+def add_xray_spectrum(sed_table, component_repo, instrument_list, scope, add_apec = True, find_gap=True):
+    """
+    Adds either a Chandra or and XMM spectrum and an APEC model. Can aslo return the gap that the EUV/DEM will fit into.
+    """
+    if scope == 'xmm':
+        instrument_name = 'xmm_epc_multi'
+    cos_start = min(sed_table['WAVELENGTH']) #save the lowest wavelength on the table before we add anything to it
+    xray_path = glob.glob(component_repo+'*'+scope+'*.ecsv')
+    if len(xray_path) > 0:
+        xray = Table.read(xray_path[0])
+        instrument_code, xray = fill_model(xray, instrument_name)
+        instrument_list.append(instrument_code)
+        xray = normfac_column(xray)
+        xray_end = max(xray['WAVELENGTH'])
+        sed_table = vstack([sed_table, xray], metadata_conflicts = 'silent')
+    if add_apec:
+        apec_path = glob.glob(component_repo+'*apec*.ecsv')
+        if len(apec_path) > 0:
+            apec = Table.read(apec_path[0])
+            instrument_code, apec = fill_model(apec, 'mod_apc_-----')
+            instrument_list.append(instrument_code)
+            apec = normfac_column(apec)
+            apec = apec[apec['WAVELENGTH'] > xray_end]
+            xray_end = max(xray['WAVELENGTH'])
+            sed_table = vstack([sed_table, apec], metadata_conflicts = 'silent')
+    if find_gap:
+        return sed_table, instrument_list, [xray_end, cos_start]
+    else:
+        return sed_table, instrument_list
     
+def add_euv(sed_table, component_repo, instrument_list, euv_gap, euv_type):
+    """
+    Add the euv portion of the spectrum, either a Linsky_14 estmation or a DEM.
+    """
+    instrument_name = 'mod_euv_young'
+    if euv_type == 'dem':
+        instrument_name = 'mod_dem_-----'
+    euv_path = glob.glob(component_repo+'*'+euv_type+'*.ecsv')
+    if len(euv_path) > 0:
+        euv = Table.read(euv_path[0])
+        instrument_code, euv = fill_model(euv, instrument_name)
+        instrument_list.append(instrument_code)
+        euv = normfac_column(euv)
+        euv = euv[(euv['WAVELENGTH'] > euv_gap[0]) & (euv['WAVELENGTH'] < euv_gap[1])]
+        sed_table = vstack([sed_table, euv], metadata_conflicts = 'silent')
+    return sed_table, instrument_list
+
+        
