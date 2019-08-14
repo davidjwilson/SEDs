@@ -322,6 +322,8 @@ def add_xray_spectrum(sed_table, component_repo, instrument_list, scope, add_ape
     """
     if scope == 'xmm':
         instrument_name = 'xmm_epc_multi'
+    if scope == 'cxo':
+        instrument_name = 'cxo_acs_-----'
     cos_start = min(sed_table['WAVELENGTH']) #save the lowest wavelength on the table before we add anything to it
     xray_path = glob.glob(component_repo+'*'+scope+'*.ecsv')
     if len(xray_path) > 0:

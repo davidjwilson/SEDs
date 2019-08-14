@@ -71,8 +71,8 @@ def build_xmm_metadata(hdr0, new_data, sed_meta):
                   'FLUXMAX','FLUXUNIT']
     meta_fill = ['XMM','EPIC','NA','MULTI','PN','MOS1','MOS2','MULTI', hdr0['pn_FILTER'],
                  hdr0['mos1_FILTER'],hdr0['mos2_FILTER'],'sed','sed','sed','sed','sed','sed','sed',
-                 'sed','sed',hdr0['pn_DATE-OBS'], start, end, exptime, 'MEAN', 
-                 exptime, 1.0, min(wavelength), max(wavelength), 'ang', 'vac', specres, waveres,np.min(flux[np.isnan(flux)==False]),
+                 'sed','sed',hdr0['pn_DATE-OBS'], start, end, exptime, 'MEAN', exptime, 
+                 exptime, exptime, 1.0, min(wavelength), max(wavelength), 'ang', 'vac', specres, waveres,np.min(flux[np.isnan(flux)==False]),
                  np.max(flux[np.isnan(flux)==False]),'erg/s/cm2/ang']  
     metadata = {}
     for name, filler in zip(meta_names, meta_fill):
