@@ -318,7 +318,7 @@ def add_phx_spectrum(sed_table, component_repo, instrument_list):
 
 def add_xray_spectrum(sed_table, component_repo, instrument_list, scope, add_apec = True, find_gap=True):
     """
-    Adds either a Chandra or and XMM spectrum and an APEC model. Can aslo return the gap that the EUV/DEM will fit into.
+    Adds either a Chandra or and XMM spectrum and an APEC model. Can also return the gap that the EUV/DEM will fit into.
     """
     if scope == 'xmm':
         instrument_name = 'xmm_epc_multi'
@@ -341,7 +341,7 @@ def add_xray_spectrum(sed_table, component_repo, instrument_list, scope, add_ape
             instrument_list.append(instrument_code)
             apec = normfac_column(apec)
             apec = apec[apec['WAVELENGTH'] > xray_end]
-            xray_end = max(xray['WAVELENGTH'])
+            xray_end = max(apec['WAVELENGTH'])
             sed_table = vstack([sed_table, apec], metadata_conflicts = 'silent')
     if find_gap:
         return sed_table, instrument_list, [xray_end, cos_start]

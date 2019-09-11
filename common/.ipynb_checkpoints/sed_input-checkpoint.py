@@ -214,13 +214,14 @@ def gj_699_test():
                        STAR_PARAMS = path + 'GJ_699_ParamStats.txt',
                        CXO_path = path+'Chandra/all/',
                        CXO_evt = muscles_path+'Chandra/primary/acisf20619N001_evt2.fits.gz',
+                       DEM_path = path + 'dem/gj699_time_average_dem.fits'
                        )
     lya_range = [1207, 1222] #lyman alpha region to remove
     other_airglow = [1300, 1310, 1353, 1356] #oi airglow to remove
     save_path = path + 'test_files/'
     version = 1
     euv_inputs = dict(lya=1.17*1.04e-12, distance=1.8266 )
-    sed_table, instrument_list = make_sed(input_paths, save_path, version, lya_range, other_airglow, save_components=True, do_phoenix=True, euv_inputs = euv_inputs)
+    sed_table, instrument_list = make_sed(input_paths, save_path, version, lya_range, other_airglow, save_components=True, do_phoenix=True)
     quicksave(sed_table)
     #print(sed_table.sort('WAVELENGTH'))
     plt.figure(star+'_test')
