@@ -29,6 +29,8 @@ import prepare_stis
 from astropy.units import cds
 from scipy.io import readsav
 from scipy.optimize import leastsq
+from scipy.signal import argrelmax
+from scipy.integrate import quad
 cds.enable()
 
 
@@ -328,9 +330,11 @@ def add_xray_spectrum(sed_table, component_repo, instrument_list, scope, add_ape
     xray_path = glob.glob(component_repo+'*'+scope+'*.ecsv')
     if len(xray_path) > 0:
         xray = Table.read(xray_path[0])
+        error = xray['ERROR']
         instrument_code, xray = fill_model(xray, instrument_name)
+        xray['ERROR'] = error
         instrument_list.append(instrument_code)
-        xray = normfac_column(xray)
+        #xray = normfac_column(xray)
         xray_end = max(xray['WAVELENGTH'])
         sed_table = vstack([sed_table, xray], metadata_conflicts = 'silent')
     if add_apec:
@@ -365,4 +369,57 @@ def add_euv(sed_table, component_repo, instrument_list, euv_gap, euv_type):
         sed_table = vstack([sed_table, euv], metadata_conflicts = 'silent')
     return sed_table, instrument_list
 
-        
+def blackbody_fit(phx, Teff):
+    """Return a function that is a blackbody fit to the phoenix spectrum for the star. The fit is to the unnormalized
+    phoenix spectrum, so the fit function values must be multiplied by the appropriate normalization factor to match
+    the normalized spectrum. From PLs code"""
+
+    
+    # recursively identify relative maxima until there are fewer than N points
+    N = 10000
+    keep = np.arange(len(phx))
+    while len(keep) > N:
+        temp, = argrelmax(phx['FLUX'][keep])
+        keep = keep[temp]
+
+    efac = const.h * const.c / const.k_B / (Teff * u.K)
+    efac  = efac.to(u.angstrom).value
+    w = phx['WAVELENGTH']
+    w = w[keep]
+    planck_shape = 1.0/w**5/(np.exp(efac/w) - 1)
+    y = phx['FLUX'][keep]
+
+    Sfy = np.sum(planck_shape * y)
+    Sff = np.sum(planck_shape**2)
+
+    norm = Sfy/Sff
+
+    return lambda w: norm/w**5/(np.exp(efac/w) - 1)
+
+def bolo_integral(pan,phx,teff,uplim=np.inf):
+    """
+    Calculates the bolometric integral flux of the SED by adding a blackbody fit to the end of the sed
+    """
+    fit_unnormed = blackbody_fit(phx, teff)
+    normfac = pan[-1]['NORMFAC'] 
+    #Ibody = flux_integral(pan)[0]
+    Ibody = np.trapz(pan['FLUX'], pan['WAVELENGTH'])
+    Itail = normfac*quad(fit_unnormed, pan['WAVELENGTH'][-1], uplim)[0]
+    I = Ibody + Itail
+
+    return I
+
+
+def add_bolometric_flux(sed_table, component_repo, star_params):
+    """
+    Creates and adds the bolometric flux column to the sed
+    """
+    phx = Table.read(glob.glob(component_repo+'*phx*ecsv')[0])
+    bolo_int = bolo_integral(sed_table,phx,star_params['Teff'])
+    sed_table['BOLOFLUX'] = sed_table['FLUX']/bolo_int
+    sed_table['BOLOERR'] = sed_table['ERROR']/bolo_int
+    #boloerr = np.zeros(len(sed_table['ERROR']))
+    #for i in range(len(boloerr)):
+     #   if sed_table['ERROR'][i] > 0.0:
+      #      boloerr[i] = sed_table['ERROR'][i]/boloflux
+    return sed_table

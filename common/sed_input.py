@@ -102,8 +102,11 @@ def make_sed(input_paths, savepath, version, lya_range, other_airglow, save_comp
     
     sed_table, instrument_list = sed.add_euv(sed_table, component_repo, instrument_list, euv_gap, euv_name)
         
-    
+    #sort by wavelength to get everything in order
     sed_table.sort(['WAVELENGTH'])
+    
+    #add the bolometric flux normalisations
+    sed_table = sed.add_bolometric_flux(sed_table, component_repo, star_params)
                                               
     return sed_table, instrument_list
         
@@ -225,7 +228,8 @@ def gj_699_test():
     quicksave(sed_table)
     #print(sed_table.sort('WAVELENGTH'))
     plt.figure(star+'_test')
-    plt.step(sed_table['WAVELENGTH'], sed_table['FLUX'], where='mid')
+    plt.step(sed_table['WAVELENGTH'], sed_table['BOLOFLUX'], where='mid')
+    plt.step(sed_table['WAVELENGTH'], sed_table['BOLOERR'], where='mid')
     plt.xscale('log')
     plt.yscale('log')
     plt.show()
