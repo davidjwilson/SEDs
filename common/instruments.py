@@ -11,7 +11,7 @@ instruments = ['hst_cos_g130m','hst_cos_g160m','hst_cos_g230l','hst_sts_g140m','
                'hst_sts_e230h','hst_sts_g230l','hst_sts_g430l','hst_sts_g430m','mod_gap_fill-',
                'xmm_epc_multi','xmm_epc_pn---', 'cxo_acs_-----', 'mod_euv_young', 'mod_apc_-----',
                'mod_lya_young','mod_phx_-----', 'oth_---_other', 'hst_sts_g230lb', 'hst_sts_g750l', 'hst_fos_g570h',
-               'hst_fos_g780h', 'hst_cos_g140l', 'mod_dem_-----']
+               'hst_fos_g780h', 'hst_sts_g140l', 'mod_dem_-----']
 instvals = [2**i for i in range(len(instruments))]
 default_order = ['hst_cos_g130m','hst_cos_g160m','hst_cos_g230l','hst_sts_g140m','hst_sts_e140m','hst_sts_e230m',
                  'hst_sts_e230h','hst_sts_g230l', 'hst_sts_g230lb', 'xmm_epc_multi','xmm_epc_pn---', 'cxo_acs_-----',
@@ -34,7 +34,7 @@ instabbrevs = {'xobs':'XMM or Chandra', 'apec':'APEC', 'euv':'Empirical EUV Esti
 # for use in making FITS headers
 HLSPtelescopes = {'hst':'HST', 'cxo':'CXO', 'xmm':'XMM', 'mod':'MODEL', 'oth':'OTHER'}
 HLSPinstruments = {'cos':'COS', 'sts':'STIS', 'euv':'EUV-SCALING', 'lya':'LYA-RECONSTRUCTION', 'phx':'PHX',
-                   'epc':'EPIC', 'gap':'POLYNOMIAL-FIT', 'apc':'APEC', '---':'NA', 'acs':'ACIS', 'fos':'FOS'}
+                   'epc':'EPIC', 'gap':'POLYNOMIAL-FIT', 'apc':'APEC', '---':'NA', 'acs':'ACIS', 'fos':'FOS', 'dem':'DEM'}
 HLSPgratings = {'g130m':'G130M', 'g160m':'G160M', 'g430l':'G430L', 'g430m':'G430M', 'g140m':'G140M', 'e230m':'E230M',
                 'e230h':'E230H', 'g230l':'G230L', 'e140m':'E140M', 'fill-':'NA', '-----':'NA', 'young':'NA',
                 'pn---':'PN', 'multi':'MULTI', 'other':'NA', 'g750l':'G750L', 'g230lb':'G230LB', 'g570h':'g570H',
@@ -52,3 +52,10 @@ def getinsti(instrument):
         return instvals[instruments.index(instrument)]
     except ValueError:
         return -99
+
+def gethlspname(inst_string):
+    """
+    Converts an instrument string into HLSP words
+    """
+    tel, inst, grate = inst_string[0:3], inst_string[4:7], inst_string[8:]
+    return HLSPtelescopes[tel], HLSPinstruments[inst], HLSPgratings[grate]

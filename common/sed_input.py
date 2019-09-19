@@ -27,7 +27,7 @@ import prepare_euv
 import prepare_chandra
 from craftroom import resample
 from scipy.interpolate import interp1d
-
+import make_sed_files
 
 #paths = some way of storing all the paths to the different spectra 
 """
@@ -226,6 +226,8 @@ def gj_699_test():
     euv_inputs = dict(lya=1.17*1.04e-12, distance=1.8266 )
     sed_table, instrument_list = make_sed(input_paths, save_path, version, lya_range, other_airglow, save_components=True, do_phoenix=True)
     quicksave(sed_table)
+    make_sed_files.sed_to_ecsv(sed_table)
+    print(instrument_list)
     #print(sed_table.sort('WAVELENGTH'))
     plt.figure(star+'_test')
     plt.step(sed_table['WAVELENGTH'], sed_table['BOLOFLUX'], where='mid')

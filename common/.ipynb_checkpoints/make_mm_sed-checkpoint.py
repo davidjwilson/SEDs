@@ -416,8 +416,8 @@ def add_bolometric_flux(sed_table, component_repo, star_params):
     """
     phx = Table.read(glob.glob(component_repo+'*phx*ecsv')[0])
     bolo_int = bolo_integral(sed_table,phx,star_params['Teff'])
-    sed_table['BOLOFLUX'] = sed_table['FLUX']/bolo_int
-    sed_table['BOLOERR'] = sed_table['ERROR']/bolo_int
+    sed_table['BOLOFLUX'] = (sed_table['FLUX']/bolo_int)*1/u.A
+    sed_table['BOLOERR'] = (sed_table['ERROR']/bolo_int)*1/u.A
     #boloerr = np.zeros(len(sed_table['ERROR']))
     #for i in range(len(boloerr)):
      #   if sed_table['ERROR'][i] > 0.0:
