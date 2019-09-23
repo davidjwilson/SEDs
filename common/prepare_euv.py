@@ -94,7 +94,7 @@ def make_dem(dem_path, save_path):
     data = fits.getdata(dem_path, 1)
     wavelength, bin_flux = data['Wavelength'], data['Bin-Integrated Flux']
     w0, w1 = wavelength_edges(wavelength)
-    flux = bin_flux#/(w1-w0) #convert from bin-intergrated flux to flux -not required for new-generation seds
+    flux = bin_flux/(w1-w0) #convert from bin-intergrated flux to flux -not required for new-generation seds
     name = 'dem.txt' 
     if os.path.exists(save_path) == False:
         os.mkdir(save_path)

@@ -185,18 +185,18 @@ def quicksave(sed_table):
     Makes quick ecsv files for poster
     """
     name = sed_table.meta['TARGNAME']
-    w, f = sed_table['WAVELENGTH'], sed_table['FLUX']
+    w, f, e = sed_table['WAVELENGTH'], sed_table['FLUX'], sed_table['ERROR']
     #w1, f1 = resample.bintogrid(w, f, dx=1.0)
     w1 = np.arange(w[0], w[-1], 1.0)
     f1 = interp1d(w,f, fill_value='extrapolate')(w1)
-    t1 = Table([w,f], names=['WAVELENGTH', 'FLUX'])
+    t1 = Table([w,f,e], names=['WAVELENGTH', 'FLUX', 'ERROR'])
     t1.write('quicksaves/'+name+'_basic.ecsv', overwrite=True)
     
     t2 = Table([w1,f1], names=['WAVELENGTH', 'FLUX'])
     t2.write('quicksaves/'+name+'_1A_basic.ecsv', overwrite=True)
     
 #gj_674_test()
-#trappist_1_test()
+trappist_1_test()
  
 def gj_699_test():
     """
@@ -236,7 +236,7 @@ def gj_699_test():
     plt.yscale('log')
     plt.show()
 
-gj_699_test()    
+#gj_699_test()    
     
     
     #filepaths = {'xmm':'/xmm/GJ674.fits',

@@ -63,7 +63,7 @@ g230l_data, gap_data = sc.read_cos_nuv(path+filepaths['cos_g230l'])
 w = g230l_data['w']
 mask = (w > g160m_end)
 g230l_start, g230l_end, totals = sc.make_section(totals, g230l_data, mask=mask)
-gap_start, gap_end, totals = sc.make_section(totals, gap_data)
+gap_start, gap_end, totals = sc.make_section(totals, gap_data)t
 
 
 #G430L 
