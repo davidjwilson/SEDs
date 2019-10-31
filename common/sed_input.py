@@ -168,9 +168,9 @@ def trappist_1_test():
     lya_range = [1207, 1225] #lyman alpha region to remove
     other_airglow =  [1273.9, 1287.3, 1301, 1307]  #oi airglow to remove
     save_path = path + 'test_files/'
-    version = 1
+    version = 2
     star_params = {'Teff':2560, 'logg':5.0, 'FeH':0.0 , 'aM':0.0 }
-    sed_table, instrument_list = make_sed(input_paths, save_path, version, lya_range, other_airglow, save_components=False, star_params=star_params, do_phoenix=True)
+    sed_table, instrument_list = make_sed(input_paths, save_path, version, lya_range, other_airglow, save_components=True, star_params=star_params, do_phoenix=True)
     quicksave(sed_table)
     
     #print(sed_table.sort('WAVELENGTH'))

@@ -92,9 +92,9 @@ def make_dem(dem_path, save_path):
     Extracts the wavelength and flux from a DEM and saves it as a text file
     """
     data = fits.getdata(dem_path, 1)
-    wavelength, bin_flux = data['Wavelength'], data['Bin-Integrated Flux']
+    wavelength, flux = data['Wavelength'], data['Flux_density']
     w0, w1 = wavelength_edges(wavelength)
-    flux = bin_flux/(w1-w0) #convert from bin-intergrated flux to flux -not required for new-generation seds
+    #flux = bin_flux/(w1-w0) #convert from bin-intergrated flux to flux -not required for new-generation seds
     name = 'dem.txt' 
     if os.path.exists(save_path) == False:
         os.mkdir(save_path)
