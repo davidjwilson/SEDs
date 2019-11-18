@@ -168,7 +168,7 @@ def trappist_1_test():
     lya_range = [1207, 1225] #lyman alpha region to remove
     other_airglow =  [1273.9, 1287.3, 1301, 1307]  #oi airglow to remove
     save_path = path + 'test_files/'
-    version = 2
+    version = 3
     star_params = {'Teff':2560, 'logg':5.0, 'FeH':0.0 , 'aM':0.0 }
     sed_table, instrument_list = make_sed(input_paths, save_path, version, lya_range, other_airglow, save_components=True, star_params=star_params, do_phoenix=True)
     quicksave(sed_table)
@@ -189,10 +189,11 @@ def quicksave(sed_table):
     #w1, f1 = resample.bintogrid(w, f, dx=1.0)
     w1 = np.arange(w[0], w[-1], 1.0)
     f1 = interp1d(w,f, fill_value='extrapolate')(w1)
+    e1 = interp1d(w,e, fill_value='extrapolate')(w1)
     t1 = Table([w,f,e], names=['WAVELENGTH', 'FLUX', 'ERROR'])
     t1.write('quicksaves/'+name+'_basic.ecsv', overwrite=True)
     
-    t2 = Table([w1,f1], names=['WAVELENGTH', 'FLUX'])
+    t2 = Table([w1,f1,e1], names=['WAVELENGTH', 'FLUX', 'ERROR'])
     t2.write('quicksaves/'+name+'_1A_basic.ecsv', overwrite=True)
     
 #gj_674_test()
