@@ -11,3 +11,6 @@ trappist-1/combined/trappist-1_sed_var_res_blya.ecsv
 *.ecsv
 #ignore phoenix ecsvs
 */phoenix_repo/*
+#ignore g+19 ir data
+/trappist-1/ir_data/PS*
+
