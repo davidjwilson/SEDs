@@ -26,7 +26,7 @@ def phxurl(Teff, logg=4.5, FeH=0.0, aM=0.0, repo='ftp'):
     Does not check that the URL is actually valid, and digits beyond the
     precision of the numbers used in the path will be truncated.
     """
-    phoenixbaseurl = 'ftp://phoenix.astro.physik.uni-goettingen.de/HiResFITS/PHOENIX-ACES-AGSS-COND-2011/'
+    phoenixbaseurl = 'ftp://phoenix.astro.physik.uni-goettingen.de/v2.0/HiResFITS/PHOENIX-ACES-AGSS-COND-2011/'
     zstr = '{:+4.1f}'.format(FeH)
     if FeH == 0.0: zstr = '-' + zstr[1:]
         
@@ -173,7 +173,7 @@ def make_phoenix_spectrum(star,wave_file, save_path, repo, star_params, save_ecs
         spectra = get_models(repo,param_dicts)
         flux = interp_flux(spectra, params_to_interp, star_params)
     wavelength = get_wavelength(wave_file)
-    if save_ecsv == True:
+    if save_ecsv:
         save_to_ecsv(star, wavelength, flux, save_path)
     if plot == True:
         plot_spectrum(wavelength, flux, star)
