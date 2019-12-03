@@ -113,6 +113,9 @@ def interp_flux(spectra, params_to_interp, star_params):
     out_vals = [star_params[p] for p in params_to_interp]
     in_vals = [[s[p] for p in params_to_interp] for s in spectra]
     fluxes = [s['flux'] for s in spectra]
+    print(in_vals)
+    print(out_vals)
+    print(fluxes)
     if len(params_to_interp) == 1:
         in_vals = [s[params_to_interp[0]] for s in spectra]
         new_flux = interp1d(in_vals, fluxes, axis=0, fill_value='extrapolate')(star_params[params_to_interp[0]])
