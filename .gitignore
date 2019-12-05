@@ -15,4 +15,6 @@ trappist-1/combined/trappist-1_sed_var_res_blya.ecsv
 /trappist-1/ir_data/PS*
 #ignore lyon models
 /trappist-1/optical/lyon_phoenix/*
-
+#recalibrations
+/trappist-1/STIS/raw_data/*
+/trappist-1/STIS/old/*
