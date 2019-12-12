@@ -12,9 +12,9 @@ from urllib.request import urlretrieve, urlopen
 """
 @author David Wilson
 
-version 3 20191211
+version 2 20190709
 
-Script to retreive phoenix models and interpolate them onto the correct values. "phxurl" and "fetchphxfile" adaped from Parke Loyds scripts. Adapetd further to use the lyon models
+Script to retreive phoenix models and interpolate them onto the correct values. "phxurl" and "fetchphxfile" adaped from Parke Loyds scripts
 """
 
 def phxurl(Teff, logg=4.5, FeH=0.0, aM=0.0, repo='ftp'):
@@ -26,7 +26,7 @@ def phxurl(Teff, logg=4.5, FeH=0.0, aM=0.0, repo='ftp'):
     Does not check that the URL is actually valid, and digits beyond the
     precision of the numbers used in the path will be truncated.
     """
-    phoenixbaseurl = 'ftp://phoenix.astro.physik.uni-goettingen.de/v2.0/HiResFITS/PHOENIX-ACES-AGSS-COND-2011/'
+    phoenixbaseurl = 'ftp://phoenix.astro.physik.uni-goettingen.de/HiResFITS/PHOENIX-ACES-AGSS-COND-2011/'
     zstr = '{:+4.1f}'.format(FeH)
     if FeH == 0.0: zstr = '-' + zstr[1:]
         
@@ -113,9 +113,6 @@ def interp_flux(spectra, params_to_interp, star_params):
     out_vals = [star_params[p] for p in params_to_interp]
     in_vals = [[s[p] for p in params_to_interp] for s in spectra]
     fluxes = [s['flux'] for s in spectra]
-    print(in_vals)
-    print(out_vals)
-    print(fluxes)
     if len(params_to_interp) == 1:
         in_vals = [s[params_to_interp[0]] for s in spectra]
         new_flux = interp1d(in_vals, fluxes, axis=0, fill_value='extrapolate')(star_params[params_to_interp[0]])
@@ -176,7 +173,7 @@ def make_phoenix_spectrum(star,wave_file, save_path, repo, star_params, save_ecs
         spectra = get_models(repo,param_dicts)
         flux = interp_flux(spectra, params_to_interp, star_params)
     wavelength = get_wavelength(wave_file)
-    if save_ecsv:
+    if save_ecsv == True:
         save_to_ecsv(star, wavelength, flux, save_path)
     if plot == True:
         plot_spectrum(wavelength, flux, star)

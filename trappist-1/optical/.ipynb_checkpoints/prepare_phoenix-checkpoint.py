@@ -12,7 +12,7 @@ from urllib.request import urlretrieve, urlopen
 """
 @author David Wilson
 
-version 2 20190709
+version 2 20191211
 
 Script to retreive phoenix models and interpolate them onto the correct values. "phxurl" and "fetchphxfile" adaped from Parke Loyds scripts
 """
