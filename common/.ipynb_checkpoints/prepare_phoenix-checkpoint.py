@@ -8,44 +8,38 @@ import astropy.units as u
 import astropy.constants as const
 from scipy.interpolate import griddata, interp1d
 from urllib.request import urlretrieve, urlopen
+import lzma
 
 """
 @author David Wilson
 
-version 2 20190709
+version 3 20191211
 
-Script to retreive phoenix models and interpolate them onto the correct values. "phxurl" and "fetchphxfile" adaped from Parke Loyds scripts
+Script to retreive phoenix models and interpolate them onto the correct values. "phxurl" and "fetchphxfile" adaped from Parke Loyds scripts. Adapetd further to use the lyon models
 """
 
-def phxurl(Teff, logg=4.5, FeH=0.0, aM=0.0, repo='ftp'):
+def phxurl(Teff, logg=4.5, repo='ftp'):
     """
     Constructs the URL for the phoenix spectrum file for a star with effective
-    temperature Teff, log surface gravity logg, metalicity FeH, and alpha
-    elemnt abundance aM.
+    temperature Teff, log surface gravity logg. FeH and aM are fixed at 0.0 as the lyon database does not have other options
 
     Does not check that the URL is actually valid, and digits beyond the
     precision of the numbers used in the path will be truncated.
     """
-    phoenixbaseurl = 'ftp://phoenix.astro.physik.uni-goettingen.de/HiResFITS/PHOENIX-ACES-AGSS-COND-2011/'
-    zstr = '{:+4.1f}'.format(FeH)
-    if FeH == 0.0: zstr = '-' + zstr[1:]
-        
-    #20190628 alphas for fe = -4.0 are missing, don't know why but adding these lines to account
-   # if FeH == -4.0:
-    #    aM = 0.0
-    
-    astr = '.Alpha={:+5.2f}'.format(aM) if aM != 0.0 else ''
-    name = ('lte{T:05.0f}-{g:4.2f}{z}{a}.PHOENIX-ACES-AGSS-COND-2011-HiRes.fits'
-            ''.format(T=Teff, g=logg, z=zstr, a=astr))
+    phoenixbaseurl = 'https://phoenix.ens-lyon.fr/Grids/BT-Settl/CIFIST2011_2015/SPECTRA/'
+  
+    name = 'lte{T:05.1f}-{g:3.1f}-0.0a+0.0.BT-Settl.spec.7.xz'.format(T=Teff/100.0, g=logg)
+    print(name)
 
     if repo == 'ftp':
-        folder = 'Z' + zstr + astr + '/'
-        return phoenixbaseurl + folder + name
+        return phoenixbaseurl + name
     else:
         return os.path.join(repo, name)
 
-def fetchphxfile(Teff, logg, FeH, aM, repo):
-    loc, ftp = [phxurl(Teff, logg, FeH, aM, repo=r) for r in [repo, 'ftp']]
+def fetchphxfile(Teff, logg, FeH=0.0, aM=0.0, repo='r', source = 'lyon'):
+    #keeping a source option in here in case I want to use the gottigen versions again
+    if source == 'lyon':
+        loc, ftp = [phxurl(Teff, logg, repo=r) for r in [repo, 'ftp']]
     urlretrieve(ftp, loc)
 
 def make_dicts(param_list):
@@ -64,12 +58,12 @@ def make_dicts(param_list):
 
 def make_param_list(star_params, grids):
     """
-    makes a list of required atmospheic parameters to be retreived, also records which params need interpolation
+    makes a list of required atmospheic parameters to be retreived, also records which params need interpolation. Fixing FeH and aM = 0.0 for now.
     """
     params_to_interp = []
     param_names = ['Teff', 'logg', 'FeH', 'aM']
     param_list = []
-    for param, grid, name in zip([star_params['Teff'],star_params['logg'] ,star_params['FeH'], star_params['aM']], grids, param_names):
+    for param, grid, name in zip([star_params['Teff'],star_params['logg'] ,0.0, 0.0], grids, param_names):
         if param in grid:
             param_list.append([param, param])
         else:
@@ -82,13 +76,33 @@ def get_grids():
     """
     arrays storing the available phoenix spectra
     """
+    phxTgrid = np.arange(1200, 7001, 100)
     phxTgrid = np.hstack([np.arange(2300,7000,100),
                    np.arange(7000,12001,200)])
     phxggrid = np.arange(0.0, 6.1, 0.5)
-    phxZgrid = np.hstack([np.arange(-4.0, -2.0, 1.0),
-                       np.arange(-2.0, 1.1, 0.5)])
-    phxagrid = np.arange(-0.2, 1.3, 0.2)
+    phxZgrid = np.array([0.0])
+    phxagrid = np.array([0.0])
     return phxTgrid,phxggrid,phxZgrid, phxagrid
+
+def extract_spectrum(filepath):
+    """
+    Extracts the spectrum from the Lyon files, which is non-trivial. Adapts code by JSP. 
+    """
+    nameout = filepath[:-3]
+    with lzma.open(filepath) as f, open(filepath, 'wb') as fout: #https://stackoverflow.com/a/33718185
+        file_content = f.read()
+        fout.write(file_content)
+    phoenixR = ascii.read(nameout,format="fixed_width_no_header",col_starts=(0,14),col_ends=(12,25),delimiter=" ",names=('Wave','Spec'))
+    ph1, jj = np.unique(np.array(phoenixR['Wave']),return_index=True)
+    phoenix = np.zeros((len(ph1),2))
+    for kk in range(len(jj)):
+        phoenix[kk,1] = np.float64(phoenixR['Spec'][jj[kk]].replace("D","E"))
+    phoenix[:,0] = ph1
+    ind = np.where( (phoenix[:,0] <= wavemax) & (phoenix[:,0] >= wavemin))[0]  
+    xraw = phoenix[:,0]
+    yraw = np.power(10.,phoenix[:,1] + DF)
+    return xraw, yraw
+
     
 def get_models(repo,param_dicts):
     """
@@ -102,17 +116,30 @@ def get_models(repo,param_dicts):
         file_path = phxurl(Teff, logg, FeH, aM, repo=repo)
         if os.path.exists(file_path) == False: #only download if we need to
             fetchphxfile(Teff, logg, FeH, aM, repo=repo)
-        params.update({'flux':fits.getdata(file_path)})
+        wavelength, flux =  extract_spectrum(file_path)
+        params.update({'wavelength':wavelength})
+        params.update({'flux':flux})
         spectra.append(params)
     return spectra
     
 def interp_flux(spectra, params_to_interp, star_params):
     """
-    build the new spectrum
+    build the new spectrum, interpolation each phoenix model onto the shortest wavelength array then interploating to the correct parameters
     """
     out_vals = [star_params[p] for p in params_to_interp]
     in_vals = [[s[p] for p in params_to_interp] for s in spectra]
-    fluxes = [s['flux'] for s in spectra]
+    wavelengths = [s['wavelength'] for s in spectra]
+    nwave = np.min([len(w) for w in wavelengths])
+    for w in wavelengths: 
+        if len(w) == nwave:
+            wavelength = w
+    fluxes = []:
+    for s in spectra:
+        if len(s['flux']) = nwave:
+            fluxes.append(s['flux'])
+        else:
+            fi = interp1d(s['wavelength'], s['flux'], fill_value='extrapolate')(wavelength)
+        
     if len(params_to_interp) == 1:
         in_vals = [s[params_to_interp[0]] for s in spectra]
         new_flux = interp1d(in_vals, fluxes, axis=0, fill_value='extrapolate')(star_params[params_to_interp[0]])
@@ -120,13 +147,8 @@ def interp_flux(spectra, params_to_interp, star_params):
         out_vals = [star_params[p] for p in params_to_interp]
         in_vals = [[s[p] for p in params_to_interp] for s in spectra]
         new_flux = griddata(in_vals, fluxes, out_vals)[0]
-    return new_flux
-    
-def get_wavelength(wave_file):
-    """
-    Load the wavelenth array from file
-    """
-    return fits.getdata(wave_file)
+    return wavelength, new_flux
+
     
 def save_to_ecsv(star,wavelength, flux, save_path):
     """
@@ -155,11 +177,11 @@ def get_existing_model(star_params, repo):
     file_path = phxurl(Teff, logg, FeH, aM, repo=repo)
     if os.path.exists(file_path) == False: #only download if we need to
         fetchphxfile(Teff, logg, FeH, aM, repo=repo)
-    flux = fits.getdata(file_path)
-    return flux
+    wavelength, flux = extract_spectrum(filepath)
+    return wavelength, flux
         
     
-def make_phoenix_spectrum(star,wave_file, save_path, repo, star_params, save_ecsv=False, plot=False):
+def make_phoenix_spectrum(star, save_path, repo, star_params, save_ecsv=False, plot=False):
     """
     Main array. Takes a list of stellar parameters and makes a phoenix spectrum out of. Save_path is where you want the final spectrum to go, repo is where downloaded phoenix files go. wave_file is where the wavelength array is 
     """
@@ -167,17 +189,23 @@ def make_phoenix_spectrum(star,wave_file, save_path, repo, star_params, save_ecs
     param_list, params_to_interp = make_param_list(star_params, [tgrid, ggrig,fgrid, agrid])
     if len(params_to_interp) == 0: #i.e. if there's an existing model
         print('phoenix model available')
-        flux = get_existing_model(star_params, repo)
+        wavelength, flux = get_existing_model(star_params, repo)
     else:
         param_dicts = make_dicts(param_list)
         spectra = get_models(repo,param_dicts)
-        flux = interp_flux(spectra, params_to_interp, star_params)
-    wavelength = get_wavelength(wave_file)
-    if save_ecsv == True:
+        wavelength, flux = interp_flux(spectra, params_to_interp, star_params) 
+    if save_ecsv:
         save_to_ecsv(star, wavelength, flux, save_path)
     if plot == True:
         plot_spectrum(wavelength, flux, star)
     return wavelength, flux
+
+def distance_scale(radius, distance, flux):
+    """
+    Scales the phoenix model using the distance to the star
+    """
+    scale = (radius.to(u.cm)/distance.to(u.cm))**2
+    return flux * scale
 
 def load_star_params(star_table_path, FeH=0.0, aM=0.0):
     """
@@ -189,37 +217,6 @@ def load_star_params(star_table_path, FeH=0.0, aM=0.0):
     logg = np.log10((g_star.to(u.cm/u.s**2)).value)
     star_params = {'Teff':data['Teff__0'], 'logg': logg, 'FeH': FeH, 'aM': aM}
     return star_params
-
-def residuals(scale, f, mf):
-    return f - mf/scale
-
-def phoenix_norm(star, w_phx, f_phx, ccd_path, plot=False, cut=2000): 
-    """
-    find the normalisation factor between the phoenix model and the stis ccd (ccd_path)
-    """
-    data = fits.getdata(ccd_path)[0]
-    w, f, dq = data['WAVELENGTH'], data['FLUX'], data['DQ']
-    #mask =  (dq ==0)
-    mask = (w > cut) & (f > 0) & (dq ==0)
-    w1, f1 = w[mask], f[mask]
-    norm_mask = (w_phx >= w1[0]) & (w_phx <= w1[-1])
-    phx_flux = interp1d(w_phx[norm_mask], f_phx[norm_mask], fill_value='extrapolate')(w1)
-    scale, flag = leastsq(residuals, 1., args=(f1, phx_flux))
-    normfac = 1/scale[0]
-
-    if plot:
-        plt.figure(star+'_scaled')
-        plt.plot(w_phx, f_phx*normfac)
-        #plt.step(w,f, where='mid')
-        plt.step(w1, f1, where='mid')
-        plt.xlabel('Wavelength (\AA)', size=20)
-        plt.ylabel('Flux (erg s$^{-1}$ cm$^{-2}$ \AA$^{-1}$)', size=20)
-        plt.xlim(2000, 6000)
-        plt.yscale('log')
-        plt.axvline(cut, c='r', ls='--')
-        plt.tight_layout()
-        plt.show()
-    return normfac
 
 
 def test():

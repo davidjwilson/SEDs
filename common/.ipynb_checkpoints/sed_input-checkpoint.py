@@ -76,7 +76,7 @@ def make_sed(input_paths, savepath, version, lya_range, other_airglow, save_comp
         if len(os.listdir(input_paths['PHOENIX'])) == 0:
             prepare_model.make_phoenix_spectrum(phoenix_wave,input_paths['PHOENIX'], phoenix_repo, star_params, save_ecsv=True, plot=False)
         prepare_model.make_model_spectrum(input_paths['PHOENIX']+os.listdir(input_paths['PHOENIX'])[0], version, sed_table ,savepath = component_repo, save_ecsv=save_components, save_fits=save_components, model_name='PHX')
-        phoenix_normfac = sed.phoenix_norm(component_repo, cut=phoenix_cut)
+        phoenix_normfac = sed.phoenix_norm(component_repo, star_params)
         sed_table, instrument_list = sed.add_phx_spectrum(sed_table, component_repo, instrument_list)
                      
     #xray- xmm/chandra +model
@@ -113,37 +113,7 @@ def make_sed(input_paths, savepath, version, lya_range, other_airglow, save_comp
 
     
     
-def gj_674_test():
-    """
-    Testing each stage with gj674
-    """
-    star = 'gj_674' #as it appears in the filepath
-    star_up = 'GJ_674'
-    star_params = {'Teff':3400, 'logg':4.5, 'FeH':0.0 , 'aM':0.0 }
-    path = '/home/david/work/muscles/SEDs/'+star+'/'
-    muscles_path = '/home/david/work/muscles/MegaMUSCLES/'+star_up+'/'
-    input_paths = dict(COS_readsav = path+'COS/', 
-                       COS_x1d = muscles_path+'HST/COS/',
-                       STIS_FUV = muscles_path+'HST/STIS/', 
-                       lya_model = path + 'lya/GJ674_intrinsic_LyA_profile.txt', 
-                       PHOENIX= path+'phoenix_repo/',
-                       XMM_path = path+'xmm/GJ674.fits',
-                       APEC = path+'apec/',
-                       EUV = path+'euv_repo/'
-                       )
-    lya_range = [1207, 1225] #lyman alpha region to remove
-    other_airglow = [1304, 1304.5, 1355, 1356] #oi airglow to remove
-    save_path = path + 'test_files/'
-    version = 1
-    euv_inputs = dict(lya=2.9*2.06e-12, distance=4.54 )
-    sed_table, instrument_list = make_sed(input_paths, save_path, version, lya_range, other_airglow, save_components=True, star_params=star_params, do_phoenix=True, euv_inputs = euv_inputs)
-    quicksave(sed_table)
-    #print(sed_table.sort('WAVELENGTH'))
-    plt.figure(star+'_test')
-    plt.step(sed_table['WAVELENGTH'], sed_table['FLUX'], where='mid')
-    plt.xscale('log')
-    plt.yscale('log')
-    plt.show()
+
     
     
 def trappist_1_test():
@@ -168,8 +138,9 @@ def trappist_1_test():
     lya_range = [1207, 1225] #lyman alpha region to remove
     other_airglow =  [1273.9, 1287.3, 1301, 1307]  #oi airglow to remove
     save_path = path + 'test_files/'
-    version = 2
-    star_params = {'Teff':2560, 'logg':5.0, 'FeH':0.0 , 'aM':0.0 }
+    version = 3
+    #star_params = {'Teff':2560, 'logg':5.0, 'FeH':0.0 , 'aM':0.0, radius = 12. }
+    star_params = {'Teff': 2628.0, 'logg': 5.21, 'FeH': 0.04, 'aM': 0, 'radius':1.16*u.R_jup, 'distance':12.43*u.pc}
     sed_table, instrument_list = make_sed(input_paths, save_path, version, lya_range, other_airglow, save_components=True, star_params=star_params, do_phoenix=True)
     quicksave(sed_table)
     
@@ -195,10 +166,11 @@ def quicksave(sed_table):
     
     t2 = Table([w1,f1,e1], names=['WAVELENGTH', 'FLUX', 'ERROR'])
     t2.write('quicksaves/'+name+'_1A_basic.ecsv', overwrite=True)
-    
-#gj_674_test()
+
 trappist_1_test()
  
+
+#############################################    
 def gj_699_test():
     """
     Barnard's star
@@ -237,6 +209,38 @@ def gj_699_test():
     plt.yscale('log')
     plt.show()
 
+def gj_674_test():
+    """
+    Testing each stage with gj674
+    """
+    star = 'gj_674' #as it appears in the filepath
+    star_up = 'GJ_674'
+    star_params = {'Teff':3400, 'logg':4.5, 'FeH':0.0 , 'aM':0.0 }
+    path = '/home/david/work/muscles/SEDs/'+star+'/'
+    muscles_path = '/home/david/work/muscles/MegaMUSCLES/'+star_up+'/'
+    input_paths = dict(COS_readsav = path+'COS/', 
+                       COS_x1d = muscles_path+'HST/COS/',
+                       STIS_FUV = muscles_path+'HST/STIS/', 
+                       lya_model = path + 'lya/GJ674_intrinsic_LyA_profile.txt', 
+                       PHOENIX= path+'phoenix_repo/',
+                       XMM_path = path+'xmm/GJ674.fits',
+                       APEC = path+'apec/',
+                       EUV = path+'euv_repo/'
+                       )
+    lya_range = [1207, 1225] #lyman alpha region to remove
+    other_airglow = [1304, 1304.5, 1355, 1356] #oi airglow to remove
+    save_path = path + 'test_files/'
+    version = 1
+    euv_inputs = dict(lya=2.9*2.06e-12, distance=4.54 )
+    sed_table, instrument_list = make_sed(input_paths, save_path, version, lya_range, other_airglow, save_components=True, star_params=star_params, do_phoenix=True, euv_inputs = euv_inputs)
+    quicksave(sed_table)
+    #print(sed_table.sort('WAVELENGTH'))
+    plt.figure(star+'_test')
+    plt.step(sed_table['WAVELENGTH'], sed_table['FLUX'], where='mid')
+    plt.xscale('log')
+    plt.yscale('log')
+    plt.show()
+    
 #gj_699_test()    
     
     

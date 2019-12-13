@@ -269,22 +269,26 @@ def add_stis_optical(sed_table, component_repo, instrument_list):
 def residuals(scale, f, mf):
     return f - mf/scale
     
-def phoenix_norm(component_repo, plot=False, cut=4000): 
+def phoenix_norm(component_repo, star_params, plot=False): 
     """
     find the normalisation factor between the phoenix model and the stis ccd (ccd_path)
     """
     norm = Table.read(glob.glob(component_repo+'*phx*.ecsv')[0])
-    base = Table.read(glob.glob(component_repo+'*g430l*.ecsv')[0])
-    cw, cf, cdq = base['WAVELENGTH'], base['FLUX'], base['DQ']
-    sw, sf = norm['WAVELENGTH'], norm['FLUX']
-    cw, cf, cdq = cw[cw >= cut], cf[cw >= cut], cdq[cw >= cut] #cut corona off
-    c_mask = (cw >= sw[0]) & (cw <=sw[-1]) & (cdq == 0)
-    s_mask = (sw >= cw[0]) & (sw <=cw[-1]) #mask to same same waveband and cut dq flags
-    cw, cf, sw, sf = cw[c_mask], cf[c_mask], sw[s_mask], sf[s_mask]
-    sw1, sf1 = resample.bintogrid(sw, sf, newx=cw) #rebin to stis wavelength grid
+    #base = Table.read(glob.glob(component_repo+'*g430l*.ecsv')[0])
+    #cw, cf, cdq = base['WAVELENGTH'], base['FLUX'], base['DQ']
+    #sw, sf = norm['WAVELENGTH'], norm['FLUX']
+    #cw, cf, cdq = cw[cw >= cut], cf[cw >= cut], cdq[cw >= cut] #cut corona off
+    #c_mask = (cw >= sw[0]) & (cw <=sw[-1]) & (cdq == 0)
+    #s_mask = (sw >= cw[0]) & (sw <=cw[-1]) #mask to same same waveband and cut dq flags
+    #cw, cf, sw, sf = cw[c_mask], cf[c_mask], sw[s_mask], sf[s_mask]
+    #sw1, sf1 = resample.bintogrid(sw, sf, newx=cw) #rebin to stis wavelength gri
 
-    scale, flag = leastsq(residuals, 1., args=(cf, sf1))
-    normfac = 1/scale[0]
+    #scale, flag = leastsq(residuals, 1., args=(cf, sf1))
+    #normfac = 1/scale[0]
+    radius, distance = star_params['radius'], star_params['distance']
+    normfac = ((radius.to(u.cm)/distance.to(u.cm))**2).value
+    
+    
     print('PHOENIX NORMFAC =', normfac)
     update_norm(glob.glob(component_repo+'*phx*.ecsv')[0], glob.glob(component_repo+'*phx*.fits')[0], normfac)
 
