@@ -74,7 +74,7 @@ def make_sed(input_paths, savepath, version, lya_range, other_airglow, save_comp
         if star_params == {}:
             star_params = prepare_model.load_star_params(input_paths['STAR_PARAMS'], FeH=0.0, aM=0.0)
         if len(os.listdir(input_paths['PHOENIX'])) == 0:
-            prepare_model.make_phoenix_spectrum(phoenix_wave,input_paths['PHOENIX'], phoenix_repo, star_params, save_ecsv=True, plot=False)
+            prepare_model.make_phoenix_spectrum(input_paths['PHOENIX'], phoenix_repo, star_params, save_ecsv=True, plot=False)
         prepare_model.make_model_spectrum(input_paths['PHOENIX']+os.listdir(input_paths['PHOENIX'])[0], version, sed_table ,savepath = component_repo, save_ecsv=save_components, save_fits=save_components, model_name='PHX')
         phoenix_normfac = sed.phoenix_norm(component_repo, star_params)
         sed_table, instrument_list = sed.add_phx_spectrum(sed_table, component_repo, instrument_list)

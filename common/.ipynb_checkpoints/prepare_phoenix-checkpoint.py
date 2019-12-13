@@ -9,6 +9,7 @@ import astropy.constants as const
 from scipy.interpolate import griddata, interp1d
 from urllib.request import urlretrieve, urlopen
 import lzma
+import requests
 
 """
 @author David Wilson
@@ -36,11 +37,14 @@ def phxurl(Teff, logg=4.5, repo='ftp'):
     else:
         return os.path.join(repo, name)
 
-def fetchphxfile(Teff, logg, FeH=0.0, aM=0.0, repo='r', source = 'lyon'):
+def fetchphxfile(Teff, logg, FeH, aM, repo, source = 'lyon'):
     #keeping a source option in here in case I want to use the gottigen versions again
     if source == 'lyon':
         loc, ftp = [phxurl(Teff, logg, repo=r) for r in [repo, 'ftp']]
-    urlretrieve(ftp, loc)
+    #urlretrieve(ftp, loc)
+    r = requests.get(ftp)
+    with open(loc,'wb') as f:
+        f.write(r.content)
 
 def make_dicts(param_list):
     """
@@ -70,6 +74,7 @@ def make_param_list(star_params, grids):
             idx = np.searchsorted(grid, param)
             param_list.append([grid[idx-1],grid[idx]])
             params_to_interp.append(name)
+    print (param_list)
     return param_list, params_to_interp
 
 def get_grids():
@@ -84,14 +89,21 @@ def get_grids():
     phxagrid = np.array([0.0])
     return phxTgrid,phxggrid,phxZgrid, phxagrid
 
-def extract_spectrum(filepath):
+def unzip_file(filepath):
     """
-    Extracts the spectrum from the Lyon files, which is non-trivial. Adapts code by JSP. 
+    Moving the lzma work to a separate directory
     """
     nameout = filepath[:-3]
     with lzma.open(filepath) as f, open(filepath, 'wb') as fout: #https://stackoverflow.com/a/33718185
         file_content = f.read()
         fout.write(file_content)
+    return nameout
+
+def extract_spectrum(filepath):
+    """
+    Extracts the spectrum from the Lyon files, which is non-trivial. Adapts code by JSP. 
+    """
+    nameout = unzip_file(filepath)
     phoenixR = ascii.read(nameout,format="fixed_width_no_header",col_starts=(0,14),col_ends=(12,25),delimiter=" ",names=('Wave','Spec'))
     ph1, jj = np.unique(np.array(phoenixR['Wave']),return_index=True)
     phoenix = np.zeros((len(ph1),2))
@@ -113,7 +125,8 @@ def get_models(repo,param_dicts):
     spectra = []
     for params in param_dicts:
         Teff, logg, FeH, aM = params['Teff'], params['logg'], params['FeH'], params['aM']
-        file_path = phxurl(Teff, logg, FeH, aM, repo=repo)
+        file_path = phxurl(Teff, logg, repo=repo)
+        print(file_path)
         if os.path.exists(file_path) == False: #only download if we need to
             fetchphxfile(Teff, logg, FeH, aM, repo=repo)
         wavelength, flux =  extract_spectrum(file_path)
@@ -133,9 +146,9 @@ def interp_flux(spectra, params_to_interp, star_params):
     for w in wavelengths: 
         if len(w) == nwave:
             wavelength = w
-    fluxes = []:
+    fluxes = []
     for s in spectra:
-        if len(s['flux']) = nwave:
+        if len(s['flux']) == nwave:
             fluxes.append(s['flux'])
         else:
             fi = interp1d(s['wavelength'], s['flux'], fill_value='extrapolate')(wavelength)
@@ -150,14 +163,14 @@ def interp_flux(spectra, params_to_interp, star_params):
     return wavelength, new_flux
 
     
-def save_to_ecsv(star,wavelength, flux, save_path):
-    """
-    save the new model to an ecsv file
-    """
-    if os.path.exists(save_path) == False:
-        os.mkdir(save_path)
-    savedat = Table([wavelength*u.AA, flux], names=['WAVELENGTH', 'FLUX'])
-    ascii.write(savedat, save_path+star+'_phoenix_interpolated.ecsv', overwrite=True)
+#def save_to_ecsv(star,wavelength, flux, save_path):
+ #   """
+  #  save the new model to an ecsv file
+  #  """
+   # if os.path.exists(save_path) == False:
+   #     os.mkdir(save_path)
+   # savedat = Table([wavelength*u.AA, flux], names=['WAVELENGTH', 'FLUX'])
+   # ascii.write(savedat, save_path+star+'_phoenix_interpolated.ecsv', overwrite=True)
     
 def plot_spectrum(wavelength, flux, star):
     plt.figure(star)
@@ -192,6 +205,7 @@ def make_phoenix_spectrum(star, save_path, repo, star_params, save_ecsv=False, p
         wavelength, flux = get_existing_model(star_params, repo)
     else:
         param_dicts = make_dicts(param_list)
+        print(param_dicts)
         spectra = get_models(repo,param_dicts)
         wavelength, flux = interp_flux(spectra, params_to_interp, star_params) 
     if save_ecsv:
@@ -207,29 +221,20 @@ def distance_scale(radius, distance, flux):
     scale = (radius.to(u.cm)/distance.to(u.cm))**2
     return flux * scale
 
-def load_star_params(star_table_path, FeH=0.0, aM=0.0):
-    """
-    Load one of SP's tables. Does not include metalicty and FeH, will proabaly need my own table.
-    """
-    data = Table.read(star_table_path, format ='ascii')[0]
-    mass, radius = data['Mass__0'] * u.M_sun, data['Radius__0'] * u.Rsun
-    g_star = (const.G * mass) / radius**2
-    logg = np.log10((g_star.to(u.cm/u.s**2)).value)
-    star_params = {'Teff':data['Teff__0'], 'logg': logg, 'FeH': FeH, 'aM': aM}
-    return star_params
 
 
 def test():
-    star = 'GJ_699'
-    star_params = load_star_params(star+'_ParamStats.txt', FeH=-0.4)   
+    star = 'Trappist-1_test'
+    #star_params = load_star_params(star+'_ParamStats.txt', FeH=-0.4)   
     path = '/home/david/work/muscles/phoenix/file_dump/'
-    wave_file = path+ 'phoenix/wavegrid_hires.fits'
+    #wave_file = path+ 'phoenix/wavegrid_hires.fits'
     repo = path + star+'_repo/'
     save_path = path + star+'_output/'
     #star_params = {'Teff':3300, 'logg': 4.00, 'FeH': -2.0, 'aM': 0.0}
-    w_phx, f_phx = make_phoenix_spectrum(star,wave_file, save_path, repo, star_params, save_ecsv=False, plot=False)
-    ccd_path = 'g430l/odlm24010_sx1.fits'
-    normfac = phoenix_norm(star, w_phx, f_phx, ccd_path, plot=True)
+    star_params = {'Teff': 2628, 'logg': 5.21, 'FeH': 0.00, 'aM': 0, 'radius':1.16*u.R_jup, 'distance':12.43*u.pc}
+    w_phx, f_phx = make_phoenix_spectrum(star, save_path, repo, star_params, save_ecsv=False, plot=True)
+   # ccd_path = 'g430l/odlm24010_sx1.fits'
+    #normfac = phoenix_norm(star, w_phx, f_phx, ccd_path, plot=True)
     print(normfac)
     #facs = []
     #cuts = np.arange(3000,4000, 100)
@@ -239,4 +244,4 @@ def test():
     #plt.plot(cuts, facs/np.mean(facs))
     #plt.show()
 
-#test()
+test()

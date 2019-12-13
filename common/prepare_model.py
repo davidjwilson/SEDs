@@ -72,6 +72,7 @@ def save_to_ecsv(data, metadata, save_path, version):
     """
     save the new model to an ecsv file
     """
+    print(save_path)
     if os.path.exists(save_path) == False:
         os.mkdir(save_path)
     file_name = make_component_filename(metadata, version)
@@ -186,17 +187,20 @@ def extract_spectrum(filepath):
     """
     Extracts the spectrum from the Lyon files, which is non-trivial. Adapts code by JSP. 
     """
-    nameout = filepath[:-3]
-    with lzma.open(filepath) as f, open(filepath, 'wb') as fout: #https://stackoverflow.com/a/33718185
-        file_content = f.read()
-        fout.write(file_content)
+    DF = -8
+    if filepath[-2:] == 'xz':
+        nameout = filepath[:-3]
+        with lzma.open(filepath) as f, open(filepath, 'wb') as fout: #https://stackoverflow.com/a/33718185
+            file_content = f.read()
+            fout.write(file_content)
+    else:
+        nameout = filepath
     phoenixR = ascii.read(nameout,format="fixed_width_no_header",col_starts=(0,14),col_ends=(12,25),delimiter=" ",names=('Wave','Spec'))
     ph1, jj = np.unique(np.array(phoenixR['Wave']),return_index=True)
     phoenix = np.zeros((len(ph1),2))
     for kk in range(len(jj)):
         phoenix[kk,1] = np.float64(phoenixR['Spec'][jj[kk]].replace("D","E"))
     phoenix[:,0] = ph1
-    ind = np.where( (phoenix[:,0] <= wavemax) & (phoenix[:,0] >= wavemin))[0]  
     xraw = phoenix[:,0]
     yraw = np.power(10.,phoenix[:,1] + DF)
     return xraw, yraw
@@ -212,8 +216,10 @@ def get_models(repo,param_dicts):
     for params in param_dicts:
         Teff, logg, FeH, aM = params['Teff'], params['logg'], params['FeH'], params['aM']
         file_path = phxurl(Teff, logg, repo=repo)
-        if os.path.exists(file_path) == False: #only download if we need to
+        if os.path.exists(file_path) == False and os.path.exists(file_path[:-3]) == False: #only download if we need to
             fetchphxfile(Teff, logg, FeH, aM, repo=repo)
+        if os.path.exists(file_path[:-3]) == True:
+            file_path = file_path[:-3]
         wavelength, flux =  extract_spectrum(file_path)
         params.update({'wavelength':wavelength})
         params.update({'flux':flux})
@@ -237,6 +243,7 @@ def interp_flux(spectra, params_to_interp, star_params):
             fluxes.append(s['flux'])
         else:
             fi = interp1d(s['wavelength'], s['flux'], fill_value='extrapolate')(wavelength)
+            fluxes.append(fi)
         
     if len(params_to_interp) == 1:
         in_vals = [s[params_to_interp[0]] for s in spectra]
@@ -248,14 +255,14 @@ def interp_flux(spectra, params_to_interp, star_params):
     return wavelength, new_flux
 
     
-#def save_to_ecsv(star,wavelength, flux, save_path):
- #   """
-  #  save the new model to an ecsv file
-  #  """
-   # if os.path.exists(save_path) == False:
-   #     os.mkdir(save_path)
-   # savedat = Table([wavelength*u.AA, flux], names=['WAVELENGTH', 'FLUX'])
-   # ascii.write(savedat, save_path+star+'_phoenix_interpolated.ecsv', overwrite=True)
+def save_phoenix(wavelength, flux, save_path):
+    """
+    save the new model to an ecsv file
+    """
+    if os.path.exists(save_path) == False:
+        os.mkdir(save_path)
+    savedat = Table([wavelength*u.AA, flux], names=['WAVELENGTH', 'FLUX'])
+    ascii.write(savedat, save_path+'phoenix_interpolated.ecsv', overwrite=True)
     
 def plot_spectrum(wavelength, flux, star):
     plt.figure(star)
@@ -279,7 +286,7 @@ def get_existing_model(star_params, repo):
     return wavelength, flux
         
     
-def make_phoenix_spectrum(star, save_path, repo, star_params, save_ecsv=False, plot=False):
+def make_phoenix_spectrum(save_path, repo, star_params, save_ecsv=False, plot=False):
     """
     Main array. Takes a list of stellar parameters and makes a phoenix spectrum out of. Save_path is where you want the final spectrum to go, repo is where downloaded phoenix files go. wave_file is where the wavelength array is 
     """
@@ -293,7 +300,7 @@ def make_phoenix_spectrum(star, save_path, repo, star_params, save_ecsv=False, p
         spectra = get_models(repo,param_dicts)
         wavelength, flux = interp_flux(spectra, params_to_interp, star_params) 
     if save_ecsv:
-        save_to_ecsv(star, wavelength, flux, save_path)
+        save_phoenix(wavelength, flux, save_path)
     if plot == True:
         plot_spectrum(wavelength, flux, star)
     return wavelength, flux
