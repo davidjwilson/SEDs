@@ -203,7 +203,8 @@ def extract_spectrum(filepath):
     phoenix[:,0] = ph1
     xraw = phoenix[:,0]
     yraw = np.power(10.,phoenix[:,1] + DF)
-    return xraw, yraw
+    mask = (xraw <= 100000) #original w is way too big
+    return xraw[mask], yraw[mask]
 
     
 def get_models(repo,param_dicts):
@@ -262,7 +263,7 @@ def save_phoenix(wavelength, flux, save_path):
     if os.path.exists(save_path) == False:
         os.mkdir(save_path)
     savedat = Table([wavelength*u.AA, flux], names=['WAVELENGTH', 'FLUX'])
-    ascii.write(savedat, save_path+'phoenix_interpolated.ecsv', overwrite=True)
+    ascii.write(savedat, save_path+'phoenix_interpolated.ecsv', format='ecsv', overwrite=True)
     
 def plot_spectrum(wavelength, flux, star):
     plt.figure(star)

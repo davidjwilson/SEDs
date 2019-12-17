@@ -198,17 +198,24 @@ def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, othe
     lya = Table.read(glob.glob(component_repo+'*lya*.ecsv')[0])
     instrument_code, lya = fill_model(lya, 'mod_lya_young')
     instrument_list.append(instrument_code)
+    lya = normfac_column(lya)
+    sed_table = vstack([sed_table, lya], metadata_conflicts = 'silent')
     
     if len(g140m_path) > 0:
         g140m = Table.read(g140m_path[0])
         instrument_code, g140m = hst_instrument_column(g140m)
         instrument_list.append(instrument_code)
         g140m = normfac_column(g140m)
-        g140m_mask = (g140m['WAVELENGTH'] > lya_range[0]) & (g140m['WAVELENGTH'] < lya['WAVELENGTH'][0]) | (g140m['WAVELENGTH'] > lya['WAVELENGTH'][0]) & (g140m['WAVELENGTH'] > lya_range[0])
+        g140m_mask = (g140m['WAVELENGTH'] > lya_range[0]) & (g140m['WAVELENGTH'] < lya['WAVELENGTH'][0]) | (g140m['WAVELENGTH'] > lya['WAVELENGTH'][-1]) & (g140m['WAVELENGTH'] < lya_range[1])
         g140m = g140m[g140m_mask]
         g140m['FLUX'] = g140m['FLUX'] * g140m.meta['NORMFAC']
         
         sed_table = vstack([sed_table, g140m], metadata_conflicts = 'silent')
+        
+  
+    
+    
+    
     
     if len(g140l_path) > 0:
         g140l = Table.read(g140l_path[0])

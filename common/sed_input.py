@@ -106,7 +106,7 @@ def make_sed(input_paths, savepath, version, lya_range, other_airglow, save_comp
     sed_table.sort(['WAVELENGTH'])
     
     #add the bolometric flux normalisations
-    sed_table = sed.add_bolometric_flux(sed_table, component_repo, star_params)
+ #   sed_table = sed.add_bolometric_flux(sed_table, component_repo, star_params)
                                               
     return sed_table, instrument_list
         
@@ -146,7 +146,7 @@ def trappist_1_test():
     
     #print(sed_table.sort('WAVELENGTH'))
     plt.figure(star+'_test')
-    plt.step(sed_table['WAVELENGTH'], sed_table['FLUX'], where='mid')
+    plt.plot(sed_table['WAVELENGTH'], sed_table['FLUX'])
     plt.xscale('log')
     plt.yscale('log')
     plt.show()

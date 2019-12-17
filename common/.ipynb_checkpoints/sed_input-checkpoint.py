@@ -74,7 +74,7 @@ def make_sed(input_paths, savepath, version, lya_range, other_airglow, save_comp
         if star_params == {}:
             star_params = prepare_model.load_star_params(input_paths['STAR_PARAMS'], FeH=0.0, aM=0.0)
         if len(os.listdir(input_paths['PHOENIX'])) == 0:
-            prepare_model.make_phoenix_spectrum(phoenix_wave,input_paths['PHOENIX'], phoenix_repo, star_params, save_ecsv=True, plot=False)
+            prepare_model.make_phoenix_spectrum(input_paths['PHOENIX'], phoenix_repo, star_params, save_ecsv=True, plot=False)
         prepare_model.make_model_spectrum(input_paths['PHOENIX']+os.listdir(input_paths['PHOENIX'])[0], version, sed_table ,savepath = component_repo, save_ecsv=save_components, save_fits=save_components, model_name='PHX')
         phoenix_normfac = sed.phoenix_norm(component_repo, star_params)
         sed_table, instrument_list = sed.add_phx_spectrum(sed_table, component_repo, instrument_list)
@@ -106,7 +106,7 @@ def make_sed(input_paths, savepath, version, lya_range, other_airglow, save_comp
     sed_table.sort(['WAVELENGTH'])
     
     #add the bolometric flux normalisations
-    sed_table = sed.add_bolometric_flux(sed_table, component_repo, star_params)
+ #   sed_table = sed.add_bolometric_flux(sed_table, component_repo, star_params)
                                               
     return sed_table, instrument_list
         
@@ -138,15 +138,15 @@ def trappist_1_test():
     lya_range = [1207, 1225] #lyman alpha region to remove
     other_airglow =  [1273.9, 1287.3, 1301, 1307]  #oi airglow to remove
     save_path = path + 'test_files/'
-    version = 3
+    version = 4
     #star_params = {'Teff':2560, 'logg':5.0, 'FeH':0.0 , 'aM':0.0, radius = 12. }
-    star_params = {'Teff': 2628.0, 'logg': 5.21, 'FeH': 0.04, 'aM': 0, 'radius':1.16*u.R_jup, 'distance':12.43*u.pc}
+    star_params = {'Teff': 2628, 'logg': 5.21, 'FeH': 0.00, 'aM': 0, 'radius':1.16*u.R_jup, 'distance':12.43*u.pc}
     sed_table, instrument_list = make_sed(input_paths, save_path, version, lya_range, other_airglow, save_components=True, star_params=star_params, do_phoenix=True)
     quicksave(sed_table)
     
     #print(sed_table.sort('WAVELENGTH'))
     plt.figure(star+'_test')
-    plt.step(sed_table['WAVELENGTH'], sed_table['FLUX'], where='mid')
+    plt.plot(sed_table['WAVELENGTH'], sed_table['FLUX'])
     plt.xscale('log')
     plt.yscale('log')
     plt.show()
