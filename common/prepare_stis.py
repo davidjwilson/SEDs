@@ -126,9 +126,11 @@ def combine_x1ds(x1ds, correct_error=True):
     
     else: #in the case where there's only one available spectrum
         data_extension = 1
-        if x1ds[0][-8:-5] == 'sx1':
+        if x1ds[0][-8:-5] == 'sx1': #modified 1 off for t1 spectrum, must improve later
             data_extension = 0
-        data = fits.getdata(x1ds[0],data_extension)[0]
+            data = Table.read('/home/david/work/muscles/SEDs/trappist-1/optical/t1_g430m_edit.ecsv')
+        else:
+            data = fits.getdata(x1ds[0],data_extension)[0]
         hdr = fits.getheader(x1ds[0],0)
         w_new, f_new, e_new, dq_new = data['WAVELENGTH'], data['FLUX'], data['ERROR'], data['DQ']
         exptime, start, end = np.full(len(data['WAVELENGTH']), hdr['TEXPTIME']), np.full(len(data['WAVELENGTH']), hdr['TEXPSTRT']), np.full(len(data['WAVELENGTH']), hdr['TEXPEND'])
