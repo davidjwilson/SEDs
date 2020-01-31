@@ -167,7 +167,7 @@ def quicksave(sed_table):
     t2 = Table([w1,f1,e1], names=['WAVELENGTH', 'FLUX', 'ERROR'])
     t2.write('quicksaves/'+name+'_1A_basic.ecsv', overwrite=True)
 
-trappist_1_test()
+#trappist_1_test()
  
 
 #############################################    
@@ -188,14 +188,14 @@ def gj_699_test():
                        APEC = path+'apec/',
                        EUV = path+'euv_repo/',
                        STAR_PARAMS = path + 'GJ_699_ParamStats.txt',
-                       CXO_path = path+'Chandra/all/',
+                       CXO_path = path+'Chandra/quiet/',
                        CXO_evt = muscles_path+'Chandra/primary/acisf20619N001_evt2.fits.gz',
-                       DEM_path = path + 'dem/gj699_time_average_dem.fits'
+                       DEM_path = path + 'dem/gj699_quiet_dem_spectrum.fits'
                        )
     lya_range = [1207, 1222] #lyman alpha region to remove
     other_airglow = [1300, 1310, 1353, 1356] #oi airglow to remove
     save_path = path + 'test_files/'
-    version = 1
+    version = 2
     euv_inputs = dict(lya=1.17*1.04e-12, distance=1.8266 )
     sed_table, instrument_list = make_sed(input_paths, save_path, version, lya_range, other_airglow, save_components=True, do_phoenix=True)
     quicksave(sed_table)
@@ -203,8 +203,8 @@ def gj_699_test():
     print(instrument_list)
     #print(sed_table.sort('WAVELENGTH'))
     plt.figure(star+'_test')
-    plt.step(sed_table['WAVELENGTH'], sed_table['BOLOFLUX'], where='mid')
-    plt.step(sed_table['WAVELENGTH'], sed_table['BOLOERR'], where='mid')
+    plt.step(sed_table['WAVELENGTH'], sed_table['FLUX'], where='mid')
+    plt.step(sed_table['WAVELENGTH'], sed_table['ERROR'], where='mid')
     plt.xscale('log')
     plt.yscale('log')
     plt.show()
@@ -241,7 +241,7 @@ def gj_674_test():
     plt.yscale('log')
     plt.show()
     
-#gj_699_test()    
+gj_699_test()    
     
     
     #filepaths = {'xmm':'/xmm/GJ674.fits',

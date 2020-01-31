@@ -321,5 +321,5 @@ def load_star_params(star_table_path, FeH=0.0, aM=0.0):
     mass, radius = data['Mass__0'] * u.M_sun, data['Radius__0'] * u.Rsun
     g_star = (const.G * mass) / radius**2
     logg = np.log10((g_star.to(u.cm/u.s**2)).value)
-    star_params = {'Teff':data['Teff__0'], 'logg': logg, 'FeH': FeH, 'aM': aM}
+    star_params = {'Teff':data['Teff__0'], 'logg': logg, 'FeH': FeH, 'aM': aM, 'radius':data['Radius__0'] * u.Rsun, 'distance':data['Distance__0']*u.pc }
     return star_params

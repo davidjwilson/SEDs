@@ -1,5 +1,5 @@
 """
-@verison: 1
+@verison: 2
 
 @author: David Wilson
 
@@ -144,7 +144,7 @@ def find_stis_normfac(component_repo, airglow, band):
         base = Table.read(glob.glob(component_repo+'*g130m*.ecsv')[0])
     if band == 'nuv':
         norm = Table.read(glob.glob(component_repo+'*g230l*.ecsv')[0])
-        base = Table.read(glob.glob(component_repo+'*g430l*.ecsv')[0])
+        base = Table.read(glob.glob(component_repo+'*g140l*.ecsv')[0])
     cw, cf, cdq = base['WAVELENGTH'], base['FLUX'], base['DQ']
     sw, sf, sdq = norm['WAVELENGTH'], norm['FLUX'], norm['DQ']
     c_mask = (cw >= sw[0]) & (cw <=sw[-1]) & (cdq == 0)
@@ -152,8 +152,8 @@ def find_stis_normfac(component_repo, airglow, band):
     cw, cf, sw, sf = cw[c_mask], cf[c_mask], sw[s_mask], sf[s_mask]
     cw1, cf1 = resample.bintogrid(cw, cf, newx=sw) #rebin to stis wavelength grid
     if band == 'fuv':
-        stis_airglow_mask = mask_maker(sw, airglow)
-        cos_airglow_mask = mask_maker(cw1, airglow)
+        stis_airglow_mask = mask_maker(sw, airglow[2:]) #only norm data after lya
+        cos_airglow_mask = mask_maker(cw1, airglow[2:])
         sw, sf, cw1, cf1 = sw[stis_airglow_mask], sf[stis_airglow_mask], cw1[cos_airglow_mask], cf1[cos_airglow_mask] #remove airglow
     c_int = np.trapz(cf1,cw1)
     s_int =  np.trapz(sf,sw)
@@ -163,6 +163,7 @@ def find_stis_normfac(component_repo, airglow, band):
         gratings = ['g140m', 'g140l'] #files to update
     if band == 'nuv':
         gratings = ['g230l']
+        normfac = 1.0 #hack while I rethink the NUV norm
     [update_norm(glob.glob(component_repo+'*'+g+'*.ecsv')[0], glob.glob(component_repo+'*'+g+'*.fits')[0], normfac) for g in gratings]
     return normfac
 
