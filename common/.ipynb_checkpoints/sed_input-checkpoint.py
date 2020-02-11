@@ -68,7 +68,7 @@ def make_sed(input_paths, savepath, version, lya_range, other_airglow, save_comp
        # print (nuv_normfac)
     #OPTICAL
     
-    sed_table, instrument_list = sed.add_stis_optical(sed_table, component_repo, instrument_list)
+  #  sed_table, instrument_list = sed.add_stis_optical(sed_table, component_repo, instrument_list) cutting stis optical for now
     
     if do_phoenix: #phoenix takes ages so I'm adding the option to turn it off for testing purposes
         if star_params == {}:
