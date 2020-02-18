@@ -209,6 +209,7 @@ def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, othe
         g140m = normfac_column(g140m)
         g140m_mask = (g140m['WAVELENGTH'] > lya_range[0]) & (g140m['WAVELENGTH'] < lya['WAVELENGTH'][0]) | (g140m['WAVELENGTH'] > lya['WAVELENGTH'][-1]) & (g140m['WAVELENGTH'] < lya_range[1])
         g140m = g140m[g140m_mask]
+        print('here is the place where the problem might be', g140m.meta['NORMFAC'])
         g140m['FLUX'] = g140m['FLUX'] * g140m.meta['NORMFAC']
         
         sed_table = vstack([sed_table, g140m], metadata_conflicts = 'silent')

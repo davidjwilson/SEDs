@@ -48,6 +48,7 @@ def make_sed(input_paths, savepath, version, lya_range, other_airglow, save_comp
     print(gratings)
     if 'G140L' in gratings:
         stis_normfac = sed.find_stis_normfac(component_repo, airglow, 'fuv')
+        #stis_normfac=1.0 #hack for gj699
        # prepare_stis.make_stis_spectum(input_paths['STIS_FUV'], version, savepath = component_repo, save_ecsv=save_components, return_gratings=True, save_fits = save_components, normfac=stis_normfac, sx1=False)
     else:
         stis_normfac= 1.0
@@ -59,7 +60,8 @@ def make_sed(input_paths, savepath, version, lya_range, other_airglow, save_comp
     
     #NUV- COS or STIS?
     if 'G230L' in gratings:
-        nuv_normfac = sed.find_stis_normfac(component_repo, airglow, 'nuv')
+       # nuv_normfac = sed.find_stis_normfac(component_repo, airglow, 'nuv')
+        nuv_normfac= 1.0
         sed_table, instrument_list = sed.add_stis_nuv(sed_table, component_repo, instrument_list)
     else:
         gap_edges = prepare_cos.make_cos_nuv(input_paths['COS_x1d'], version, savepath = component_repo, plot=False, save_ecsv=save_components, save_fits=save_components, find_gap=True)
@@ -195,7 +197,7 @@ def gj_699_test():
     lya_range = [1207, 1222] #lyman alpha region to remove
     other_airglow = [1300, 1310, 1353, 1356] #oi airglow to remove
     save_path = path + 'test_files/'
-    version = 2
+    version = 3
     euv_inputs = dict(lya=1.17*1.04e-12, distance=1.8266 )
     sed_table, instrument_list = make_sed(input_paths, save_path, version, lya_range, other_airglow, save_components=True, do_phoenix=True)
     quicksave(sed_table)
