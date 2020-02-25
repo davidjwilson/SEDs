@@ -8,6 +8,8 @@ from astropy.io import ascii
 import astropy.units as u
 from scipy.interpolate import interpolate
 from astropy.units import cds
+from scipy.io.idl import readsav
+
 
 
 cds.enable()
@@ -78,6 +80,17 @@ def nan_clean(array):
             array[i] = 0.0
     return array
 
+ 
+def get_ayres_e140m(x1ds): 
+    """ 
+    reads T Ayres combined e140m files and bulds the data arrays from them. Hacky for now, will replace with my own routines when the new e140m calibrations are available.
+    """
+    target = fits.getheader(x1ds[0])['TARGNAME']
+    savpath = '/home/david/work/muscles/SEDs/common/ayres_e140m/{}_E140M_coadd.sav'.format(target)
+    data = readsav(savpath)
+    w_new, f_new, e_new, dq_new = data['wave'], data['flux'], data['photerr'], data['epsilon']
+    return w_new, f_new, e_new, dq_new
+    
 def combine_x1ds(x1ds, correct_error=True):
     """
     coadds a collection of x1d fluxes and adds columns for exposure time detials. Input is a list of paths to x1d files with the same grating. Also works for sx1 files
@@ -119,7 +132,7 @@ def combine_x1ds(x1ds, correct_error=True):
 
         f_new, e_new = coadd_flux(np.array(f_new), np.array(e_new))
         dq_new = np.array(dq_new, dtype=int)
-        dq_new = [(np.sum(np.unique(dq_new[:,i]))) for i in range(len(dq_new[0]))] 
+        dq_new = [(np.sum(np.unique(dq_new[:,i]))) for i in range(len(dq_new[0]))]
         exptime = np.sum(np.array(exptime), axis=0)
         start = np.min(np.ma.masked_array(start, mask=[np.array(start) == 0.]), axis=0)
         end = np.max(np.array(end), axis=0)
@@ -136,6 +149,10 @@ def combine_x1ds(x1ds, correct_error=True):
         exptime, start, end = np.full(len(data['WAVELENGTH']), hdr['TEXPTIME']), np.full(len(data['WAVELENGTH']), hdr['TEXPSTRT']), np.full(len(data['WAVELENGTH']), hdr['TEXPEND'])
         if correct_error:    
                 e_new = no_zero_errors(f_new, e_new)
+    if fits.getheader(x1ds[0])['OPT_ELEM'] == 'E140M':
+        print('yes')
+        w_new, f_new, e_new, dq_new = get_ayres_e140m(x1ds)
+        exptime, start, end = np.full(len(w_new), 0),np.full(len(w_new), 0), np.full(len(w_new), 0)
     f_new, e_new = nan_clean(f_new), nan_clean(e_new)
     w0, w1 = wavelength_edges(w_new)
     new_data = {'WAVELENGTH':w_new*u.AA,'WAVELENGTH0':w0*u.AA,'WAVELENGTH1':w1*u.AA,'FLUX':f_new*u.erg/u.s/u.cm**2/u.AA,
@@ -276,8 +293,8 @@ def make_dataset_extension(x1ds):
     hdu.header.insert(9, ('EXTNO',3))
     hdu.header['COMMENT'] = description_text
     return hdu
- 
 
+    
 def make_stis_spectum(x1dpath, version,savepath = '', plot=False, save_ecsv=False, save_fits=False, return_data=False, return_gratings = False, normfac=1.0, sx1 = True):
     """
     main function
