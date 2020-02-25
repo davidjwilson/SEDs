@@ -152,8 +152,8 @@ def find_stis_normfac(component_repo, airglow, band):
     cw, cf, sw, sf = cw[c_mask], cf[c_mask], sw[s_mask], sf[s_mask]
     cw1, cf1 = resample.bintogrid(cw, cf, newx=sw) #rebin to stis wavelength grid
     if band == 'fuv':
-        stis_airglow_mask = mask_maker(sw, airglow[2:]) #only norm data after lya
-        cos_airglow_mask = mask_maker(cw1, airglow[2:])
+        stis_airglow_mask = mask_maker(sw, airglow) #only norm data after lya
+        cos_airglow_mask = mask_maker(cw1, airglow)
         sw, sf, cw1, cf1 = sw[stis_airglow_mask], sf[stis_airglow_mask], cw1[cos_airglow_mask], cf1[cos_airglow_mask] #remove airglow
     c_int = np.trapz(cf1,cw1)
     s_int =  np.trapz(sf,sw)

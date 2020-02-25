@@ -152,8 +152,8 @@ def find_stis_normfac(component_repo, airglow, band):
     cw, cf, sw, sf = cw[c_mask], cf[c_mask], sw[s_mask], sf[s_mask]
     cw1, cf1 = resample.bintogrid(cw, cf, newx=sw) #rebin to stis wavelength grid
     if band == 'fuv':
-        stis_airglow_mask = mask_maker(sw, airglow[2:]) #only norm data after lya
-        cos_airglow_mask = mask_maker(cw1, airglow[2:])
+        stis_airglow_mask = mask_maker(sw, airglow) #only norm data after lya
+        cos_airglow_mask = mask_maker(cw1, airglow)
         sw, sf, cw1, cf1 = sw[stis_airglow_mask], sf[stis_airglow_mask], cw1[cos_airglow_mask], cf1[cos_airglow_mask] #remove airglow
     c_int = np.trapz(cf1,cw1)
     s_int =  np.trapz(sf,sw)
@@ -209,7 +209,6 @@ def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, othe
         g140m = normfac_column(g140m)
         g140m_mask = (g140m['WAVELENGTH'] > lya_range[0]) & (g140m['WAVELENGTH'] < lya['WAVELENGTH'][0]) | (g140m['WAVELENGTH'] > lya['WAVELENGTH'][-1]) & (g140m['WAVELENGTH'] < lya_range[1])
         g140m = g140m[g140m_mask]
-        print('here is the place where the problem might be', g140m.meta['NORMFAC'])
         g140m['FLUX'] = g140m['FLUX'] * g140m.meta['NORMFAC']
         
         sed_table = vstack([sed_table, g140m], metadata_conflicts = 'silent')
