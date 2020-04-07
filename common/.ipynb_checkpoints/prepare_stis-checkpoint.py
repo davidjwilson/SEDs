@@ -150,7 +150,7 @@ def combine_x1ds(x1ds, correct_error=True):
         if correct_error:    
                 e_new = no_zero_errors(f_new, e_new)
     if fits.getheader(x1ds[0])['OPT_ELEM'] == 'E140M':
-        print('yes')
+      #  print('yes')
         w_new, f_new, e_new, dq_new = get_ayres_e140m(x1ds)
         exptime, start, end = np.full(len(w_new), 0),np.full(len(w_new), 0), np.full(len(w_new), 0)
     f_new, e_new = nan_clean(f_new), nan_clean(e_new)
