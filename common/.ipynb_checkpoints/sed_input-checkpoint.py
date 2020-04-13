@@ -70,7 +70,7 @@ def make_sed(input_paths, savepath, version, lya_range, other_airglow, save_comp
        # print (nuv_normfac)
     #OPTICAL
     
-  #  sed_table, instrument_list = sed.add_stis_optical(sed_table, component_repo, instrument_list) cutting stis optical for now
+    sed_table, instrument_list = sed.add_stis_optical(sed_table, component_repo, instrument_list)# cutting stis optical for now
     
     if do_phoenix: #phoenix takes ages so I'm adding the option to turn it off for testing purposes
         if star_params == {}:
@@ -134,13 +134,13 @@ def trappist_1_test():
                        XMM_path = path+'xmm/Trappist-1.fits',
                        APEC = path+'apec/',
                        EUV = path+'euv_repo/',
-                       DEM_path = path + 'dem/trappist-1_dem_spectra.fits'
+                       DEM_path = path + 'dem/spectrum_trappist_one_d13.fits'
                    
                       )
     lya_range = [1207, 1225] #lyman alpha region to remove
     other_airglow =  [1273.9, 1287.3, 1301, 1307]  #oi airglow to remove
     save_path = path + 'test_files/'
-    version = 5
+    version = 6
     #star_params = {'Teff':2560, 'logg':5.0, 'FeH':0.0 , 'aM':0.0, radius = 12. }
     star_params = {'Teff': 2628, 'logg': 5.21, 'FeH': 0.00, 'aM': 0, 'radius':1.16*u.R_jup, 'distance':12.43*u.pc}
     sed_table, instrument_list = make_sed(input_paths, save_path, version, lya_range, other_airglow, save_components=True, star_params=star_params, do_phoenix=True)
@@ -169,7 +169,7 @@ def quicksave(sed_table):
     t2 = Table([w1,f1,e1], names=['WAVELENGTH', 'FLUX', 'ERROR'])
     t2.write('quicksaves/'+name+'_1A_basic.ecsv', overwrite=True)
 
-#trappist_1_test()
+trappist_1_test()
  
 
 #############################################    
@@ -243,7 +243,7 @@ def gj_674_test():
     plt.yscale('log')
     plt.show()
     
-gj_699_test()    
+#gj_699_test()    
     
     
     #filepaths = {'xmm':'/xmm/GJ674.fits',
