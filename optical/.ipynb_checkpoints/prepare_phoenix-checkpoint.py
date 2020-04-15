@@ -104,16 +104,37 @@ def extract_spectrum(filepath):
     Extracts the spectrum from the Lyon files, which is non-trivial. Adapts code by JSP. 
     """
     #nameout = unzip_file(filepath)
-    wavemin, wavemax, DF = 100, 1000000, 8
-    phoenixR = ascii.read(filepath,format="fixed_width_no_header",col_starts=(0,14),col_ends=(12,25),delimiter=" ",names=('Wave','Spec'))
-    ph1, jj = np.unique(np.array(phoenixR['Wave']),return_index=True)
-    phoenix = np.zeros((len(ph1),2))
-    for kk in range(len(jj)):
-        line = phoenixR['Spec'][jj[kk]]
-        if line[-1] == '-':
-            line = line[:-1]
-        phoenix[kk,1] = np.float64(line.replace("D","E"))
-    phoenix[:,0] = ph1
+    wavemin, wavemax, DF = 1000, 1000000, 8
+    
+    try:
+        phoenixR = ascii.read(filepath,format="fixed_width_no_header",col_starts=(0,14),col_ends=(12,25),delimiter=" ",names=('Wave','Spec'))
+        ph1, jj = np.unique(np.array(phoenixR['Wave']),return_index=True)
+        phoenix = np.zeros((len(ph1),2))
+        for kk in range(len(jj)):
+            phoenix[kk,1] = np.float64(phoenixR['Spec'][jj[kk]].replace("D","E"))
+        phoenix[:,0] = ph1
+    except:
+            try:
+                print("File Badly Formatted --- trying again...")
+                phoenixR = ascii.read(filepath,format="fixed_width_no_header",col_starts=(0,13),col_ends=(12,24),delimiter=" ",names=('Wave','Spec'))
+                ph1, jj = np.unique(np.array(phoenixR['Wave']),return_index=True)
+                phoenix = np.zeros((len(ph1),2))
+                for kk in range(len(jj)):
+                    phoenix[kk,1] = np.float64(phoenixR['Spec'][jj[kk]].replace("D","E"))
+                phoenix[:,0] = ph1
+            except:
+                print("... and again ... ")
+                phoenixR = ascii.read(filepath,format="no_header",delimiter=" ")
+                temp = np.zeros(len(phoenixR['col1']))
+                for kk in range(len(temp)):
+                    temp[kk] = np.float64(phoenixR['col1'][kk].replace("D","E"))
+                ph1, jj = np.unique(temp,return_index=True)
+                phoenix = np.zeros((len(ph1),2))
+                for kk in range(len(jj)):
+                    phoenix[kk,0] = np.float64(phoenixR['col1'][jj[kk]].replace("D","E"))
+                    phoenix[kk,1] = np.float64(phoenixR['col2'][jj[kk]].replace("D","E"))
+    
+ 
     ind = np.where( (phoenix[:,0] <= wavemax) & (phoenix[:,0] >= wavemin))[0]  
     xraw = phoenix[ind,0]
     yraw = np.power(10.,phoenix[ind,1] + DF)
@@ -152,8 +173,10 @@ def interp_flux(spectra, params_to_interp, star_params):
     fluxes = []
     for s in spectra:
         if len(s['flux']) == nwave:
+            print(len(s['wavelength']), s['wavelength'][0], s['wavelength'][-1])
             fluxes.append(s['flux'])
         else:
+            print(len(s['wavelength']), s['wavelength'][0], s['wavelength'][-1])
             fi = interp1d(s['wavelength'], s['flux'], fill_value='extrapolate')(wavelength)
             fluxes.append(fi)
         
@@ -163,22 +186,25 @@ def interp_flux(spectra, params_to_interp, star_params):
     else:
         out_vals = [star_params[p] for p in params_to_interp]
         in_vals = [[s[p] for p in params_to_interp] for s in spectra]
-        print(in_vals)
-        print(out_vals)
-        print(len(fluxes))
+     #   print(in_vals)
+      #  print(out_vals)
+       # print(len(fluxes))
         new_flux = griddata(in_vals, fluxes, out_vals)[0]
     return wavelength, new_flux
 
     
-def save_to_ecsv(star,wavelength, flux, save_path):
+def save_to_ecsv(star,wavelength, flux, save_path, star_params):
     """
   #  save the new model to an ecsv file
   #  """
+    normfac = find_normfac(star_params['Radius'], star_params['Distance'] )
     if os.path.exists(save_path) == False:
         os.mkdir(save_path)
-    savedat = Table([wavelength*u.AA, flux], names=['WAVELENGTH', 'FLUX'])
-    star = star.replace(' ', '_')
-    ascii.write(savedat, save_path+star+'_phoenix_interpolated.ecsv', overwrite=True, format='ecsv')
+    metadata = {'TEFF':star_params['Teff'], 'LOGG':star_params['logg'], 'NORMFAC':normfac}
+    savedat = Table([wavelength*u.AA, flux], names=['WAVELENGTH', 'FLUX'], meta=metadata)
+    star = star.replace(' ', '')
+    #ascii.write(savedat, save_path+star+'_phoenix_interpolated.ecsv', overwrite=True, format='ecsv')
+    savedat.write(save_path+star+'_phoenix_interpolated.ecsv', overwrite=True, format='ascii.ecsv')
     
 def plot_spectrum(wavelength, flux, star):
     plt.figure(star)
@@ -217,7 +243,7 @@ def make_phoenix_spectrum(star, save_path, repo, star_params, save_ecsv=False, p
         spectra = get_models(repo,param_dicts)
         wavelength, flux = interp_flux(spectra, params_to_interp, star_params) 
     if save_ecsv:
-        save_to_ecsv(star, wavelength, flux, save_path)
+        save_to_ecsv(star, wavelength, flux, save_path, star_params)
     if plot == True:
         plot_spectrum(wavelength, flux, star)
     return wavelength, flux
@@ -229,6 +255,12 @@ def distance_scale(radius, distance, flux):
     scale = (radius.to(u.cm)/distance.to(u.cm))**2
     return flux * scale
 
+def find_normfac(radius, distance):
+    """
+    finds the scaling factor for the spectrum
+    """
+    return (radius.to(u.cm)/distance.to(u.cm))**2
+ 
 
 
 def test():
