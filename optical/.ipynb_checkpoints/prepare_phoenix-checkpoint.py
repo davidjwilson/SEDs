@@ -14,7 +14,7 @@ import requests
 """
 @author David Wilson
 
-version 3 20191211
+version 4 20200416
 
 Script to retreive phoenix models and interpolate them onto the correct values. "phxurl" and "fetchphxfile" adaped from Parke Loyds scripts. Adapetd further to use the lyon models
 """
@@ -104,7 +104,7 @@ def extract_spectrum(filepath):
     Extracts the spectrum from the Lyon files, which is non-trivial. Adapts code by JSP. 
     """
     #nameout = unzip_file(filepath)
-    wavemin, wavemax, DF = 1000, 1000000, 8
+    wavemin, wavemax, DF = 1000, 1000000, -8
     
     try:
         phoenixR = ascii.read(filepath,format="fixed_width_no_header",col_starts=(0,14),col_ends=(12,25),delimiter=" ",names=('Wave','Spec'))
