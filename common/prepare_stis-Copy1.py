@@ -17,10 +17,10 @@ cds.enable()
 """
 @author: David Wilson
 
-version 2 20200430
+version 1 20190717
 
 
-Finds all STIS x1d files, groups them by grating, coadds them and saves to file with required metadata. 
+Finds all STIS x1d files, groups them by grating, coadds them and saves to file with required metadata
 
 """
 def coadd_flux(f_array, e_array):

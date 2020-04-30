@@ -1,9 +1,9 @@
 """
-@verison: 1
+@verison: 2
 
 @author: David Wilson
 
-@date 20190805
+@date 20200430
 
 Using this to wite the main function for make_mm_sed.
 """
@@ -44,10 +44,13 @@ def make_sed(input_paths, savepath, version, lya_range, other_airglow, save_comp
     sed_table, instrument_list = sed.build_cos_fuv(component_repo, airglow)
     
     #STIS FUV and Lya
-    gratings = prepare_stis.make_stis_spectum(input_paths['STIS_FUV'], version, savepath = component_repo, save_ecsv=save_components, return_gratings=True, save_fits = save_components)
+   # gratings = prepare_stis.make_stis_spectum(input_paths['STIS_FUV'], version, savepath = component_repo, save_ecsv=save_components, return_gratings=True, save_fits = save_components)
+    #print(gratings)
+    #updated to use pre-prepared stis ecsvs:
+    gratings = np.array([Table.read(stis_ecsv).meta['GRATING'] for stis_ecsv in glob.glob(input_paths['STIS_FUV']+'*.ecsv')], dtype=str)
     print(gratings)
     if 'G140L' in gratings:
-        stis_normfac = sed.find_stis_normfac(component_repo, airglow, 'fuv')
+        stis_normfac = sed.find_stis_normfac(input_paths['STIS_FUV'], airglow, 'fuv')
         #stis_normfac=1.0 #hack for gj699
        # prepare_stis.make_stis_spectum(input_paths['STIS_FUV'], version, savepath = component_repo, save_ecsv=save_components, return_gratings=True, save_fits = save_components, normfac=stis_normfac, sx1=False)
     else:
@@ -62,7 +65,7 @@ def make_sed(input_paths, savepath, version, lya_range, other_airglow, save_comp
     if 'G230L' in gratings:
        # nuv_normfac = sed.find_stis_normfac(component_repo, airglow, 'nuv')
         nuv_normfac= 1.0
-        sed_table, instrument_list = sed.add_stis_nuv(sed_table, component_repo, instrument_list)
+        sed_table, instrument_list = sed.add_stis_nuv(sed_table, input_paths['STIS_FUV'], instrument_list)
     else:
         gap_edges = prepare_cos.make_cos_nuv(input_paths['COS_x1d'], version, savepath = component_repo, plot=False, save_ecsv=save_components, save_fits=save_components, find_gap=True)
         #print (gap)
@@ -73,12 +76,14 @@ def make_sed(input_paths, savepath, version, lya_range, other_airglow, save_comp
     sed_table, instrument_list = sed.add_stis_optical(sed_table, component_repo, instrument_list)# cutting stis optical for now
     
     if do_phoenix: #phoenix takes ages so I'm adding the option to turn it off for testing purposes
-        if star_params == {}:
-            star_params = prepare_model.load_star_params(input_paths['STAR_PARAMS'], FeH=0.0, aM=0.0)
-        if len(os.listdir(input_paths['PHOENIX'])) == 0:
-            prepare_model.make_phoenix_spectrum(input_paths['PHOENIX'], phoenix_repo, star_params, save_ecsv=True, plot=False)
-        prepare_model.make_model_spectrum(input_paths['PHOENIX']+os.listdir(input_paths['PHOENIX'])[0], version, sed_table ,savepath = component_repo, save_ecsv=save_components, save_fits=save_components, model_name='PHX')
-        phoenix_normfac = sed.phoenix_norm(component_repo, star_params)
+     #   if star_params == {}:
+      #      star_params = prepare_model.load_star_params(input_paths['STAR_PARAMS'], FeH=0.0, aM=0.0)
+       # if len(os.listdir(input_paths['PHOENIX'])) == 0:
+            #prepare_model.make_phoenix_spectrum(input_paths['PHOENIX'], phoenix_repo, star_params, save_ecsv=True, plot=False)
+        phoenix_path = '/media/david/5tb_storage1/muscles/phoenix_models/interpolated_models/{}_phoenix_interpolated.ecsv'.format(sed_table.meta['TARGNAME'])
+        prepare_model.make_model_spectrum(phoenix_path, version, sed_table ,savepath = component_repo, save_ecsv=save_components, save_fits=save_components, model_name='PHX')
+        #phoenix_normfac = sed.phoenix_norm(component_repo, star_params)
+        phoenix_normfac = Table.read(phoenix_path).meta['NORMFAC']
         sed_table, instrument_list = sed.add_phx_spectrum(sed_table, component_repo, instrument_list)
                      
     #xray- xmm/chandra +model
@@ -88,10 +93,10 @@ def make_sed(input_paths, savepath, version, lya_range, other_airglow, save_comp
     if 'CXO_path' in input_paths:
         prepare_chandra.make_chandra_spectra(input_paths['CXO_path'], input_paths['CXO_evt'], component_repo, sed_table.meta, version, apec_repo=input_paths['APEC'], save_ecsv=save_components, save_fits=save_components)
         scope = 'cxo'
-        
-    prepare_model.make_model_spectrum(input_paths['APEC']+os.listdir(input_paths['APEC'])[0], version, sed_table ,savepath = component_repo, save_ecsv=save_components, save_fits=save_components, model_name='apec')
+    if 'CXO_path' in input_paths or 'XMM_path' in input_paths:     
+        prepare_model.make_model_spectrum(input_paths['APEC']+os.listdir(input_paths['APEC'])[0], version, sed_table ,savepath = component_repo, save_ecsv=save_components, save_fits=save_components, model_name='apec')
     
-    sed_table, instrument_list, euv_gap = sed.add_xray_spectrum(sed_table, component_repo, instrument_list, scope, add_apec = True, find_gap=True)
+        sed_table, instrument_list, euv_gap = sed.add_xray_spectrum(sed_table, component_repo, instrument_list, scope, add_apec = True, find_gap=True)
     
     #EUV
     dem_path = ''
@@ -169,7 +174,7 @@ def quicksave(sed_table):
     t2 = Table([w1,f1,e1], names=['WAVELENGTH', 'FLUX', 'ERROR'])
     t2.write('quicksaves/'+name+'_1A_basic.ecsv', overwrite=True)
 
-trappist_1_test()
+#trappist_1_test()
  
 
 #############################################    
@@ -184,7 +189,7 @@ def gj_699_test():
     muscles_path = '/home/david/work/muscles/MegaMUSCLES/'+star_up+'/'
     input_paths = dict(COS_readsav = path+'COS/', 
                        COS_x1d = muscles_path+'HST/COS/',
-                       STIS_FUV = muscles_path+'HST/STIS/', 
+                       STIS_FUV = '/home/david/work/muscles/SEDs/common/stis_test_output/GJ699/',
                        lya_model = path + 'lya/GJ699_lya_simple.txt', 
                        PHOENIX= path+'phoenix_repo/',
                        APEC = path+'apec/',
@@ -197,7 +202,7 @@ def gj_699_test():
     lya_range = [1207, 1222] #lyman alpha region to remove
     other_airglow = [1300, 1310, 1353, 1356] #oi airglow to remove
     save_path = path + 'test_files/'
-    version = 3
+    version = 4
     euv_inputs = dict(lya=1.17*1.04e-12, distance=1.8266 )
     sed_table, instrument_list = make_sed(input_paths, save_path, version, lya_range, other_airglow, save_components=True, do_phoenix=True)
     quicksave(sed_table)
@@ -244,16 +249,39 @@ def gj_674_test():
     plt.show()
     
 #gj_699_test()    
+
+def gj_849_test():
+    """
     
+    """
+    star = 'gj_849' #as it appears in the filepath
+    star_up = 'GJ_849'
+    #star_params = {'Teff':3400, 'logg':4.5, 'FeH':0.0 , 'aM':0.0 }
+    path = '/home/david/work/muscles/SEDs/'+star+'/'
+   # muscles_path = '/home/david/work/muscles/MegaMUSCLES/'+star_up+'/'
     
-    #filepaths = {'xmm':'/xmm/GJ674.fits',
-     #        'cos_g130m':'/COS/GJ674_COS130M_Mm1_NOSCL_03apr18.sav',
-      #       'lya':'/lya/GJ674_intrinsic_LyA_profile.txt',
-       ##      'stis_g140m':'/STIS/GJ674_G140M_coadd.ecsv',
-            # 'stis_g140l':'/STIS/GJ674_G140L_noflare_x1d.fits',
-         ##    'stis_g230l':'/STIS/GJ674_G230L_x1d.fits',
-             #'stis_g430l':'/STIS/odlm21010_sx1.fits',
-           #  'phoenix':'/PHOENIX/lte03400-4.50-0.0.PHOENIX-ACES-AGSS-COND-2011-HiRes.fits',
-            # 'phoenix_wave' :'/PHOENIX/WAVE_PHOENIX-ACES-AGSS-COND-2011.fits' }
+    input_paths = dict(COS_readsav = 'cos_savs/GJ849/', 
+                       COS_x1d = '/media/david/5tb_storage1/muscles/cos_x1ds/',
+                       STIS_FUV = '/home/david/work/muscles/SEDs/common/stis_test_output/GJ849/',
+                       lya_model = 'lya_intermediates/GJ849_lya_basic.txt',
+                       EUV = path+'euv_repo/'
+                       )
+    lya_range = [1207, 1222] #lyman alpha region to remove
+    other_airglow = [1300, 1310, 1353, 1356] #oi airglow to remove
+    save_path = path + 'test_files/'
+    version = 1
+    euv_inputs = dict(lya=1.17*1.04e-12, distance=1.8266 )
+    sed_table, instrument_list = make_sed(input_paths, save_path, version, lya_range, other_airglow, save_components=True, do_phoenix=True, euv_inputs = euv_inputs)
+    quicksave(sed_table)
+    make_sed_files.sed_to_ecsv(sed_table)
+    print(instrument_list)
+    #print(sed_table.sort('WAVELENGTH'))
+    plt.figure(star+'_test')
+    plt.step(sed_table['WAVELENGTH'], sed_table['FLUX'], where='mid')
+    plt.step(sed_table['WAVELENGTH'], sed_table['ERROR'], where='mid')
+    plt.xscale('log')
+    plt.yscale('log')
+    plt.show()
     
+gj_849_test()
 
