@@ -9,15 +9,15 @@ import astropy.io.fits as fits
 
 """
 
-@verison: 2
+@verison: 3
 
 @author: David Wilson
 
-@date 20190809
+@date 20200504
 
 Makes txt files for the EUV portion of a spectrum that can then be fed into prepare_model. Either uses a DEM model or the Linsky+14 relationships
 
-
+v3 added ability to put star name in files
 
 Calculating the EUV fluxes using the relationships of Linsky + 14 (https://ui.adsabs.harvard.edu/abs/2014ApJ...780...61L/abstract)
 
@@ -45,7 +45,7 @@ def wavelength_edges(w):
     w1 = w + diff/2.
     return w0, w1
 
-def euv_estimator(euv_inputs, save_path, save=True):
+def euv_estimator(euv_inputs, save_path, star, save=True):
     
     lya, distance = euv_inputs['lya'], euv_inputs['distance']
         
@@ -74,8 +74,9 @@ def euv_estimator(euv_inputs, save_path, save=True):
 
     if os.path.exists(save_path) == False:
         os.mkdir(save_path)
-    
-    filename = 'l14euv_lya%s_d%s.txt' % (euv_inputs['lya'], euv_inputs['distance'])
+    if star != '':
+        star = '{}_'.format(star)
+    filename = '{}l14euv_lya{}_d{}.txt'.format(star, euv_inputs['lya'], euv_inputs['distance'])
     savedat = Table([wavelength, flux], names=['WAVELENGTH', 'FLUX'])
     ascii.write(savedat, save_path+filename, overwrite=True)
     
@@ -102,12 +103,12 @@ def make_dem(dem_path, save_path):
     ascii.write(savedat, save_path+name, overwrite=True)
 
 
-def make_euv(savepath, dem_path = '', euv_inputs = {}):
+def make_euv(savepath, star = '', dem_path = '', euv_inputs = {}):
     """
-    Main fuction. Uses a DEM if available, if not makes the EUV spectrum from euv_inputes (lya flux, distance)
+    Main fuction. Uses a DEM if available, if not makes the EUV spectrum from euveuv_txt_files_inputes (lya flux, distance)
     """
     if dem_path == '':
-        euv_estimator(euv_inputs, savepath)
+        euv_estimator(euv_inputs, savepath, star)
     else:
         make_dem(dem_path, savepath)
         
