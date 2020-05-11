@@ -11,13 +11,13 @@ from astropy.time import Time
 from astropy.units import cds
 cds.enable()
 
-
 """
-@verison: 1
+
+@verison: 2
 
 @author: David Wilson
 
-@date 20190814
+@date 20200511
 
 Turns AB's Chandra files into HSLP escv and fits files
 """
@@ -59,9 +59,9 @@ def build_chandra_data(spectrum_path, hdr0):
                 'ERROR':e*u.erg/u.s/u.cm**2/u.AA,'EXPTIME':exptime*u.s,'DQ':dq,'EXPSTART':start*cds.MJD,'EXPEND':end*cds.MJD}
     return new_data
                   
-def build_chandra_metadata(hdr0, new_data, sed_meta):
+def build_chandra_metadata(hdr1, new_data):
     """
-    Makes the metadata for the chandra data table
+    Makes the metadata for the chandra data table. Version 2 rewriting to not requre the SED metadata so can make x-ray files separately 
     """
     wavelength, flux = new_data['WAVELENGTH'].value, new_data['FLUX'].value
     mid = int(len(wavelength) / 2)
@@ -69,21 +69,25 @@ def build_chandra_metadata(hdr0, new_data, sed_meta):
     waveres = wavelength[mid+1] - wavelength[mid]
     start, end, exptime = np.min(new_data['EXPSTART'][new_data['EXPSTART']>0]).value, np.max(new_data['EXPEND']).value, np.max(new_data['EXPTIME']).value
     meta_names =['TELESCOP','INSTRUME','GRATING','DETECTOR','FILTER',
-                 'TARGNAME','RA_TARG','DEC_TARG','PROPOSID','HLSPNAME','HLSPACRN','HLSPLEAD',
+                 'TARGNAME','RA_TARG','DEC_TARG','PROPOSID',
+                 'HLSPNAME','HLSPACRN','HLSPLEAD',
                  'PR_INV_L','PR_INV_F','DATE-OBS','EXPSTART','EXPEND','EXPTIME','EXPDEFN','EXPMIN',
                  'EXPMAX','EXPMED','NORMFAC','WAVEMIN','WAVEMAX','WAVEUNIT','AIRORVAC','SPECRES','WAVERES','FLUXMIN',
                   'FLUXMAX','FLUXUNIT']
-    meta_fill = ['CXO','','NONE','ACIS-7','NA',
-                 'sed','sed','sed','sed','sed','sed','sed',
-                 'sed','sed',hdr0['DATE-OBS'], start, end, exptime, 'MEAN', exptime, 
+    meta_fill = ['CXO','1','NONE',hdr1['DETNAM'],'NA',
+                 hdr1['OBJECT'],'1','1','15071',
+                 'Measurements of the Ultraviolet Spectral Characteristics of Low-mass Exoplanet Host Stars','MUSCLES','David J. Wilson',
+                 hdr1['OBSERVER'].split()[0:-1],hdr1['OBSERVER'].split()[-1],'1', start, end, exptime, 'MEAN', exptime, 
                  exptime, exptime, 1.0, min(wavelength), max(wavelength), 'ang', 'vac', specres, waveres,np.min(flux[np.isnan(flux)==False]),
                  np.max(flux[np.isnan(flux)==False]),'erg/s/cm2/ang']  
     metadata = {}
     for name, filler in zip(meta_names, meta_fill):
         if filler == 'sed':
             metadata[name] = sed_meta[name]
-        elif filler == '':
-            metadata[name] = hdr0[name]
+     #   elif filler == '0':
+      #      metadata[name] = hdr0[name]
+        elif filler == '1':
+            metadata[name] = hdr1[name]
         else:
             metadata[name] = filler
     return metadata
@@ -144,12 +148,12 @@ def make_dataset_extension(hdr):
     return hdu
     
     
-def make_chandra_spectra(chandra_path, evt_path, savepath, sed_meta, version, apec_repo='', make_apec=True, save_ecsv=False, save_fits=False):
-    hdr0 = fits.getheader(evt_path)
+def make_chandra_spectra(chandra_path, evt_path, savepath, version, apec_repo='', make_apec=True, save_ecsv=False, save_fits=False):
+    hdr = fits.getheader(evt_path, 1)
     data_file = glob.glob(chandra_path+'*spectrum*')[0]
     model_file = glob.glob(chandra_path+'*model*')[0]                 
-    data = build_chandra_data(data_file, hdr0)
-    metadata = build_chandra_metadata(hdr0, data, sed_meta)
+    data = build_chandra_data(data_file, hdr)
+    metadata = build_chandra_metadata(hdr, data)
     if make_apec:
         apec_to_ecsv(model_file, metadata, apec_repo)
     if save_ecsv:

@@ -13,11 +13,11 @@ cds.enable()
 
 
 """
-@verison: 1
+@verison: 2
 
 @author: David Wilson
 
-@date 20190809
+@date 20200511
 
 Turns XMM data in to HLSP format ecsv and fits files, ready to be added to an SED
 """
@@ -38,7 +38,7 @@ def apec_to_ecsv(data, hdr0, save_path):
     if os.path.exists(save_path) == False:
         os.mkdir(save_path)
     wavelength, flux = data['Wave'], data['Flux']
-    target = hdr0['TARGET'].replace(' ','_')
+    target = hdr0['TARGET'].replace(' ','')
     savedat = Table([wavelength, flux], names=['WAVELENGTH', 'FLUX'])
     name = target+'apec.txt' 
     ascii.write(savedat, save_path+name, overwrite=True)
@@ -55,7 +55,7 @@ def build_xmm_data(data, hdr0):
                 'ERROR':e*u.erg/u.s/u.cm**2/u.AA,'EXPTIME':exptime*u.s,'DQ':dq,'EXPSTART':start*cds.MJD,'EXPEND':end*cds.MJD}
     return new_data
 
-def build_xmm_metadata(hdr0, new_data, sed_meta):
+def build_xmm_metadata(hdr0, new_data):
     """
     Makes the metadata for the xmm data table
     """
@@ -70,16 +70,17 @@ def build_xmm_metadata(hdr0, new_data, sed_meta):
                  'EXPMAX','EXPMED','NORMFAC','WAVEMIN','WAVEMAX','WAVEUNIT','AIRORVAC','SPECRES','WAVERES','FLUXMIN',
                   'FLUXMAX','FLUXUNIT']
     meta_fill = ['XMM','EPIC','NA','MULTI','PN','MOS1','MOS2','MULTI', hdr0['pn_FILTER'],
-                 hdr0['mos1_FILTER'],hdr0['mos2_FILTER'],'sed','sed','sed','sed','sed','sed','sed',
-                 'sed','sed',hdr0['pn_DATE-OBS'], start, end, exptime, 'MEAN', exptime, 
+                 hdr0['mos1_FILTER'],hdr0['mos2_FILTER'],hdr0['TARGET'].replace(' ',''),'','','15071',
+                 'Measurements of the Ultraviolet Spectral Characteristics of Low-mass Exoplanet Host Stars','MUSCLES','David J. Wilson',
+                 'Cynthia', 'Froning' ,hdr0['pn_DATE-OBS'], start, end, exptime, 'MEAN', exptime, 
                  exptime, exptime, 1.0, min(wavelength), max(wavelength), 'ang', 'vac', specres, waveres,np.min(flux[np.isnan(flux)==False]),
                  np.max(flux[np.isnan(flux)==False]),'erg/s/cm2/ang']  
     metadata = {}
     for name, filler in zip(meta_names, meta_fill):
-        if filler == 'sed':
-            metadata[name] = sed_meta[name]
-        else:
-            metadata[name] = filler
+       # if filler == 'sed':
+        #    metadata[name] = sed_meta[name]
+       # else:
+       metadata[name] = filler
     return metadata
     
 def save_to_ecsv(data, metadata, save_path, version):
@@ -138,14 +139,14 @@ def make_dataset_extension(hdr):
     return hdu
     
     
-def make_xmm_spectra(xmm_path, savepath, sed_meta, version, apec_repo='', make_apec=True, save_ecsv=False, save_fits=False):
+def make_xmm_spectra(xmm_path, savepath, version, apec_repo='', make_apec=True, save_ecsv=False, save_fits=False):
     hdul = fits.open(xmm_path)
     hdr0 = hdul[0].header
     data = hdul[1].data
     apec_data = hdul[2].data
     hdul.close
     data = build_xmm_data(data, hdr0)
-    metadata = build_xmm_metadata(hdr0, data, sed_meta)
+    metadata = build_xmm_metadata(hdr0, data)
     if make_apec:
         apec_to_ecsv(apec_data, hdr0, apec_repo)
     if save_ecsv:

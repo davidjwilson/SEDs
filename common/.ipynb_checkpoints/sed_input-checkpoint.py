@@ -43,7 +43,7 @@ xmm_path = path + 'xray/xmm/'
 dem_path = path + 'dem_models'
 star_params_path = path + 'mega_muscles_stellar_parameters.csv'
 lya_path = path + 'lya_hlsp/' 
-euv_repo = path + 'euv_repo/'
+euv_repo = path + 'euv_hlsp/'
 
 #'2MASS-J23062928-0502285' leaving out Trappist-1
 stars = ['L-980-5',
@@ -170,15 +170,25 @@ for star in stars[1:2]:
     e_full = np.concatenate((e_full, np.array(e)))
     
     #EUV
-    """ 
-    dem_file = glob.glob('{}{}_v*.fits')
-    if len(dem_file) > 1:
-        print('More than one dem file for this star')
-    if len(dem_file > 0):
-        euv_name = 'dem'
-        prepare_euv.make_euv(dem_file, dem_path, euv_inputs=euv_inputs)
-        prepare_model.make_model_spectrum(input_paths['EUV']+os.listdir(input_paths['EUV'])[0], version, sed_table ,savepath = component_repo, save_ecsv=save_components, save_fits=save_components, model_name=euv_name)
-    """
+     
+    #dem_file = glob.glob('{}{}_v*.fits')
+   # if len(dem_file) > 1:
+     #   print('More than one dem file for this star')
+    #if len(dem_file > 0):
+     #   euv_name = 'dem'
+      #  prepare_euv.make_euv(dem_file, dem_path, euv_inputs=euv_inputs)
+       # prepare_model.make_model_spectrum(, version, sed_table ,savepath = component_repo, save_ecsv=save_components, save_fits=save_components, model_name=euv_name)
+  #  if len(dem_file) = 0:
+    euv_files = glob.glob('{}hlsp_muscles_model_euv-scaling_{}_na_v1_component-spec.ecsv'.format(euv_repo, star.lower()))
+    if len(euv_files) == 1:
+        data = Table.read(euv_files[0])
+        w, f = data['WAVELENGTH'], data['FLUX']
+        mask = w < min(w_full)
+        w, f = w[mask], f[mask]
+        plt.step(w, f, where='mid', label='EUV scaling')
+        w_full = np.concatenate((w_full, np.array(w)))
+        f_full = np.concatenate((f_full, np.array(f)))
+        e_full = np.concatenate((e_full, np.zeros(len(w))))
     
                 
     plt.legend(loc= 1)

@@ -271,7 +271,7 @@ def gj_849_test():
     save_path = path + 'test_files/'
     version = 1
     euv_inputs = dict(lya=1.17*1.04e-12, distance=1.8266 )
-    sed_table, instrument_list = make_sed(input_paths, save_path, version, lya_range, other_airglow, save_components=True, do_phoenix=True)
+    sed_table, instrument_list = make_sed(input_paths, save_path, version, lya_range, other_airglow, save_components=True, do_phoenix=True, )
     quicksave(sed_table)
     make_sed_files.sed_to_ecsv(sed_table)
     print(instrument_list)
