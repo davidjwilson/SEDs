@@ -1,9 +1,9 @@
 """
-@verison: 4
+@verison: 3
 
 @author: David Wilson
 
-@date 20200512
+@date 20200504
 
 Organises all of the Mega-MUSCLES data and produces the SEDs. New 2020 workflow orgainising data by source rather than star.
 
@@ -29,13 +29,21 @@ import prepare_chandra
 from craftroom import resample
 from scipy.interpolate import interp1d
 import make_sed_files
-from shutil import copyfile
 
 """File structure"""
 
 path = '/media/david/5tb_storage1/muscles/' #data are in the external harddrive
-sources = ['cos','stis', 'lya','phoenix', 'xmm', 'chandra', 'apec', 'euv']
-
+phoenix_path = path + 'phoenix_models/interpolated_models/'
+stis_path = path + 'stis_ecsvs/'
+cos_path = path + 'cos_savs/'
+stis_x1ds = path + 'stis_x1ds/'
+cos_x1ds = path + 'cos_x1ds'
+chandra_path = path + 'xray/chandra/'
+xmm_path = path + 'xray/xmm/'
+dem_path = path + 'dem_models'
+star_params_path = path + 'mega_muscles_stellar_parameters.csv'
+lya_path = path + 'lya_hlsp/' 
+euv_repo = path + 'euv_hlsp/'
 
 #'2MASS-J23062928-0502285' leaving out Trappist-1
 stars = ['L-980-5',
@@ -50,12 +58,12 @@ stars = ['L-980-5',
         'GJ729',
         'GJ15A']
 
-airglow =  [1207, 1222, 1300, 1310, 1353, 1356]
+airmask =  [1207, 1222, 1300, 1310, 1353, 1356]
 cos_gratings = ['G130M', 'G160M']
 stis_gratings = ['G140M','E140M','G140L', 'G230L', 'G230LB', 'G430L']
 
-#lya_ecsvs = glob.glob('{}*ecsv'.format(lya_path))
-#star_params = Table.read(star_params_path)
+lya_ecsvs = glob.glob('{}*ecsv'.format(lya_path))
+star_params = Table.read(star_params_path)
 #print(lya_ecsvs)
 ###################
 version = 1
@@ -73,43 +81,11 @@ def make_repo(star, path, version):
         os.mkdir(component_repo)
     return repo, component_repo
 
-def sort_components(star, path, sources, component_repo):
-    """
-    Moves all components to individual star directories
-    """
-    for source in sources:
-        if source == 'stis':
-            spath = '{}{}_hlsp/{}/'.format(path, source, star)
-        else:
-            spath = '{}{}_hlsp/'.format(path, source)
-        starfiles = glob.glob('{}*{}*'.format(spath, star.lower()))
-        for sf in starfiles:
-            fname = os.path.split(sf)[1]
-            copyfile(sf, '{}{}'.format(component_repo, fname))
 
-      #  print(spec)
-              #  filename = os.path.split(spec)[1]
-               # copyfile(spec, 'nuv_collection/spectra/{}'.format(filename))
-
-
-
-for star in stars[0:2]:
+for star in stars[1:2]:
     repo, component_repo = make_repo(star, path, version)
-   # sort_components(star, path, sources, component_repo)
     
-   #COS
-    
-    sed_table, instrument_list = sed.build_cos_fuv(component_repo, airglow)
-    
-    #STIS and Lya
-    
-    sed_table, instrument_list = sed.add_stis_and_lya(sed_table, component_repo, airglow[0:2], instrument_list, airglow[2:])
-    
-    plt.plot(sed_table['WAVELENGTH'], sed_table['FLUX'])
-    plt.show()
-    
-"""    
-    
+    print(star)
     cos_savs = glob.glob('{}{}/*.sav'.format(cos_path, star))
     #print(cos_savs)
     stis_ecsvs = glob.glob('{}{}/*.ecsv'.format(stis_path, star))
@@ -122,18 +98,29 @@ for star in stars[0:2]:
     
     #COS
     
-    sed_table, instrument_list = sed.build_cos_fuv(star, '{}cos_hlsp'.format(path), airglow)
+    for grating in cos_gratings:
+        for sav in cos_savs:
+            data = readsav(sav)
+            if str(data['grating'][0]) == "b'{}'".format(grating) :
+                w, f, e = data['wave'], data['flux'], data['err']
+                mask = (w < airmask[0]) | (w > airmask[1]) & (w < airmask[2]) | (w > airmask[3]) & (w < airmask[4]) | (w > airmask[5]) 
+                w, f, e = w[mask], f[mask], e[mask]
+              #  mask = (w > w1)
+            #    w, f, e = w[mask], f[mask], e[mask]
+                plt.step(w,f, where='mid', label=grating)
+                w1 = w[-1]
+                w_full = np.concatenate((w_full, np.array(w)))
+                f_full = np.concatenate((f_full, np.array(f)))
+                e_full = np.concatenate((e_full, np.array(e)))
     
-    #Lya + Stis
-    
-    sed_table, instrument_list = sed.add_stis_and_lya(sed_table, component_repo, airglow[0:2], instrument_list, airglow[2:])
+    #Lya
     
     lw0, lw1 = 1000000, 0 #placeholder so L-980-5 works
     for lya in lya_ecsvs:
         data = Table.read(lya)
       #  print(data.meta['TARGNAME'])
         if data.meta['TARGNAME'] == star:
-            w, f = data['WAVELENGTH'], data['FLUX']hlsp_muscles_hst_cos_gj1132_g130m_v1_component-spec.fits
+            w, f = data['WAVELENGTH'], data['FLUX']
             plt.step(w, f, where='mid', label=r'Ly $\alpha$')
             lw0, lw1 = w[0], w[-1]
             w_full = np.concatenate((w_full, np.array(w)))
@@ -214,5 +201,5 @@ for star in stars[0:2]:
     #savdat = Table([w_full*u.AA, f_full*u.erg/u.s/u.cm**2/u.AA, e_full*u.erg/u.s/u.cm**2/u.AA], names=['WAVELENGTH', 'FLUX', 'ERROR'])
     #ascii.write(savdat, 'uv_first_pass/{}_hst+opt_v1.ecsv'.format(star), format='ecsv', overwrite=True)
 
-"""
+
 

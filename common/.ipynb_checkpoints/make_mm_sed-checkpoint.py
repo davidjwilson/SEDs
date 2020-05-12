@@ -196,11 +196,14 @@ def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, othe
     """
     g140l_path = glob.glob(component_repo+'*g140l*.ecsv')
     g140m_path = glob.glob(component_repo+'*g140m*.ecsv')
-    lya = Table.read(glob.glob(component_repo+'*lya*.ecsv')[0])
-    instrument_code, lya = fill_model(lya, 'mod_lya_young')
-    instrument_list.append(instrument_code)
-    lya = normfac_column(lya)
-    sed_table = vstack([sed_table, lya], metadata_conflicts = 'silent')
+    lya = dict(WAVELENGTH = [10000, 0]) #filler for the star that doesn't have a lya measurement 
+    lya_path = glob.glob(component_repo+'*lya*.ecsv')
+    if len(lya_path) == 1:
+        lya = Table.read(lya_path[0])
+        instrument_code, lya = fill_model(lya, 'mod_lya_young')
+        instrument_list.append(instrument_code)
+        lya = normfac_column(lya)
+        sed_table = vstack([sed_table, lya], metadata_conflicts = 'silent')
     
     if len(g140m_path) > 0:
         g140m = Table.read(g140m_path[0])
