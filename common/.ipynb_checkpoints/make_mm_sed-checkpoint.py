@@ -23,7 +23,7 @@ import astropy.constants as const
 from astropy.modeling import models, fitting
 from craftroom import resample
 from scipy.interpolate import interp1d
-from astropy.convolution import convolve, Box1DKernel
+from astropy.convolution import convolve, Box1DKernel, convolve_fft, Gaussian1DKernel
 import prepare_cos 
 import prepare_stis
 from astropy.units import cds
@@ -32,6 +32,59 @@ from scipy.optimize import leastsq
 from scipy.signal import argrelmax
 from scipy.integrate import quad
 cds.enable()
+
+
+def smear(w,f, R, w_sample=1):
+    '''
+    Smears a model spectrum with a gaussian kernel to the given resolution, R.
+    Adapeted from https://github.com/spacetelescope/pysynphot/issues/78
+
+    Parameters
+    -----------
+
+    w,f:  spectrum to smear
+
+    R: int
+        The resolution (dL/L) to smear to
+
+    w_sample: int
+        Oversampling factor for smoothing
+
+    Returns
+    -----------
+
+    sp: PySynphot Source Spectrum
+        The smeared spectrum
+    '''
+
+    # Save original wavelength grid and units
+    w_grid = w
+    
+
+    # Generate logarithmic wavelength grid for smoothing
+    w_logmin = np.log10(np.nanmin(w_grid))
+    w_logmax = np.log10(np.nanmax(w_grid))
+    n_w = np.size(w_grid)*w_sample
+    w_log = np.logspace(w_logmin, w_logmax, num=n_w)
+
+    # Find stddev of Gaussian kernel for smoothing
+    R_grid = (w_log[1:-1]+w_log[0:-2])/(w_log[1:-1]-w_log[0:-2])/2
+    sigma = np.median(R_grid)/R
+    if sigma < 1:
+        sigma = 1
+
+    # Interpolate on logarithmic grid
+    f_log = np.interp(w_log, w_grid, f)
+
+    # Smooth convolving with Gaussian kernel
+    gauss = Gaussian1DKernel(stddev=sigma)
+    f_conv = convolve_fft(f_log, gauss)
+
+    # Interpolate back on original wavelength grid
+    f_sm = np.interp(w_grid, w_log, f_conv)
+
+    # Write smoothed spectrum back into Spectrum object
+    return w_grid, f_sm
 
 
 def mask_maker(x, pairs, include=True):
@@ -263,19 +316,7 @@ def add_cos_nuv(sed_table, component_repo, instrument_list, gap_edges):
     sed_table, instrument_list = fill_cos_airglow(sed_table, gap_edges, instrument_list, nuv=True)
     return sed_table, instrument_list
     
-def add_stis_optical(sed_table, component_repo, instrument_list):
-    """
-    Adds the G430L spectrum
-    """
-    g430l_path = glob.glob(component_repo+'*g430l*.ecsv')
-    if len(g430l_path) > 0:
-        g430l = Table.read(g430l_path[0])
-        instrument_code, g430l = hst_instrument_column(g430l)
-        instrument_list.append(instrument_code)
-        g430l = normfac_column(g430l)
-        g430l = g430l[g430l['WAVELENGTH'] > max(sed_table['WAVELENGTH'])]
-        sed_table = vstack([sed_table, g430l], metadata_conflicts = 'silent')
-    return sed_table, instrument_list
+
     
 def residuals(scale, f, mf):
     return f - mf/scale
@@ -285,21 +326,8 @@ def phoenix_norm(component_repo, star_params, plot=False):
     find the normalisation factor between the phoenix model and the stis ccd (ccd_path)
     """
     norm = Table.read(glob.glob(component_repo+'*phx*.ecsv')[0])
-    #base = Table.read(glob.glob(component_repo+'*g430l*.ecsv')[0])
-    #cw, cf, cdq = base['WAVELENGTH'], base['FLUX'], base['DQ']
-    #sw, sf = norm['WAVELENGTH'], norm['FLUX']
-    #cw, cf, cdq = cw[cw >= cut], cf[cw >= cut], cdq[cw >= cut] #cut corona off
-    #c_mask = (cw >= sw[0]) & (cw <=sw[-1]) & (cdq == 0)
-    #s_mask = (sw >= cw[0]) & (sw <=cw[-1]) #mask to same same waveband and cut dq flags
-    #cw, cf, sw, sf = cw[c_mask], cf[c_mask], sw[s_mask], sf[s_mask]
-    #sw1, sf1 = resample.bintogrid(sw, sf, newx=cw) #rebin to stis wavelength gri
-
-    #scale, flag = leastsq(residuals, 1., args=(cf, sf1))
-    #normfac = 1/scale[0]
     radius, distance = star_params['radius'], star_params['distance']
     normfac = ((radius.to(u.cm)/distance.to(u.cm))**2).value
-    
-    
     print('PHOENIX NORMFAC =', normfac)
     update_norm(glob.glob(component_repo+'*phx*.ecsv')[0], glob.glob(component_repo+'*phx*.fits')[0], normfac)
 
@@ -317,6 +345,20 @@ def phoenix_norm(component_repo, star_params, plot=False):
         plt.show()
     return normfac
 
+def add_stis_optical(sed_table, component_repo, instrument_list):
+    """
+    Adds the G430L spectrum
+    """
+    g430l_path = glob.glob(component_repo+'*g430l*.ecsv')
+    if len(g430l_path) > 0:
+        g430l = Table.read(g430l_path[0])
+        instrument_code, g430l = hst_instrument_column(g430l)
+        instrument_list.append(instrument_code)
+        g430l = normfac_column(g430l)
+        g430l = g430l[g430l['WAVELENGTH'] > max(sed_table['WAVELENGTH'])]
+        sed_table = vstack([sed_table, g430l], metadata_conflicts = 'silent')
+    return sed_table, instrument_list
+
 def add_phx_spectrum(sed_table, component_repo, instrument_list):
     """
     Adds the scaled phoenix spectrum
@@ -332,7 +374,52 @@ def add_phx_spectrum(sed_table, component_repo, instrument_list):
         sed_table = vstack([sed_table, phx], metadata_conflicts = 'silent')
     return sed_table, instrument_list
         
+def add_phoenix_and_g430l(sed_table, component_repo, instrument_list, error_cut=True, scale=True):
+    """
+    Adds both the phoenix model and the g430l spectrm, triming the g430l spectrum by and error cut and filling in any gap with the phoenix model. 
+    """
+    phx_path = glob.glob(component_repo+'*phx*.ecsv')
+    g430l_path = glob.glob(component_repo+'*g430l*.ecsv')
+    if len(phx_path) == 1 and len(g430l_path) == 1:
+        phx = Table.read(phx_path[0])
+        instrument_code, phx = fill_model(phx, 'mod_phx_-----')
+        instrument_list.append(instrument_code)
+        phx = normfac_column(phx)
+        phx['FLUX'] *= phx.meta['NORMFAC']
+        
+        g430l = Table.read(g430l_path[0])
+        instrument_code, g430l = hst_instrument_column(g430l)
+        instrument_list.append(instrument_code)
+        
+        if error_cut: #cut region before a rolling 30pt mean SN > 1
+            bin_width = 30
+            w, f, e = g430l['WAVELENGTH'], g430l['FLUX'], g430l['ERROR']
+            sn = np.array([np.mean(f[i:i+bin_width]/e[i:i+bin_width]) for i in range(len(w[:-bin_width]))])
+            start = w[:-bin_width][np.where(sn > 1)[0][0]]
+            mask = (w > start) & (f > 0)
+            g430l = g430l[mask]
+        
+        if scale: #scale g430l spectrum to the phoenix spectrum
+            mask = (phx['WAVELENGTH'] >= g430l['WAVELENGTH'][0]) & (phx['WAVELENGTH'] <= g430l['WAVELENGTH'][-1]) 
+            mw, mf = phx['WAVELENGTH'][mask], phx['FLUX'][mask]
+            mw, mf = smear(mw, mf, 1000)
+            pfr = interp1d(mw, mf, fill_value='extrapolate')(g430l['WAVELENGTH'])
+            normfac = leastsq(residuals, 1., args=(g430l['FLUX'], pfr))[0]
+            g430l['FLUX'] *= normfac
+            g430l['ERROR'] *= normfac
+            update_norm(phx_path[0], '{}.fits'.format(phx_path[0][:-5]), normfac[0])
+        
+        g430l = normfac_column(g430l)
+        g430l = g430l[g430l['WAVELENGTH'] > max(sed_table['WAVELENGTH'])]
+        phx = phx[(phx['WAVELENGTH'] > max(sed_table['WAVELENGTH'])) & (phx['WAVELENGTH'] < min(g430l['WAVELENGTH'])) | (phx['WAVELENGTH'] > max(g430l['WAVELENGTH']))]
 
+        sed_table = vstack([sed_table, g430l], metadata_conflicts = 'silent')
+        sed_table = vstack([sed_table, phx], metadata_conflicts = 'silent')
+        
+    return sed_table, instrument_list
+        
+    
+    
 def add_xray_spectrum(sed_table, component_repo, instrument_list, scope, add_apec = True, find_gap=True):
     """
     Adds either a Chandra or and XMM spectrum and an APEC model. Can also return the gap that the EUV/DEM will fit into.

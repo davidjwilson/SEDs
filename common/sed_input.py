@@ -105,7 +105,13 @@ for star in stars[0:2]:
     
     sed_table, instrument_list = sed.add_stis_and_lya(sed_table, component_repo, airglow[0:2], instrument_list, airglow[2:])
     
-    plt.plot(sed_table['WAVELENGTH'], sed_table['FLUX'])
+    #PHOENIX
+    
+    sed_table, instrument_list = sed.add_phoenix_and_g430l(sed_table, component_repo, instrument_list)
+    
+    
+    args = np.argsort(sed_table['WAVELENGTH'])
+    plt.plot(sed_table['WAVELENGTH'][args], sed_table['FLUX'][args])
     plt.show()
     
 """    
