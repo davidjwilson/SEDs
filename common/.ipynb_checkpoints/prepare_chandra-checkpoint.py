@@ -68,6 +68,9 @@ def build_chandra_metadata(hdr1, new_data):
     specres = wavelength[mid]
     waveres = wavelength[mid+1] - wavelength[mid]
     start, end, exptime = np.min(new_data['EXPSTART'][new_data['EXPSTART']>0]).value, np.max(new_data['EXPEND']).value, np.max(new_data['EXPTIME']).value
+    star = hdr1['OBJECT']
+    if star == 'LHS2686':
+        star = 'LHS-2686'
     meta_names =['TELESCOP','INSTRUME','GRATING','DETECTOR','FILTER',
                  'TARGNAME','RA_TARG','DEC_TARG','PROPOSID',
                  'HLSPNAME','HLSPACRN','HLSPLEAD',
@@ -75,9 +78,9 @@ def build_chandra_metadata(hdr1, new_data):
                  'EXPMAX','EXPMED','NORMFAC','WAVEMIN','WAVEMAX','WAVEUNIT','AIRORVAC','SPECRES','WAVERES','FLUXMIN',
                   'FLUXMAX','FLUXUNIT']
     meta_fill = ['CXO','1','NONE',hdr1['DETNAM'],'NA',
-                 hdr1['OBJECT'],'1','1',hdr1['OBS_ID'],
+                 star,'1','1','15071',
                  'Measurements of the Ultraviolet Spectral Characteristics of Low-mass Exoplanet Host Stars','MUSCLES','David J. Wilson',
-                 hdr1['OBSERVER'].split()[0:-1],hdr1['OBSERVER'].split()[-1],'1', start, end, exptime, 'MEAN', exptime, 
+                 'Cynthia','Froning','1', start, end, exptime, 'MEAN', exptime, 
                  exptime, exptime, 1.0, min(wavelength), max(wavelength), 'ang', 'vac', specres, waveres,np.min(flux[np.isnan(flux)==False]),
                  np.max(flux[np.isnan(flux)==False]),'erg/s/cm2/ang']  
     metadata = {}
@@ -159,7 +162,7 @@ def make_chandra_spectra(chandra_path, evt_path, savepath, version, apec_repo=''
     if save_ecsv:
         save_to_ecsv(data, metadata, savepath, version)
     if save_fits:
-        data_set_hdu = make_dataset_extension(hdr0)
+        data_set_hdu = make_dataset_extension(hdr)
         save_to_fits(data, metadata, data_set_hdu, savepath, version)
  
     

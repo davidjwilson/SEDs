@@ -78,10 +78,7 @@ def sort_components(star, path, sources, component_repo):
     Moves all components to individual star directories
     """
     for source in sources:
-        if source == 'stis':
-            spath = '{}{}_hlsp/{}/'.format(path, source, star)
-        else:
-            spath = '{}{}_hlsp/'.format(path, source)
+        spath = '{}{}_hlsp/'.format(path, source)
         starfiles = glob.glob('{}*{}*'.format(spath, star.lower()))
         for sf in starfiles:
             fname = os.path.split(sf)[1]
@@ -91,11 +88,18 @@ def sort_components(star, path, sources, component_repo):
               #  filename = os.path.split(spec)[1]
                # copyfile(spec, 'nuv_collection/spectra/{}'.format(filename))
 
+def which_xray(component_repo):
+    xscope = 'none'
+    if len(glob.glob('{}*xmm*'.format(component_repo))) > 0:
+           xscope = 'xmm'
+    if len(glob.glob('{}*cxo*'.format(component_repo))) > 0:
+           xscope = 'cxo'
+    return xscope 
 
-
-for star in stars[0:2]:
+for star in stars:
+    print(star)
     repo, component_repo = make_repo(star, path, version)
-   # sort_components(star, path, sources, component_repo)
+    sort_components(star, path, sources, component_repo)
     
    #COS
     
@@ -109,10 +113,31 @@ for star in stars[0:2]:
     
     sed_table, instrument_list = sed.add_phoenix_and_g430l(sed_table, component_repo, instrument_list)
     
+    #X-ray
     
-    args = np.argsort(sed_table['WAVELENGTH'])
-    plt.plot(sed_table['WAVELENGTH'][args], sed_table['FLUX'][args])
-    plt.show()
+    sed_table, instrument_list, euv_gap = sed.add_xray_spectrum(sed_table, component_repo, instrument_list, which_xray(component_repo), add_apec = True, find_gap=True)
+    
+    #EUV
+    euv_name = 'euv-scaling'
+    sed_table, instrument_list = sed.add_euv(sed_table, component_repo, instrument_list, euv_gap, euv_name)
+    
+    sed_table.sort(['WAVELENGTH'])
+    lim = np.mean(sed_table['FLUX'][(sed_table['WAVELENGTH'] > 2e5) & (sed_table['WAVELENGTH'] < 3e5)])
+    
+    plt.figure(star, figsize=(7, 5))
+    plt.plot(sed_table['WAVELENGTH'], sed_table['FLUX'], label=star, rasterized=True)
+    plt.ylim(lim)
+    plt.xlim(5, 3e5)
+    plt.yscale('log')
+    plt.xscale('log')
+    plt.xlabel('Wavelength (\AA)')
+    plt.ylabel('Flux erg s$^{-1}$cm$^{-2}$\AA$^{-1}$)')
+    plt.legend(loc=1)
+    plt.tight_layout()
+    plt.savefig('plots/first_seds/{}_v{}_sed.png'.format(star, version))
+    #plt.show()
+    plt.close()
+    
     
 """    
     
