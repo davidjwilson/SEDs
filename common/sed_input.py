@@ -123,7 +123,7 @@ for star in stars:
     
     sed_table.sort(['WAVELENGTH'])
     lim = np.mean(sed_table['FLUX'][(sed_table['WAVELENGTH'] > 2e5) & (sed_table['WAVELENGTH'] < 3e5)])
-    
+ 
     plt.figure(star, figsize=(7, 5))
     plt.plot(sed_table['WAVELENGTH'], sed_table['FLUX'], label=star, rasterized=True)
     plt.ylim(lim)
@@ -134,114 +134,16 @@ for star in stars:
     plt.ylabel('Flux erg s$^{-1}$cm$^{-2}$\AA$^{-1}$)')
     plt.legend(loc=1)
     plt.tight_layout()
-    plt.savefig('plots/first_seds/{}_v{}_sed.png'.format(star, version))
+    #plt.savefig('plots/first_seds/{}_v{}_sed.png'.format(star, version))
     #plt.show()
     plt.close()
     
-    
-"""    
-    
-    cos_savs = glob.glob('{}{}/*.sav'.format(cos_path, star))
-    #print(cos_savs)
-    stis_ecsvs = glob.glob('{}{}/*.ecsv'.format(stis_path, star))
 
-    w_full = np.array([], dtype=float)
-    f_full = np.array([], dtype=float)
-    e_full = np.array([], dtype=float)
-    
-    w1 = 1160
-    
-    #COS
-    
-    sed_table, instrument_list = sed.build_cos_fuv(star, '{}cos_hlsp'.format(path), airglow)
-    
-    #Lya + Stis
-    
-    sed_table, instrument_list = sed.add_stis_and_lya(sed_table, component_repo, airglow[0:2], instrument_list, airglow[2:])
-    
-    lw0, lw1 = 1000000, 0 #placeholder so L-980-5 works
-    for lya in lya_ecsvs:
-        data = Table.read(lya)
-      #  print(data.meta['TARGNAME'])
-        if data.meta['TARGNAME'] == star:
-            w, f = data['WAVELENGTH'], data['FLUX']hlsp_muscles_hst_cos_gj1132_g130m_v1_component-spec.fits
-            plt.step(w, f, where='mid', label=r'Ly $\alpha$')
-            lw0, lw1 = w[0], w[-1]
-            w_full = np.concatenate((w_full, np.array(w)))
-            f_full = np.concatenate((f_full, np.array(f)))
-            e_full = np.concatenate((e_full, np.zeros(len(w))))
-            
-    #STIS
-            
-    for grating in stis_gratings:
-        for spec in stis_ecsvs:
-            data= Table.read(spec)
-            if data.meta['GRATING'] == grating:
-                w, f, e = data['WAVELENGTH'], data['FLUX'], data['ERROR']
-                if grating == 'G140M':
-                    mask = (w > 1207) & (w < lw0) | (w > lw1) & (w < 1222) 
-               # elif grating == 'G140L':
-                #    mask = (w > 1300) & (w < 1310) | (w > 1353) & (w < 1356) #| (w > w1)
-                 #   w1 = w[-1]
-                #elif grating == 'E140M':
-                 #   mask =  (w > w1) & (w < lw0) #| (w > lw1)
-                  #  w1 = w[-1]
-                else:
-                  #  mask = (w > w1)
-                    mask = (w > w[0]-10)
-                    w1 = w[-1]
-                w, f, e = w[mask], f[mask], e[mask]
-                smooth = 2
-               # if grating =='G430L':
-                #    f = convolve(np.array(f),Box1DKernel(smooth))
-                 #   e = convolve(np.array(e),Box1DKernel(smooth))/(smooth**0.5)
-                plt.step(w, f, where='mid', label=grating)
-                w_full = np.concatenate((w_full, np.array(w)))
-                f_full = np.concatenate((f_full, np.array(f)))
-                e_full = np.concatenate((e_full, np.array(e)))
-                
-    #PHOENIX        
-    
-    opath = glob.glob(phoenix_path+star+'*')
- #   print(opath)
-    pdata = Table.read(opath[0])
-    w, f, e  = pdata['WAVELENGTH'], pdata['FLUX']*pdata.meta['NORMFAC'], np.zeros(len(pdata['WAVELENGTH']))
-    mask = w > max(w_full)
-    w, f, e = w[mask], f[mask], e[mask]
-    plt.plot(w, f, ls='--')
-    w_full = np.concatenate((w_full, np.array(w)))
-    f_full = np.concatenate((f_full, np.array(f)))
-    e_full = np.concatenate((e_full, np.array(e)))
-    
-    #EUV
-     
-    #dem_file = glob.glob('{}{}_v*.fits')
-   # if len(dem_file) > 1:
-     #   print('More than one dem file for this star')
-    #if len(dem_file > 0):
-     #   euv_name = 'dem'
-      #  prepare_euv.make_euv(dem_file, dem_path, euv_inputs=euv_inputs)
-       # prepare_model.make_model_spectrum(, version, sed_table ,savepath = component_repo, save_ecsv=save_components, save_fits=save_components, model_name=euv_name)
-  #  if len(dem_file) = 0:
-    euv_files = glob.glob('{}hlsp_muscles_model_euv-scaling_{}_na_v1_component-spec.ecsv'.format(euv_repo, star.lower()))
-    if len(euv_files) == 1:
-        data = Table.read(euv_files[0])
-        w, f = data['WAVELENGTH'], data['FLUX']
-        mask = w < min(w_full)
-        w, f = w[mask], f[mask]
-        plt.step(w, f, where='mid', label='EUV scaling')
-        w_full = np.concatenate((w_full, np.array(w)))
-        f_full = np.concatenate((f_full, np.array(f)))
-        e_full = np.concatenate((e_full, np.zeros(len(w))))
-    
-                
-    plt.legend(loc= 1)
-    plt.xscale('log')
-    plt.yscale('log')
-    #plt.ylim(1e-17)
-    plt.show()
-    args = np.argsort(w_full)
-    w_full, f_full, e_full = w_full[args], f_full[args], e_full[args] 
+ 
+print('Done')
+
+"""    
+
     #savdat = Table([w_full*u.AA, f_full*u.erg/u.s/u.cm**2/u.AA, e_full*u.erg/u.s/u.cm**2/u.AA], names=['WAVELENGTH', 'FLUX', 'ERROR'])
     #ascii.write(savdat, 'uv_first_pass/{}_hst+opt_v1.ecsv'.format(star), format='ecsv', overwrite=True)
 
