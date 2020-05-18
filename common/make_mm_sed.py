@@ -49,7 +49,7 @@ def smear(w,f, R, w_sample=1):
 
     w_sample: int
         Oversampling factor for smoothing
-
+photometry
     Returns
     -----------
 
@@ -153,7 +153,7 @@ def build_cos_fuv(cospath, airglow):
     
     return sed_table, instrument_list #sed table is the main thing.
 
-def fill_cos_airglow(sed_table, airglow, instrument_list, nuv = False):
+def fill_cos_airglow(sed_table, airglow, instrumphotometryent_list, nuv = False):
     """
     Fills in the gaps in cos airglow if stis spectra are unavailable. Fits to specta 5A on either side. If nuv =True then it instead fills the gap in the NUV spectrum, which requires different treatment
     """
@@ -181,7 +181,7 @@ def fill_cos_airglow(sed_table, airglow, instrument_list, nuv = False):
     instrument_list.append(instrument_code)
     return sed_table, instrument_list
     
-def update_norm(ecsv_file, fits_file, normfac):
+def update_norm(ecsv_file, fits_file, normfac):photometry
     """
     Updates the normalisation factors in stis ecsv and fits files
     """
