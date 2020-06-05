@@ -50,6 +50,7 @@ stars = ['L-980-5',
         'GJ729',
         'GJ15A']
 
+stars = ['GJ674']
 airglow =  [1207, 1222, 1300, 1310, 1353, 1356]
 cos_gratings = ['G130M', 'G160M']
 stis_gratings = ['G140M','E140M','G140L', 'G230L', 'G230LB', 'G430L']
@@ -107,11 +108,11 @@ for star in stars:
     
     #STIS and Lya
     
-    sed_table, instrument_list = sed.add_stis_and_lya(sed_table, component_repo, airglow[0:2], instrument_list, airglow[2:])
+    sed_table, instrument_list = sed.add_stis_and_lya(sed_table, component_repo, airglow[0:2], instrument_list, airglow[2:], norm=False)
     
     #PHOENIX
     
-    sed_table, instrument_list = sed.add_phoenix_and_g430l(sed_table, component_repo, instrument_list)
+    sed_table, instrument_list = sed.add_phoenix_and_g430l(sed_table, component_repo, instrument_list, scale=False)
     
     #X-ray
     
@@ -124,8 +125,12 @@ for star in stars:
     sed_table.sort(['WAVELENGTH'])
     lim = np.mean(sed_table['FLUX'][(sed_table['WAVELENGTH'] > 2e5) & (sed_table['WAVELENGTH'] < 3e5)])
  
+    savdat = Table([sed_table['WAVELENGTH']*u.AA, sed_table['FLUX']*u.erg/u.s/u.cm**2/u.AA, sed_table['ERROR']*u.erg/u.s/u.cm**2/u.AA], names=['WAVELENGTH', 'FLUX', 'ERROR'])
+    ascii.write(savdat, '{}/basic_seds/{}_basic_v1.ecsv'.format(path, star), format='ecsv', overwrite=True)
+
     plt.figure(star, figsize=(7, 5))
     plt.plot(sed_table['WAVELENGTH'], sed_table['FLUX'], label=star, rasterized=True)
+   # plt.plot(sed_table['WAVELENGTH'], sed_table['ERROR'], rasterized=True)
     plt.ylim(lim)
     plt.xlim(5, 3e5)
     plt.yscale('log')
@@ -135,8 +140,11 @@ for star in stars:
     plt.legend(loc=1)
     plt.tight_layout()
     #plt.savefig('plots/first_seds/{}_v{}_sed.png'.format(star, version))
-    #plt.show()
+    plt.show()
     plt.close()
+    
+    
+
     
 
  
