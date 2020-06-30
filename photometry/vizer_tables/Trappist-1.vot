@@ -4,7 +4,7 @@
   xsi:schemaLocation="http://www.ivoa.net/xml/VOTable/v1.3 http://www.ivoa.net/xml/VOTable/v1.3">
  <DESCRIPTION>
    VizieR Astronomical Server vizier.u-strasbg.fr
-    Date: 2020-02-10T19:57:15 [V1.99+ (14-Oct-2013)]
+    Date: 2020-06-26T19:06:06 [V1.99+ (14-Oct-2013)]
    Explanations and Statistics of UCDs:			See LINK below
    In case of problem, please report to:	cds-question@unistra.fr
    In this version, NULL integer columns are written as an empty string
@@ -12,12 +12,12 @@
  </DESCRIPTION>
 <!-- VOTable description at http://www.ivoa.net/Documents/latest/VOT.html -->
 <INFO ID="VERSION" name="votable-version" value="1.99+ (14-Oct-2013)"/>
-<INFO ID="Ref" name="-ref" value="VOTx4856"/>
+<INFO ID="Ref" name="-ref" value="VOTx17265"/>
 <INFO name="-out.form" value="mini"/>
 <INFO name="MaxTuples" value="50000" />
 <INFO name="queryParameters" value="5">
 -oc.form=D.
--c=Trappist-1
+-c=23 06 29.3684052886-05 02 29.031690445
 -phot
 -out=_raj,_dej,_tabname(),_ID(),_sed4
 -c.rs=5
@@ -25,7 +25,7 @@
 <INFO ID="Target" name="-c" value="346.622368-05.041398,rs=5.">
 Constraint -c.rs=5</INFO>
 
-<RESOURCE ID="VizieR_S634679835" name="VizieR(2020-02-10T19:57:15)">
+<RESOURCE ID="VizieR_S646513566" name="VizieR(2020-06-26T19:06:06)">
   <DESCRIPTION>VizieR database maintained by CDS, see http://vizier.u-strasbg.fr</DESCRIPTION>
   <COOSYS ID="J2000_2000.000" system="eq_FK5" equinox="J2000" epoch="2000.000"/>
   <COOSYS ID="J2000" system="eq_FK5" equinox="J2000"/>
@@ -78,6 +78,16 @@ Constraint -c.rs=5</INFO>
 <TR><TD>346.62201300</TD><TD>-05.04127400</TD><TD>IV/34/epic</TD><TD>ID=246199087&amp;-c=346.622013 -05.041274,eq=J2000&amp;-c.rs=0.004</TD><TD>138.55e+3</TD><TD>51.4e-3</TD><TD>1.1e-3</TD><TD>2MASS:Ks</TD></TR>
 <TR><TD>346.62201300</TD><TD>-05.04127400</TD><TD>IV/34/epic</TD><TD>ID=246199087&amp;-c=346.622013 -05.041274,eq=J2000&amp;-c.rs=0.004</TD><TD>181.75e+3</TD><TD>54.2e-3</TD><TD>1.0e-3</TD><TD>2MASS:H</TD></TR>
 <TR><TD>346.62201300</TD><TD>-05.04127400</TD><TD>IV/34/epic</TD><TD>ID=246199087&amp;-c=346.622013 -05.041274,eq=J2000&amp;-c.rs=0.004</TD><TD>241.96e+3</TD><TD>45.3e-3</TD><TD>0.9e-3</TD><TD>2MASS:J</TD></TR>
+<TR><TD>346.6224974989500</TD><TD>-05.0413434572700</TD><TD>IV/38/tic</TD><TD>-c=346.62249749895 -05.04134345727,eq=J2000&amp;-c.rs=0.004</TD><TD>138.55e+3</TD><TD>51.4e-3</TD><TD>1.1e-3</TD><TD>2MASS:Ks</TD></TR>
+<TR><TD>346.6224974989500</TD><TD>-05.0413434572700</TD><TD>IV/38/tic</TD><TD>-c=346.62249749895 -05.04134345727,eq=J2000&amp;-c.rs=0.004</TD><TD>183.92e+3</TD><TD>53.7e-3</TD><TD>1.0e-3</TD><TD>Johnson:H</TD></TR>
+<TR><TD>346.6224974989500</TD><TD>-05.0413434572700</TD><TD>IV/38/tic</TD><TD>-c=346.62249749895 -05.04134345727,eq=J2000&amp;-c.rs=0.004</TD><TD>239.83e+3</TD><TD>46.3e-3</TD><TD>0.9e-3</TD><TD>Johnson:J</TD></TR>
+<TR><TD>346.6224974989500</TD><TD>-05.0413434572700</TD><TD>IV/38/tic</TD><TD>-c=346.62249749895 -05.04134345727,eq=J2000&amp;-c.rs=0.004</TD><TD>332.44e+3</TD><TD>15.4e-3</TD><TD>0.1e-3</TD><TD>SDSS:z</TD></TR>
+<TR><TD>346.6224974989500</TD><TD>-05.0413434572700</TD><TD>IV/38/tic</TD><TD>-c=346.62249749895 -05.04134345727,eq=J2000&amp;-c.rs=0.004</TD><TD>392.66e+3</TD><TD>3.34e-3</TD><TD>0.01e-3</TD><TD>SDSS:i</TD></TR>
+<TR><TD>346.6224974989500</TD><TD>-05.0413434572700</TD><TD>IV/38/tic</TD><TD>-c=346.62249749895 -05.04134345727,eq=J2000&amp;-c.rs=0.004</TD><TD>445.46e+3</TD><TD>1.67e-3</TD><TD>0.00e-3</TD><TD>Gaia:G</TD></TR>
+<TR><TD>346.6224974989500</TD><TD>-05.0413434572700</TD><TD>IV/38/tic</TD><TD>-c=346.62249749895 -05.04134345727,eq=J2000&amp;-c.rs=0.004</TD><TD>479.90e+3</TD><TD>230.e-6</TD><TD>1.e-6</TD><TD>SDSS:r</TD></TR>
+<TR><TD>346.6224974989500</TD><TD>-05.0413434572700</TD><TD>IV/38/tic</TD><TD>-c=346.62249749895 -05.04134345727,eq=J2000&amp;-c.rs=0.004</TD><TD>541.43e+3</TD><TD>566.e-6</TD><TD>105.e-6</TD><TD>Johnson:V</TD></TR>
+<TR><TD>346.6224974989500</TD><TD>-05.0413434572700</TD><TD>IV/38/tic</TD><TD>-c=346.62249749895 -05.04134345727,eq=J2000&amp;-c.rs=0.004</TD><TD>621.98e+3</TD><TD>51.3e-6</TD><TD>0.8e-6</TD><TD>SDSS:g</TD></TR>
+<TR><TD>346.6224974989500</TD><TD>-05.0413434572700</TD><TD>IV/38/tic</TD><TD>-c=346.62249749895 -05.04134345727,eq=J2000&amp;-c.rs=0.004</TD><TD>851.92e+3</TD><TD>1.73e-6</TD><TD>1.40e-6</TD><TD>SDSS:u</TD></TR>
 <TR><TD>346.6220125</TD><TD>-05.0412750</TD><TD>J/ApJ/705/1416/table1</TD><TD>recno=59</TD><TD>241.96e+3</TD><TD>45.5e-3</TD><TD></TD><TD>2MASS:J</TD></TR>
 <TR><TD>346.6220000</TD><TD>-5.0412500</TD><TD>J/ApJ/754/44/targets</TD><TD>recno=711</TD><TD>241.96e+3</TD><TD>44.7e-3</TD><TD></TD><TD>2MASS:J</TD></TR>
 <TR><TD>346.6220000</TD><TD>-05.0412500</TD><TD>J/ApJ/798/73/table6</TD><TD>recno=94464</TD><TD>89.490e+3</TD><TD>36.5e-3</TD><TD>0.7e-3</TD><TD>WISE:W1</TD></TR>
@@ -130,7 +140,7 @@ Constraint -c.rs=5</INFO>
 <TR><TD>346.6220417</TD><TD>-5.0410833</TD><TD>J/PASP/118/659/table1</TD><TD>recno=192</TD><TD>181.75e+3</TD><TD>54.1e-3</TD><TD></TD><TD>2MASS:H</TD></TR>
 <TR><TD>346.6220417</TD><TD>-5.0410833</TD><TD>J/PASP/118/659/table1</TD><TD>recno=192</TD><TD>241.96e+3</TD><TD>45.5e-3</TD><TD></TD><TD>2MASS:J</TD></TR>
 </TABLEDATA></DATA>
-<INFO name="matches" value="22">matching records</INFO>
+<INFO name="matches" value="23">matching records</INFO>
 
 <INFO name="Warning" value="increase the precision for computed column 11"/>
 <INFO name="Warning" value="increase the precision for computed column 11"/>
