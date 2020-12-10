@@ -1,0 +1,35 @@
+\begin{table}[]
+    \centering
+    \begin{tabular}{llc}
+Species & $\lambda_{rest}$ (\AA) & Flux ($10^{-18}$\,erg\,s$^{-1}$\,cm$^{-2}$) \\ \hline 
+\ion{C}{3}$^m$ & 1175 & $88.0\pm5.3$ \\
+\ion{Si}{3}$^m$ & 1206 & $38.0\pm3.4$ \\
+\ion{N}{5} & 1238.821 & $59.0\pm3.1$ \\
+\ion{N}{5} & 1242.804 & $19.0\pm2.3$ \\
+\ion{Si}{2} & 1264.737 & $\leq1.9$ \\
+\ion{Si}{3} & 1294.543 & $\leq3.4$ \\
+\ion{Si}{3} & 1298.918 & $\leq7.8$ \\
+\ion{Si}{3} & 1301.147 & $\leq6.0$ \\
+\ion{C}{2} & 1323.952 & $\leq4.9$ \\
+\ion{C}{2} & 1334.524 & $32.0\pm3.0$ \\
+\ion{C}{2} & 1335.709 & $63.0\pm3.6$ \\
+\ion{Si}{4} & 1393.755 & $17.0\pm4.1$ \\
+\ion{Si}{4} & 1402.77 & $\leq4.6$ \\
+\ion{C}{4} & 1548.201 & $110\pm9.2$ \\
+\ion{C}{4} & 1550.772 & $52.0\pm6.3$ \\
+\ion{C}{1} & 1561.438 & $\leq3.4$ \\
+\ion{He}{2}$^m$ & 1640.412 & $\leq10.0$ \\
+\ion{C}{1}$^m$ & 1657.3366 & $56.0\pm43.0$ \\
+\ion{Mg}{2}$^m$ & 2800 & $1670\pm480$ \\
+\ion{Ca}{2} & 3933.6614  & $320\pm100$ \\ 
+\ion{Ca}{2}$*$ & 3968.4673 & $400\pm100$ \\
+    \end{tabular}
+    \caption{Integrated fluxes for ultraviolet emission lines in the spectrum of TRAPPIST-1. $^m$ Multiplet. $^*$Detected, but blended with H\,$\epsilon$.}
+    \label{tab:t1_line_fluxes}
+\end{table}
+
+%lists compiled by \citet{linsky17-1} and \citet{peacocketal19-1}
+\section{Emission line flux measurements}
+\label{sec:em_lines}
+Producing the DEM and semi-empirical models discussed below required identifying and measuring the fluxes of emission lines in the COS spectra (Table \ref{tab:t1_line_fluxes}). We assembled a list of ultraviolet emission lines with a high likelihood of detection from \citet{paganoetal00-1}, \citet{delzannaetal02-1} and \citet{redfieldetal02-1}. The low signal-to-noise ratio of the COS spectra precluded reliable fitting with model line profiles, so instead we followed the procedure from \citet{franceetal18-1}, integrating the flux over $\pm0.5$\,\AA\ around each line and subtracting a polynomial fit to the continuum on either side. Close multiplets (marked by $m$ in Table \ref{tab:t1_line_fluxes}) were treated as a single line with an integration range of $\pm0.5$\,\AA\ from highest and lowest wavelength lines in the mulitplet. The \ion{Mg}{ii}\,2800\,\AA\ lines in the lower resolution G230L spectrum were integrated over the range 2794--2806\,\AA\. Non-detections are defined as lines where the uncertainty of the integrated flux was greater than the flux measurement: in this case, the uncertainty is given as an upper limit.
+
