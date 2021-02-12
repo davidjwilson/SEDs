@@ -67,3 +67,4 @@ def make_primary_ext():
     hdr = fits.Header()
     primary_hdu = fits.PrimaryHDU(header=hdr)
     return primary_hdu
+

@@ -50,7 +50,7 @@ stars = ['L-980-5',
         'GJ729',
         'GJ15A']
 
-stars = ['GJ674']
+stars = ['GJ15A']
 airglow =  [1207, 1222, 1300, 1310, 1353, 1356]
 cos_gratings = ['G130M', 'G160M']
 stis_gratings = ['G140M','E140M','G140L', 'G230L', 'G230LB', 'G430L']
@@ -59,7 +59,7 @@ stis_gratings = ['G140M','E140M','G140L', 'G230L', 'G230LB', 'G430L']
 #star_params = Table.read(star_params_path)
 #print(lya_ecsvs)
 ###################
-version = 1
+version = 2
 ###################
 
 def make_repo(star, path, version):

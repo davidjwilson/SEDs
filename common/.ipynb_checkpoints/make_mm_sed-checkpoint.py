@@ -1,9 +1,9 @@
 """
-@verison: 2
+@verison: 3
 
 @author: David Wilson
 
-@date 20190805
+@date 20202811
 
 The big one. Draft here, will spin off to modules as required. 
 
@@ -542,6 +542,7 @@ def add_xray_spectrum(sed_table, component_repo, instrument_list, scope, add_ape
     if add_apec:
         apec_path = glob.glob(component_repo+'*apec*.ecsv')
         if len(apec_path) > 0:
+            print(apec_path)
             apec = Table.read(apec_path[0])
             instrument_code, apec = fill_model(apec, 'mod_apc_-----')
             instrument_list.append(instrument_code)
