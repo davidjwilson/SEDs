@@ -37,20 +37,20 @@ path = '/media/david/5tb_storage1/muscles/' #data are in the external harddrive
 sources = ['cos','stis', 'lya','phoenix', 'xmm', 'chandra', 'apec', 'euv']
 
 
-#'2MASS-J23062928-0502285' leaving out Trappist-1
-stars = ['L-980-5',
-        'GJ674', 
-        'GJ676A',
-        'GJ649',
-        'GJ699',
-        'GJ163',
-        'GJ849',
-        'GJ1132',
-        'LHS-2686',
-        'GJ729',
-        'GJ15A']
+stars= ['2MASS-J23062928-0502285']# leaving out Trappist-1
+# stars = ['L-980-5',
+#         'GJ674', 
+#         'GJ676A',
+#         'GJ649',
+#         'GJ699',
+#         'GJ163',
+#         'GJ849',
+#         'GJ1132',
+#         'LHS-2686',
+#         'GJ729',
+#         'GJ15A']
 
-stars = ['GJ15A']
+# stars = ['GJ15A']
 airglow =  [1207, 1222, 1300, 1310, 1353, 1356]
 cos_gratings = ['G130M', 'G160M']
 stis_gratings = ['G140M','E140M','G140L', 'G230L', 'G230LB', 'G430L']

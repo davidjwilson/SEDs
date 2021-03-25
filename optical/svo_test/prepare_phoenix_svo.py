@@ -164,7 +164,23 @@ def get_existing_model(star_params, repo):
     file_path = make_filepath(Teff, logg, FeH, aM, repo=repo)
     wavelength, flux = extract_spectrum(filepath)
     return wavelength, flux
-        
+  
+def air_to_vac(w_air, flux, flux_interp = False):
+    """
+    Converts the air wavelengths to vaccum wavelengths via the formular from https://www.astro.uu.se/valdwiki/Air-to-vacuum%20conversion
+    """
+    if w_air[0] == 0.0: #correct a divide by zero problem by adding a very small number to the first wavelength element
+        w_air[0] += 0.01 * w_air[1]
+        print(w_air[0])
+    print(w_air[0])   
+    s = 1e4/w_air
+    n = 1. + 0.00008336624212083 + (0.02408926869968 / (130.1065924522 - s**2)) + (0.0001599740894897 / (38.92568793293 - s**2))
+    w_vac = w_air * n
+    if flux_interp: #interpolate flux back onto old wavelength grid
+        flux = interp1d(w_vac, flux, fill_value='extrapolate')(w_air)
+        w_vac = w_air
+    return w_vac, flux
+    
     
 def extract_spectrum(filepath):
     """
@@ -177,7 +193,7 @@ def extract_spectrum(filepath):
         sys.exit(1)
     return w_raw, f_raw
     
-def make_phoenix_spectrum(star, save_path, repo, star_params, save_ecsv=False, plot=False):
+def make_phoenix_spectrum(star, save_path, repo, star_params, save_ecsv=False, plot=False, to_vac=False):
     """
     Main array. Takes a list of stellar parameters and makes a phoenix spectrum out of. Save_path is where you want the final spectrum to go, repo is where downloaded phoenix files go. wave_file is where the wavelength array is 
     """
@@ -191,7 +207,10 @@ def make_phoenix_spectrum(star, save_path, repo, star_params, save_ecsv=False, p
         print(param_dicts)
         spectra = get_models(repo,param_dicts)
         wavelength, flux = interp_flux(spectra, params_to_interp, star_params)
+    wavelength, flux = wavelength[wavelength >= 501.0], flux[wavelength >= 501.0] #spectrum does funny things at lambda < 501
     normfac = find_normfac(star_params['Radius'], star_params['Distance'])
+    if to_vac:
+        wavelength, flux = air_to_vac(wavelength, flux)
     if save_ecsv:
         save_to_ecsv(star, wavelength, flux, save_path, star_params, normfac)
     if plot == True:
@@ -225,6 +244,7 @@ def test_load():
         print('No ecsv files in path')
         
     
+
     
 test()
-test_load()
+# test_load() 
