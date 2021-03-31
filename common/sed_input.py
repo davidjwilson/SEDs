@@ -100,6 +100,7 @@ def which_xray(component_repo):
 for star in stars:
     print(star)
     repo, component_repo = make_repo(star, path, version)
+    print(component_repo)
     sort_components(star, path, sources, component_repo)
     
    #COS
@@ -131,7 +132,8 @@ for star in stars:
     plt.figure(star, figsize=(7, 5))
     plt.plot(sed_table['WAVELENGTH'], sed_table['FLUX'], label=star, rasterized=True)
    # plt.plot(sed_table['WAVELENGTH'], sed_table['ERROR'], rasterized=True)
-    plt.ylim(lim)
+#     plt.ylim(lim)
+    plt.ylim(1e-17, 1e-13)
     plt.xlim(5, 3e5)
     plt.yscale('log')
     plt.xscale('log')

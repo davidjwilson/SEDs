@@ -153,7 +153,7 @@ def build_cos_fuv(cospath, airglow):
     
     return sed_table, instrument_list #sed table is the main thing.
 
-def fill_cos_airglow(sed_table, airglow, instrumphotometryent_list, nuv = False):
+def fill_cos_airglow(sed_table, airglow, instrument_list, nuv = False):
     """
     Fills in the gaps in cos airglow if stis spectra are unavailable. Fits to specta 5A on either side. If nuv =True then it instead fills the gap in the NUV spectrum, which requires different treatment
     """
@@ -542,7 +542,7 @@ def add_xray_spectrum(sed_table, component_repo, instrument_list, scope, add_ape
     if add_apec:
         apec_path = glob.glob(component_repo+'*apec*.ecsv')
         if len(apec_path) > 0:
-            print(apec_path)
+#             print(apec_path)
             apec = Table.read(apec_path[0])
             instrument_code, apec = fill_model(apec, 'mod_apc_-----')
             instrument_list.append(instrument_code)
