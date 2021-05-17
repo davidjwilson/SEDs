@@ -37,18 +37,18 @@ path = '/media/david/5tb_storage1/muscles/' #data are in the external harddrive
 sources = ['cos','stis', 'lya','phoenix', 'xmm', 'chandra', 'apec', 'euv']
 
 
-stars= ['2MASS-J23062928-0502285']# leaving out Trappist-1
-# stars = ['L-980-5',
-#         'GJ674', 
-#         'GJ676A',
-#         'GJ649',
-#         'GJ699',
-#         'GJ163',
-#         'GJ849',
-#         'GJ1132',
-#         'LHS-2686',
-#         'GJ729',
-#         'GJ15A']
+# stars= ['2MASS-J23062928-0502285']# leaving out Trappist-1
+stars = ['L-980-5',
+        'GJ674', 
+        'GJ676A',
+        'GJ649',
+        'GJ699',
+        'GJ163',
+        'GJ849',
+        'GJ1132',
+        'LHS-2686',
+        'GJ729',
+        'GJ15A']
 
 # stars = ['GJ15A']
 airglow =  [1207, 1222, 1300, 1310, 1353, 1356]
@@ -101,7 +101,6 @@ for star in stars:
     print(star)
     repo, component_repo = make_repo(star, path, version)
     print(component_repo)
-    print('you are here')
     sort_components(star, path, sources, component_repo)
     
    #COS
