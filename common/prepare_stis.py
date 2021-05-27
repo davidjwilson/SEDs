@@ -154,7 +154,7 @@ def combine_x1ds(x1ds, correct_error=True):
     if fits.getheader(x1ds[0])['OPT_ELEM'] == 'E140M':
       #  print('yes')
         w_new, f_new, e_new, dq_new = get_ayres_e140m(x1ds)
-        exptime, start, end = np.full(len(w_new), 0),np.full(len(w_new), 0), np.full(len(w_new), 0)
+        exptime, start, end = np.full(len(w_new), 0),np.full(len(w_new), 0), np.full(len(w_new), 0) #why?
     f_new, e_new = nan_clean(f_new), nan_clean(e_new)
     w0, w1 = wavelength_edges(w_new)
     new_data = {'WAVELENGTH':w_new*u.AA,'WAVELENGTH0':w0*u.AA,'WAVELENGTH1':w1*u.AA,'FLUX':f_new*u.erg/u.s/u.cm**2/u.AA,

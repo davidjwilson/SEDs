@@ -33,24 +33,25 @@ from shutil import copyfile
 
 """File structure"""
 
-path = '/media/david/5tb_storage1/muscles/' #data are in the external harddrive
+# path = '/media/david/5tb_storage1/muscles/' #data are in the external harddrive
+path = '/media/david/1tb_storage1/emergency_data/mega_muscles/' #backup hd
 sources = ['cos','stis', 'lya','phoenix', 'xmm', 'chandra', 'apec', 'euv']
 
 
 # stars= ['2MASS-J23062928-0502285']# leaving out Trappist-1
-stars = ['L-980-5',
-        'GJ674', 
-        'GJ676A',
-        'GJ649',
-        'GJ699',
-        'GJ163',
-        'GJ849',
-        'GJ1132',
-        'LHS-2686',
-        'GJ729',
-        'GJ15A']
+# stars = ['L-980-5',
+#         'GJ674', 
+#         'GJ676A',
+#         'GJ649',
+#         'GJ699',
+#         'GJ163',
+#         'GJ849',
+#         'GJ1132',
+#         'LHS-2686',
+#         'GJ729',
+#         'GJ15A']
 
-# stars = ['GJ15A']
+stars = ['GJ15A']
 airglow =  [1207, 1222, 1300, 1310, 1353, 1356]
 cos_gratings = ['G130M', 'G160M']
 stis_gratings = ['G140M','E140M','G140L', 'G230L', 'G230LB', 'G430L']
@@ -66,8 +67,8 @@ def make_repo(star, path, version):
     """
     Makes directories to store the produced files
     """
-    repo = '{}sed_repo/{}/'.format(path, star)
-    component_repo = '{}components_v{}/'.format(repo, version)
+    repo = '{}hlsp/{}/'.format(path, star)
+    component_repo = '{}components_v1/'.format(repo)
     if os.path.exists(repo) == False: #makes the parent directory then puts another directory in it for the components
         os.mkdir(repo)
     if os.path.exists(component_repo) == False:
@@ -101,7 +102,7 @@ for star in stars:
     print(star)
     repo, component_repo = make_repo(star, path, version)
     print(component_repo)
-    sort_components(star, path, sources, component_repo)
+#     sort_components(star, path, sources, component_repo)
     
    #COS
     
@@ -125,9 +126,15 @@ for star in stars:
     
     sed_table.sort(['WAVELENGTH'])
     lim = np.mean(sed_table['FLUX'][(sed_table['WAVELENGTH'] > 2e5) & (sed_table['WAVELENGTH'] < 3e5)])
+    
+    print (sed_table.dtype.names)
+    
+    print(sed_table[1300])
+    print(sed_table.meta)
+    print(instrument_list)
  
-    savdat = Table([sed_table['WAVELENGTH']*u.AA, sed_table['FLUX']*u.erg/u.s/u.cm**2/u.AA, sed_table['ERROR']*u.erg/u.s/u.cm**2/u.AA], names=['WAVELENGTH', 'FLUX', 'ERROR'])
-    ascii.write(savdat, '{}/basic_seds/{}_basic_v1.ecsv'.format(path, star), format='ecsv', overwrite=True)
+#     savdat = Table([sed_table['WAVELENGTH']*u.AA, sed_table['FLUX']*u.erg/u.s/u.cm**2/u.AA, sed_table['ERROR']*u.erg/u.s/u.cm**2/u.AA], names=['WAVELENGTH', 'FLUX', 'ERROR'])
+#     ascii.write(savdat, '{}/basic_seds/{}_basic_v1.ecsv'.format(path, star), format='ecsv', overwrite=True)
 
     plt.figure(star, figsize=(7, 5))
     plt.plot(sed_table['WAVELENGTH'], sed_table['FLUX'], label=star, rasterized=True)
