@@ -17,10 +17,10 @@ cds.enable()
 """
 @author: David Wilson
 
-version 3 20210528
+version 2 20200430
 
 
-Finds all STIS x1d files, groups them by grating, coadds them and saves to file with required metadata. V3 fixes not knowning the exptimes for e140m
+Finds all STIS x1d files, groups them by grating, coadds them and saves to file with required metadata. 
 
 """
 def coadd_flux(f_array, e_array):
@@ -88,8 +88,8 @@ def get_ayres_e140m(x1ds):
     target = fits.getheader(x1ds[0])['TARGNAME']
     savpath = '/home/david/work/muscles/SEDs/common/ayres_e140m/{}_E140M_coadd.sav'.format(target)
     data = readsav(savpath)
-    w_new, f_new, e_new, dq_new, exptime = data['wave'], data['flux'], data['photerr'], data['epsilon'], data['texpt']
-    return w_new, f_new, e_new, dq_new, exptime
+    w_new, f_new, e_new, dq_new = data['wave'], data['flux'], data['photerr'], data['epsilon']
+    return w_new, f_new, e_new, dq_new
     
 def combine_x1ds(x1ds, correct_error=True):
     """
@@ -97,64 +97,46 @@ def combine_x1ds(x1ds, correct_error=True):
 
     """
     if len(x1ds) > 1:
-        if fits.getheader(x1ds[0])['OPT_ELEM'] == 'E140M':
-      #  print('yes')
-            w_new, f_new, e_new, dq_new, exptime = get_ayres_e140m(x1ds)
-            start = []
-            end = []
-            for x in x1ds:
-                hdr = fits.getheader(x,0)
-                start.append(hdr['TEXPSTRT'])
-                end.append(hdr['TEXPEND'])
-            print('start', start)
-            print('end', end)
-            start, end = np.min(np.array(start)), np.max(np.array(end))
-            start, end = np.full(len(w_new), start), np.full(len(w_new), end)
-
+        f_new = []
+        e_new = []
+        dq_new = []
+        exptime = []
+        start = []
+        end = []
+        w_new = build_wavelength(x1ds)
+        for x in x1ds:
+            data_extension = 1
+            if x[-8:-5] == 'sx1':
+                data_extension = 0
+            data = fits.getdata(x,data_extension)[0]
+            hdr = fits.getheader(x,0)
+            fi = interpolate.interp1d(data['WAVELENGTH'], data['FLUX'], bounds_error=False, fill_value=0.)(w_new)
+            ei = interpolate.interp1d(data['WAVELENGTH'], data['ERROR'], bounds_error=False, fill_value=0.)(w_new)
+            dqi =  interpolate.interp1d(data['WAVELENGTH'], data['DQ'], kind='nearest',bounds_error=False, fill_value=0.)(w_new)
+            expi = np.full(len(data['WAVELENGTH']), hdr['TEXPTIME'])
+            expi = interpolate.interp1d(data['WAVELENGTH'], expi, kind='nearest',bounds_error=False, fill_value=0.)(w_new)
+            starti = np.full(len(data['WAVELENGTH']), hdr['TEXPSTRT'])
+            starti = interpolate.interp1d(data['WAVELENGTH'], starti, kind='nearest',bounds_error=False, fill_value=0.)(w_new)
+            endi = np.full(len(data['WAVELENGTH']), hdr['TEXPEND'])
+            endi = interpolate.interp1d(data['WAVELENGTH'], endi, kind='nearest',bounds_error=False, fill_value=0.)(w_new)
             
-                
-#         start, end = ,np.full(len(w_new), 0), np.full(len(w_new), 0) 
-        else:
-            f_new = []
-            e_new = []
-            dq_new = []
-            exptime = []
-            start = []
-            end = []
-            w_new = build_wavelength(x1ds)
-            for x in x1ds:
-                data_extension = 1
-                if x[-8:-5] == 'sx1':
-                    data_extension = 0
-                data = fits.getdata(x,data_extension)[0]
-                hdr = fits.getheader(x,0)
-                fi = interpolate.interp1d(data['WAVELENGTH'], data['FLUX'], bounds_error=False, fill_value=0.)(w_new)
-                ei = interpolate.interp1d(data['WAVELENGTH'], data['ERROR'], bounds_error=False, fill_value=0.)(w_new)
-                dqi =  interpolate.interp1d(data['WAVELENGTH'], data['DQ'], kind='nearest',bounds_error=False, fill_value=0.)(w_new)
-                expi = np.full(len(data['WAVELENGTH']), hdr['TEXPTIME'])
-                expi = interpolate.interp1d(data['WAVELENGTH'], expi, kind='nearest',bounds_error=False, fill_value=0.)(w_new)
-                starti = np.full(len(data['WAVELENGTH']), hdr['TEXPSTRT'])
-                starti = interpolate.interp1d(data['WAVELENGTH'], starti, kind='nearest',bounds_error=False, fill_value=0.)(w_new)
-                endi = np.full(len(data['WAVELENGTH']), hdr['TEXPEND'])
-                endi = interpolate.interp1d(data['WAVELENGTH'], endi, kind='nearest',bounds_error=False, fill_value=0.)(w_new)
+            if correct_error:    
+                ei = no_zero_errors(fi, ei)
+            f_new.append(fi)
+            e_new.append(ei)
+            dq_new.append(dqi)
+            exptime.append(expi)
+            start.append(starti)
+            end.append(endi)
+            
 
-                if correct_error:    
-                    ei = no_zero_errors(fi, ei)
-                f_new.append(fi)
-                e_new.append(ei)
-                dq_new.append(dqi)
-                exptime.append(expi)
-                start.append(starti)
-                end.append(endi)
-
-
-            f_new, e_new = coadd_flux(np.array(f_new), np.array(e_new))
-            dq_new = np.array(dq_new, dtype=int)
-            dq_new = [(np.sum(np.unique(dq_new[:,i]))) for i in range(len(dq_new[0]))]
-            exptime = np.sum(np.array(exptime), axis=0)
-            start = np.min(np.ma.masked_array(start, mask=[np.array(start) == 0.]), axis=0)
-            end = np.max(np.array(end), axis=0)
-
+        f_new, e_new = coadd_flux(np.array(f_new), np.array(e_new))
+        dq_new = np.array(dq_new, dtype=int)
+        dq_new = [(np.sum(np.unique(dq_new[:,i]))) for i in range(len(dq_new[0]))]
+        exptime = np.sum(np.array(exptime), axis=0)
+        start = np.min(np.ma.masked_array(start, mask=[np.array(start) == 0.]), axis=0)
+        end = np.max(np.array(end), axis=0)
+    
     else: #in the case where there's only one available spectrum
         data_extension = 1
         if x1ds[0][-8:-5] == 'sx1': #modified 1 off for t1 spectrum, must improve later
@@ -169,7 +151,10 @@ def combine_x1ds(x1ds, correct_error=True):
         exptime, start, end = np.full(len(data['WAVELENGTH']), hdr['TEXPTIME']), np.full(len(data['WAVELENGTH']), hdr['TEXPSTRT']), np.full(len(data['WAVELENGTH']), hdr['TEXPEND'])
         if correct_error:    
                 e_new = no_zero_errors(f_new, e_new)
-   
+    if fits.getheader(x1ds[0])['OPT_ELEM'] == 'E140M':
+      #  print('yes')
+        w_new, f_new, e_new, dq_new = get_ayres_e140m(x1ds)
+        exptime, start, end = np.full(len(w_new), 0),np.full(len(w_new), 0), np.full(len(w_new), 0) #why?
     f_new, e_new = nan_clean(f_new), nan_clean(e_new)
     w0, w1 = wavelength_edges(w_new)
     new_data = {'WAVELENGTH':w_new*u.AA,'WAVELENGTH0':w0*u.AA,'WAVELENGTH1':w1*u.AA,'FLUX':f_new*u.erg/u.s/u.cm**2/u.AA,
@@ -346,19 +331,8 @@ def test():
     testing with GJ 699
     """
     x1dpath = '/home/david/work/muscles/MegaMUSCLES/GJ_699/HST/STIS/'
-    version = 2
+    version = 1
     savepath = 'test_files/'
     make_stis_spectum(x1dpath, version, savepath = savepath, plot=True, save_ecsv=True, save_fits=True)
-    
-def e140m_redo():
-    stars = ['GJ15A', 'GJ729']
-    for star in stars:
-        x1dpath = '/media/david/1tb_storage1/emergency_data/mega_muscles/e140m_fits/{}/'.format(star)
-        version = 2
-        savepath = 'e140m_test/'
-        make_stis_spectum(x1dpath, version, savepath = savepath, plot=True, save_ecsv=True, save_fits=True)
-    
-e140m_redo()
-
     
 #test()
