@@ -30,7 +30,7 @@ def make_filepath(Teff, logg=4.5, repo='ftp'):
     temperature Teff, log surface gravity logg. 
     """
    
-    name = 'lte{T:05.1f}-{g:3.1f}-0.0a+0.0.BT-Settl.spec.7.dat.txt'.format(T=Teff/100.0, g=logg)
+    name = 'lte{T:05.1f}-{g:3.1f}-0.0a+0.0.BT-Settl.spec.7.dat'.format(T=Teff/100.0, g=logg)
     #print(name)
     
     return os.path.join(repo, name)
@@ -246,5 +246,5 @@ def test_load():
     
 
     
-test()
+# test()
 # test_load() 

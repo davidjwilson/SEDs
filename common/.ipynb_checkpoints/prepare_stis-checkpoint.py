@@ -358,7 +358,7 @@ def e140m_redo():
         savepath = 'e140m_test/'
         make_stis_spectum(x1dpath, version, savepath = savepath, plot=True, save_ecsv=True, save_fits=True)
     
-e140m_redo()
+# e140m_redo()
 
     
 #test()

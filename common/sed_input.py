@@ -51,7 +51,8 @@ sources = ['cos','stis', 'lya','phoenix', 'xmm', 'chandra', 'apec', 'euv']
 #         'GJ729',
 #         'GJ15A']
 
-stars = ['GJ15A']
+# stars = ['GJ15A']
+stars = ['2MASS-J23062928-0502285', 'GJ699']
 airglow =  [1207, 1222, 1300, 1310, 1353, 1356]
 cos_gratings = ['G130M', 'G160M']
 stis_gratings = ['G140M','E140M','G140L', 'G230L', 'G230LB', 'G430L']
@@ -106,7 +107,7 @@ for star in stars:
     
    #COS
     
-    sed_table, instrument_list = sed.build_cos_fuv(component_repo, airglow)
+    sed_table, instrument_list = sed.add_cos(component_repo, airglow)
     
     #STIS and Lya
     
@@ -114,7 +115,7 @@ for star in stars:
     
     #PHOENIX
     
-    sed_table, instrument_list = sed.add_phoenix_and_g430l(sed_table, component_repo, instrument_list, scale=False)
+#     sed_table, instrument_list = sed.add_phoenix_and_g430l(sed_table, component_repo, instrument_list, scale=False)
     
     #X-ray
     
@@ -127,11 +128,11 @@ for star in stars:
     sed_table.sort(['WAVELENGTH'])
     lim = np.mean(sed_table['FLUX'][(sed_table['WAVELENGTH'] > 2e5) & (sed_table['WAVELENGTH'] < 3e5)])
     
-    print (sed_table.dtype.names)
+#     print (sed_table.dtype.names)
     
-    print(sed_table[1300])
-    print(sed_table.meta)
-    print(instrument_list)
+#     print(sed_table[1300])
+#     print(sed_table.meta)
+#     print(instrument_list)
  
 #     savdat = Table([sed_table['WAVELENGTH']*u.AA, sed_table['FLUX']*u.erg/u.s/u.cm**2/u.AA, sed_table['ERROR']*u.erg/u.s/u.cm**2/u.AA], names=['WAVELENGTH', 'FLUX', 'ERROR'])
 #     ascii.write(savdat, '{}/basic_seds/{}_basic_v1.ecsv'.format(path, star), format='ecsv', overwrite=True)

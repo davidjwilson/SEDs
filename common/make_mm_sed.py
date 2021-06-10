@@ -122,7 +122,7 @@ def normfac_column(table):
     table['NORMFAC'] = norm_array
     return table
 
-def build_cos_fuv(cospath, airglow):
+def add_cos(cospath, airglow):
     """
     cospath is a path to where the output from prepare_cos are stored. 
     Airglow is a list of airglow regions to mask out (inculding the Lyman alpha). Defined by visual inspection of each spectrum.
@@ -131,6 +131,7 @@ def build_cos_fuv(cospath, airglow):
     instrument_list = [] #starts a running count of all instruments
     g130m_path = glob.glob(cospath+'*g130m*.ecsv')
     g160m_path = glob.glob(cospath+'*g160m*.ecsv')
+    g230l_path = glob.glob(cospath+'*cos*g230l*.ecsv')
     
     if len(g130m_path) == 1:
     
@@ -150,6 +151,20 @@ def build_cos_fuv(cospath, airglow):
         g130m = normfac_column(g130m)
         g160m = g160m[g160m['WAVELENGTH'] > sed_table['WAVELENGTH'][-1]] #cut off everything covered by g130m
         sed_table = vstack([sed_table, g160m], metadata_conflicts = 'silent')
+      
+    if len(g230l_path) > 0:
+        g230l = Table.read(g230l_path[0])
+        gap_edges = [2085.0, 2777.0]
+        gap_mask = mask_maker(g230l['WAVELENGTH'], gap_edges)
+        g230l = g230l[gap_mask] 
+        instrument_code, g230l = hst_instrument_column(g230l)
+        instrument_list.append(instrument_code)
+        g230l = normfac_column(g230l)
+        g230l = g230l[g230l['WAVELENGTH'] > max(sed_table['WAVELENGTH'])]
+        sed_table = vstack([sed_table, g230l], metadata_conflicts = 'silent')
+        sed_table, instrument_list = fill_cos_airglow(sed_table, gap_edges, instrument_list, nuv=True)
+
+        
     
     return sed_table, instrument_list #sed table is the main thing.
 
@@ -164,6 +179,7 @@ def fill_cos_airglow(sed_table, airglow, instrument_list, nuv = False):
         mask = (w > 1700) & (w < 2790) | (w > 2805) & (w < 3150) #cut to nuv range and remove mg ii
         w, f = w[mask], f[mask]
         gap_f = np.polyval((np.polyfit(w,f,1)), gap_w)
+        print(np.mean(gap_f))
     else:
         b = airglow[::2]
         r = airglow[1::2]
@@ -192,88 +208,6 @@ def update_norm(ecsv_file, fits_file, normfac):
     h[0].header['NORMFAC'] = normfac
     h.writeto(fits_file, overwrite=True)
     h.close()
-"""
-def find_stis_normfac(component_repo, airglow, band):
-"""
- #   Finds the normaliastion factor between the COS FUV data and the STIS G140L spectrum, if present. Band is fuv or nuv. FUV normalises the G140L to G140M, nuv normalises the G220L to G430L 
-"""
-    if band == 'fuv':
-        norm = Table.read(glob.glob(component_repo+'*g140l*.ecsv')[0])
-        base = Table.read(glob.glob(component_repo+'*g130m*.ecsv')[0])
-    if band == 'nuv':
-        norm = Table.read(glob.glob(component_repo+'*g230l*.ecsv')[0])
-        base = Table.read(glob.glob(component_repo+'*g140l*.ecsv')[0])
-    cw, cf, cdq = base['WAVELENGTH'], base['FLUX'], base['DQ']
-    sw, sf, sdq = norm['WAVELENGTH'], norm['FLUX'], norm['DQ']
-    c_mask = (cw >= sw[0]) & (cw <=sw[-1]) & (cdq == 0)
-    s_mask = (sw >= cw[0]) & (sw <=cw[-1]) & (sdq == 0)#mask to same same waveband and cut dq flags
-    cw, cf, sw, sf = cw[c_mask], cf[c_mask], sw[s_mask], sf[s_mask]
-    cw1, cf1 = resample.bintogrid(cw, cf, newx=sw) #rebin to stis wavelength grid
-    if band == 'fuv':
-        stis_airglow_mask = mask_maker(sw, airglow) #only norm data after lya
-        cos_airglow_mask = mask_maker(cw1, airglow)
-        sw, sf, cw1, cf1 = sw[stis_airglow_mask], sf[stis_airglow_mask], cw1[cos_airglow_mask], cf1[cos_airglow_mask] #remove airglow
-    c_int = np.trapz(cf1,cw1)
-    s_int =  np.trapz(sf,sw)
-    normfac = c_int/s_int
-    print('STIS normfac ('+band+') = ', normfac)
-    if band == 'fuv':
-        gratings = ['g140m', 'g140l'] #files to update
-    if band == 'nuv':
-        gratings = ['g230l']
-        normfac = 1.0 #hack while I rethink the NUV norm
-    [update_norm(glob.glob(component_repo+'*'+g+'*.ecsv')[0], glob.glob(component_repo+'*'+g+'*.fits')[0], normfac) for g in gratings]
-    return normfac
-"""
-    
-def find_normfac(base, normpath, airglow, oldnorm):
-    """
-    Better (?) version of normfac for sequentially normalising STIS spectra
-    """
-    print('oldnorm', oldnorm)
-    norm = Table.read(normpath)
-    print(norm.meta['GRATING'])
-    print(norm['WAVELENGTH'][0])
-    print(base['WAVELENGTH'][-1])
-    cw, cf, ce, cdq = base['WAVELENGTH'], base['FLUX'], base['ERROR'], base['DQ']
-    sw, sf, se, sdq = norm['WAVELENGTH'], norm['FLUX'], norm['ERROR'], norm['DQ']
-   
-    print(len(sw))
-  #  plt.plot(cw, cf, sw,sf)
-   # plt.show()
-    c_mask = (cw >= sw[0]) & (cw <=sw[-1]) & (cf/ce > 1) & (cdq == 0) 
-    s_mask = (sw >= cw[0]) & (sw <=cw[-1]) & (sf/se > 1) & (sdq == 0) #mask to same same waveband and cut dq flags
-    
-    cw, cf, sw, sf = cw[c_mask], cf[c_mask], sw[s_mask], sf[s_mask]
-   # print(len(sw))
-    if len(sw) > 0: #if there's anything left
-        cf = convolve(np.array(cf),Box1DKernel(5))
-        sf = convolve(np.array(sf),Box1DKernel(5))
-       # cw1, cf1 = resample.bintogrid(cw, cf, newx=sw) #rebin to same wavelength grid
-        #cw1, cf1 = resample.bintogrid(cw, cf, dx=1) #rebin both to a 1A grid
-        #sw, sf = resample.bintogrid(sw, sf, newx=cw)
-      #  print('here', len(sw))
-        norm_airglow_mask = mask_maker(sw, airglow) 
-        base_airglow_mask = mask_maker(cw, airglow)
-        sw, sf, cw, cf = sw[norm_airglow_mask], sf[norm_airglow_mask], cw[base_airglow_mask], cf[base_airglow_mask]
-       # print('here', len(sw))
-        cw, cf = resample.bintogrid(cw, cf, newx=sw)
-      #  cf = interp1d(cw, cf, fill_value='extrapolate')(sw)
-        #print(len(cw), len(sw))
-        c_int = np.trapz(cf,cw)
-        s_int =  np.trapz(sf,sw)
-        
-      #  normfac = leastsq(residuals, 1., args=(cf, sf))[0][0]
-        normfac = c_int/s_int
-        print(norm.meta['GRATING'], normfac)
-        if norm.meta['GRATING'] != 'G140L': #this is going to normalise with COS so doesn't get bigger 
-            normfac *= oldnorm
-        print (normfac)
-        
-    else:
-        normfac = oldnorm
-    #update_norm(normpath, '{}.fits'.format(normpath[:-5]), normfac)
-    return normfac
     
 
 
@@ -300,11 +234,11 @@ def fill_model(table, model_name):
     #'ERROR':e_new*u.erg/u.s/u.cm**2/u.AA,'EXPTIME':exptime*u.s,'DQ':dq_new,'EXPSTART':start*cds.MJD,'EXPEND':end*cds.MJD keep incase units are an issue
     
 
-def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, other_airglow, norm=True):
+def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, other_airglow, norm=True, error_cut=True):
     """
-    Add the stis fuv spectra and lya modelto the sed
+    Add the stis fuv spectra and lya model to the sed
     """
-    stis_gratings = ['E140M', 'G140M','G140L', 'G230L', 'G230LB']
+    stis_gratings = ['E140M', 'G140M','G140L', 'G230L', 'G230LB', 'G430L']
    # g140l_path = glob.glob(component_repo+'*g140l*.ecsv')
    # g140m_path = glob.glob(component_repo+'*g140m*.ecsv')
     lya = dict(WAVELENGTH = [10000, 0]) #filler for the star that doesn't have a lya measurement 
@@ -320,100 +254,54 @@ def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, othe
         specpath = glob.glob('{}*{}_v*.ecsv'.format(component_repo, grating.lower()))
         
         if len(specpath) == 1:
+           
+                 
             data= Table.read(specpath[0])
-            instrument_code, data = hst_instrument_column(data)
-            instrument_list.append(instrument_code)
-            if grating != 'E140M':
+            if data.meta['INSTRUME'] =='STIS':
+                instrument_code, data = hst_instrument_column(data)
+                instrument_list.append(instrument_code)
+                if grating != 'E140M':
+                    if norm:
+                        normfac = find_normfac(sed_table, specpath[0], np.concatenate((lya_range, other_airglow)), normfac) #normalise to COS spectra then sequentially 
+                    update_norm(specpath[0], '{}.fits'.format(specpath[0][:-5]), normfac)
+                if grating == 'E140M':
+                    mask = (data['WAVELENGTH'] > 1160) & (data['WAVELENGTH'] < lya['WAVELENGTH'][0]) | (data['WAVELENGTH'] > lya['WAVELENGTH'][-1]) 
+
+                elif grating == 'G140M':
+                    mask = (data['WAVELENGTH'] > lya_range[0]) & (data['WAVELENGTH'] < lya['WAVELENGTH'][0]) | (data['WAVELENGTH'] > lya['WAVELENGTH'][-1]) & (data['WAVELENGTH'] < lya_range[1])
+                elif grating == 'G140L':
+                    mask = mask_maker(data['WAVELENGTH'], other_airglow, include=False) #fill in airglow gaps
+                    mask |= (data['WAVELENGTH'] > max(sed_table['WAVELENGTH']))
+                    
+                elif grating == 'G430L':
+                    if error_cut: #cut region before a rolling 30pt mean SN > 1
+                        bin_width = 30
+                        w, f, e = data['WAVELENGTH'], data['FLUX'], data['ERROR']
+                        sn = np.array([np.mean(f[i:i+bin_width]/e[i:i+bin_width]) for i in range(len(w[:-bin_width]))])
+                        start = w[:-bin_width][np.where(sn > 1)[0][0]]
+                        mask = (w > start) & (f > 0)
+                        data = data[mask]
+                    mask = (data['WAVELENGTH'] > max(sed_table['WAVELENGTH']))
+                else:
+                    mask = (data['WAVELENGTH'] > max(sed_table['WAVELENGTH']))
+                data = data[mask]
                 if norm:
-                    normfac = find_normfac(sed_table, specpath[0], np.concatenate((lya_range, other_airglow)), normfac) #normalise to COS spectra then sequentially 
-                update_norm(specpath[0], '{}.fits'.format(specpath[0][:-5]), normfac)
-            if grating == 'E140M':
-                mask = (data['WAVELENGTH'] > 1160) & (data['WAVELENGTH'] < lya['WAVELENGTH'][0]) | (data['WAVELENGTH'] > lya['WAVELENGTH'][-1]) 
-            
-            elif grating == 'G140M':
-                mask = (data['WAVELENGTH'] > lya_range[0]) & (data['WAVELENGTH'] < lya['WAVELENGTH'][0]) | (data['WAVELENGTH'] > lya['WAVELENGTH'][-1]) & (data['WAVELENGTH'] < lya_range[1])
-            elif grating == 'G140L':
-                mask = mask_maker(data['WAVELENGTH'], other_airglow, include=False) #fill in airglow gaps
-                mask |= (data['WAVELENGTH'] > max(sed_table['WAVELENGTH']))
-            else:
-                mask = (data['WAVELENGTH'] > max(sed_table['WAVELENGTH']))
-            data = data[mask]
-            if norm:
-                data['FLUX'] = data['FLUX'] * normfac
-                data['ERROR'] = data['ERROR'] * normfac
-            if grating == 'E140M':
-                sed_table = data
-            else:                
-                sed_table = vstack([sed_table, data], metadata_conflicts = 'silent')
-            if len(lya_path) == 1:    #lya needs to be added after e140m  
-                sed_table = vstack([sed_table, lya], metadata_conflicts = 'silent')
-            sed_table.sort(['WAVELENGTH'])
+                    data['FLUX'] = data['FLUX'] * normfac
+                    data['ERROR'] = data['ERROR'] * normfac
+                if grating == 'E140M':
+                    sed_table = data
+                else:                
+                    sed_table = vstack([sed_table, data], metadata_conflicts = 'silent')
+                if len(lya_path) == 1:    #lya needs to be added after e140m  
+                    sed_table = vstack([sed_table, lya], metadata_conflicts = 'silent')
+                sed_table.sort(['WAVELENGTH'])
+
                 
-            
-        
-    
-  #  if len(g140m_path) > 0:
-   #     g140m = Table.read(g140m_path[0])
-    #    instrument_code, g140m = hst_instrument_column(g140m)
-     ##   instrument_list.append(instrument_code)
-     #   g140m = normfac_column(g140m)
-     #   g140m_mask = (g140m['WAVELENGTH'] > lya_range[0]) & (g140m['WAVELENGTH'] < lya['WAVELENGTH'][0]) | (g140m['WAVELENGTH'] > lya['WAVELENGTH'][-1]) & (g140m['WAVELENGTH'] < lya_range[1])
-     #   g140m = g140m[g140m_mask]
-     #   g140m['FLUX'] = g140m['FLUX'] * g140m.meta['NORMFAC']
-        
-      #  sed_table = vstack([sed_table, g140m], metadata_conflicts = 'silent')
-        
-  
-    
-    
-   
-    
-    #if len(g140l_path) > 0:
-     #   g140l = Table.read(g140l_path[0])
-     #   instrument_code, g140l = hst_instrument_column(g140l)
-     #   instrument_list.append(instrument_code)
-     #   g140l = normfac_column(g140l)
-     #   g140l_mask = mask_maker(g140l['WAVELENGTH'], other_airglow, include=False) #fill in airglow gaps
-     #   g140l_mask |= (g140l['WAVELENGTH'] > max(sed_table['WAVELENGTH'])) #add in everything beyond COS range
-     #   g140l = g140l[g140l_mask]
-     #   g140l['FLUX'] = g140l['FLUX'] * g140l.meta['NORMFAC']
-      #  sed_table = vstack([sed_table, g140l], metadata_conflicts = 'silent')
-            
-        
     return sed_table, instrument_list
 
 
-   
 
 
-def add_stis_nuv(sed_table, component_repo, instrument_list):
-    """
-    Add a stis g230l spectrum to the end of whatever's there already.
-    """
-    g230l = Table.read(glob.glob(component_repo+'*stis*g230l*.ecsv')[0])
-    instrument_code, g230l = hst_instrument_column(g230l)
-    instrument_list.append(instrument_code)
-    g230l = normfac_column(g230l)
-    g230l = g230l[g230l['WAVELENGTH'] > max(sed_table['WAVELENGTH'])]
-    g230l['FLUX'] *= g230l.meta['NORMFAC']
-    sed_table = vstack([sed_table, g230l], metadata_conflicts = 'silent')
-    return sed_table, instrument_list
-
-def add_cos_nuv(sed_table, component_repo, instrument_list, gap_edges):
-    """
-    Add a cos g230l spectrum to the end of whatever's there already, filling in the gap with a polynomial
-    """
-    g230l = Table.read(glob.glob(component_repo+'*cos*g230l*.ecsv')[0])
-    gap_mask = mask_maker(g230l['WAVELENGTH'], gap_edges)
-    g230l = g230l[gap_mask] 
-    instrument_code, g230l = hst_instrument_column(g230l)
-    instrument_list.append(instrument_code)
-    g230l = normfac_column(g230l)
-    g230l = g230l[g230l['WAVELENGTH'] > max(sed_table['WAVELENGTH'])]
-    sed_table = vstack([sed_table, g230l], metadata_conflicts = 'silent')
-    sed_table, instrument_list = fill_cos_airglow(sed_table, gap_edges, instrument_list, nuv=True)
-    return sed_table, instrument_list
-    
 
     
 def residuals(scale, f, mf):
@@ -474,7 +362,7 @@ def add_phx_spectrum(sed_table, component_repo, instrument_list):
         
 def add_phoenix_and_g430l(sed_table, component_repo, instrument_list, error_cut=True, scale=True):
     """
-    Adds both the phoenix model and the g430l spectrm, triming the g430l spectrum by and error cut and filling in any gap with the phoenix model. 
+    Adds both the phoenix model and the g430l spectrum, triming the g430l spectrum by and error cut and filling in any gap with the phoenix model. 
     """
     phx_path = glob.glob(component_repo+'*phx*.ecsv')
     g430l_path = glob.glob(component_repo+'*g430l*.ecsv')
