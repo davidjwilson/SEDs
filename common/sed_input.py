@@ -38,21 +38,22 @@ path = '/media/david/1tb_storage1/emergency_data/mega_muscles/' #backup hd
 sources = ['cos','stis', 'lya','phoenix', 'xmm', 'chandra', 'apec', 'euv']
 
 
-# stars= ['2MASS-J23062928-0502285']# leaving out Trappist-1
-# stars = ['L-980-5',
-#         'GJ674', 
-#         'GJ676A',
-#         'GJ649',
-#         'GJ699',
-#         'GJ163',
-#         'GJ849',
-#         'GJ1132',
-#         'LHS-2686',
-#         'GJ729',
-#         'GJ15A']
+# stars= []# leaving out Trappist-1
+stars = ['2MASS-J23062928-0502285',
+        'L-980-5',
+        'GJ674', 
+        'GJ676A',
+        'GJ649',
+        'GJ699',
+        'GJ163',
+        'GJ849',
+        'GJ1132',
+        'LHS-2686',
+        'GJ729',
+        'GJ15A']
 
 # stars = ['GJ15A']
-stars = ['2MASS-J23062928-0502285', 'GJ699']
+# stars = ['2MASS-J23062928-0502285', 'GJ699']
 airglow =  [1207, 1222, 1300, 1310, 1353, 1356]
 cos_gratings = ['G130M', 'G160M']
 stis_gratings = ['G140M','E140M','G140L', 'G230L', 'G230LB', 'G430L']
@@ -115,7 +116,13 @@ for star in stars:
     
     #PHOENIX
     
-#     sed_table, instrument_list = sed.add_phoenix_and_g430l(sed_table, component_repo, instrument_list, scale=False)
+#     phoenix_path = '/media/david/5tb_storage1/muscles/phoenix_models/interpolated_models/{}_phoenix_interpolated.ecsv'.format(sed_table.meta['TARGNAME'])
+    phoenix_path = '/home/david/work/muscles/SEDs/optical/interpolated_models/{}_phoenix_interpolated.ecsv'.format(sed_table.meta['TARGNAME'])
+    phoenix_normfac = Table.read(phoenix_path).meta['NORMFAC'].value
+    prepare_model.make_model_spectrum(phoenix_path, 6, sed_table ,savepath = component_repo, save_ecsv=True, save_fits=True, normfac=phoenix_normfac, model_name='PHX')
+    
+#    sed_table, instrument_list = sed.add_phoenix_and_g430l(sed_table, component_repo, instrument_list, scale=False)
+    sed_table, instrument_list= sed.add_phx_spectrum(sed_table, component_repo, instrument_list)
     
     #X-ray
     

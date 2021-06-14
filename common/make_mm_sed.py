@@ -179,7 +179,7 @@ def fill_cos_airglow(sed_table, airglow, instrument_list, nuv = False):
         mask = (w > 1700) & (w < 2790) | (w > 2805) & (w < 3150) #cut to nuv range and remove mg ii
         w, f = w[mask], f[mask]
         gap_f = np.polyval((np.polyfit(w,f,1)), gap_w)
-        print(np.mean(gap_f))
+#         print(np.mean(gap_f))
     else:
         b = airglow[::2]
         r = airglow[1::2]
