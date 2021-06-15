@@ -39,27 +39,27 @@ sources = ['cos','stis', 'lya','phoenix', 'xmm', 'chandra', 'apec', 'euv']
 
 
 # stars= []# leaving out Trappist-1
-stars = ['2MASS-J23062928-0502285',
-        'L-980-5',
-        'GJ674', 
-        'GJ676A',
-        'GJ649',
-        'GJ699',
-        'GJ163',
-        'GJ849',
-        'GJ1132',
-        'LHS-2686',
-        'GJ729',
-        'GJ15A']
+# stars = ['2MASS-J23062928-0502285',
+#         'L-980-5',
+#         'GJ674', 
+#         'GJ676A',
+#         'GJ649',
+#         'GJ699',
+#         'GJ163',
+#         'GJ849',
+#         'GJ1132',
+#         'LHS-2686',
+#         'GJ729',
+#         'GJ15A']
 
 # stars = ['GJ15A']
-# stars = ['2MASS-J23062928-0502285', 'GJ699']
+stars = ['2MASS-J23062928-0502285']#, 'GJ699']
 airglow =  [1207, 1222, 1300, 1310, 1353, 1356]
 cos_gratings = ['G130M', 'G160M']
 stis_gratings = ['G140M','E140M','G140L', 'G230L', 'G230LB', 'G430L']
 
 #lya_ecsvs = glob.glob('{}*ecsv'.format(lya_path))
-#star_params = Table.read(star_params_path)
+
 #print(lya_ecsvs)
 ###################
 version = 2
@@ -100,11 +100,30 @@ def which_xray(component_repo):
            xscope = 'cxo'
     return xscope 
 
+def table_name(star): 
+    """
+    Turns the input name into the name in the stellar params table
+    """
+    if star[:2] == 'GJ':
+        star = star.replace(' ', '')
+    elif star == 'Trappist-1':
+        star = '2MASS-J23062928-0502285'
+    elif star[0] == 'L':
+        star = star.replace(' ', '-')
+    return star
+    
+star_params_path = '/home/david/work/muscles/SEDs/optical/stellar_parameters.csv'
+star_params = Table.read(star_params_path)
+targets = np.array([table_name(star) for star in star_params['Target']])
+# print(targets)
+    
 for star in stars:
     print(star)
     repo, component_repo = make_repo(star, path, version)
     print(component_repo)
 #     sort_components(star, path, sources, component_repo)
+
+    row = star_params[np.where(targets == star)[0][0]]
     
    #COS
     
@@ -117,9 +136,9 @@ for star in stars:
     #PHOENIX
     
 #     phoenix_path = '/media/david/5tb_storage1/muscles/phoenix_models/interpolated_models/{}_phoenix_interpolated.ecsv'.format(sed_table.meta['TARGNAME'])
-    phoenix_path = '/home/david/work/muscles/SEDs/optical/interpolated_models/{}_phoenix_interpolated.ecsv'.format(sed_table.meta['TARGNAME'])
-    phoenix_normfac = Table.read(phoenix_path).meta['NORMFAC'].value
-    prepare_model.make_model_spectrum(phoenix_path, 6, sed_table ,savepath = component_repo, save_ecsv=True, save_fits=True, normfac=phoenix_normfac, model_name='PHX')
+#     phoenix_path = '/home/david/work/muscles/SEDs/optical/interpolated_models/{}_phoenix_interpolated.ecsv'.format(sed_table.meta['TARGNAME'])
+#     phoenix_normfac = Table.read(phoenix_path).meta['NORMFAC'].value
+#     prepare_model.make_model_spectrum(phoenix_path, 6, sed_table ,savepath = component_repo, save_ecsv=True, save_fits=True, normfac=phoenix_normfac, model_name='PHX')
     
 #    sed_table, instrument_list = sed.add_phoenix_and_g430l(sed_table, component_repo, instrument_list, scale=False)
     sed_table, instrument_list= sed.add_phx_spectrum(sed_table, component_repo, instrument_list)
@@ -130,10 +149,19 @@ for star in stars:
     
     #EUV
     euv_name = 'euv-scaling'
+    if len(glob.glob('{}*dem*'.format(component_repo))) > 1:
+        euv_name = 'dem'
+    
     sed_table, instrument_list = sed.add_euv(sed_table, component_repo, instrument_list, euv_gap, euv_name)
     
     sed_table.sort(['WAVELENGTH'])
-    lim = np.mean(sed_table['FLUX'][(sed_table['WAVELENGTH'] > 2e5) & (sed_table['WAVELENGTH'] < 3e5)])
+   # lim = np.mean(sed_table['FLUX'][(sed_table['WAVELENGTH'] > 2e5) & (sed_table['WAVELENGTH'] < 3e5)])
+    print(np.trapz(sed_table['FLUX'], sed_table['WAVELENGTH']))
+#     print(sed_table.meta)
+    #bolometric flux
+    sed_table = sed.add_bolometric_flux(sed_table, component_repo, row)
+    np.save('test_to_fits/ti_instlist', instrument_list)
+#     sed_table.write('test_to_fits/t1_table_test.ecsv')
     
 #     print (sed_table.dtype.names)
     
@@ -148,12 +176,12 @@ for star in stars:
     plt.plot(sed_table['WAVELENGTH'], sed_table['FLUX'], label=star, rasterized=True)
    # plt.plot(sed_table['WAVELENGTH'], sed_table['ERROR'], rasterized=True)
 #     plt.ylim(lim)
-    plt.ylim(1e-17, 1e-13)
-    plt.xlim(5, 3e5)
+#     plt.ylim(1e-17, 1e-13)
+#     plt.xlim(5, 3e5)
     plt.yscale('log')
     plt.xscale('log')
     plt.xlabel('Wavelength (\AA)')
-    plt.ylabel('Flux erg s$^{-1}$cm$^{-2}$\AA$^{-1}$)')
+    plt.ylabel('Flux (erg s$^{-1}$cm$^{-2}$\AA$^{-1}$)')
     plt.legend(loc=1)
     plt.tight_layout()
     #plt.savefig('plots/first_seds/{}_v{}_sed.png'.format(star, version))
