@@ -510,9 +510,13 @@ def add_bolometric_flux(sed_table, component_repo, star_params):
     Creates and adds the bolometric flux column to the sed
     """
     phx = Table.read(glob.glob(component_repo+'*phx*ecsv')[0])
-    bolo_int = bolo_integral(sed_table,phx,star_params['Teff'])
-    sed_table['BOLOFLUX'] = (sed_table['FLUX']/bolo_int)*1/u.A
-    sed_table['BOLOERR'] = (sed_table['ERROR']/bolo_int)*1/u.A
+    bolo_int = bolo_integral(sed_table,phx,star_params['Teff'])*(u.erg/u.s/u.cm**2)
+    boloflux = (sed_table['FLUX']/bolo_int).value
+    boloerr = (sed_table['ERROR']/bolo_int).value
+    
+    sed_table['BOLOFLUX'] = boloflux*(1/u.AA)
+    sed_table['BOLOERR'] = boloerr*(1/u.AA)
+    sed_table.meta['BOLOFLUX'] = bolo_int.value
     #boloerr = np.zeros(len(sed_table['ERROR']))
     #for i in range(len(boloerr)):
      #   if sed_table['ERROR'][i] > 0.0:

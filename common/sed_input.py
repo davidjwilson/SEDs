@@ -30,6 +30,8 @@ from craftroom import resample
 from scipy.interpolate import interp1d
 import make_sed_files
 from shutil import copyfile
+import make_fits
+import instruments
 
 """File structure"""
 
@@ -135,10 +137,7 @@ for star in stars:
     
     #PHOENIX
     
-#     phoenix_path = '/media/david/5tb_storage1/muscles/phoenix_models/interpolated_models/{}_phoenix_interpolated.ecsv'.format(sed_table.meta['TARGNAME'])
-#     phoenix_path = '/home/david/work/muscles/SEDs/optical/interpolated_models/{}_phoenix_interpolated.ecsv'.format(sed_table.meta['TARGNAME'])
-#     phoenix_normfac = Table.read(phoenix_path).meta['NORMFAC'].value
-#     prepare_model.make_model_spectrum(phoenix_path, 6, sed_table ,savepath = component_repo, save_ecsv=True, save_fits=True, normfac=phoenix_normfac, model_name='PHX')
+
     
 #    sed_table, instrument_list = sed.add_phoenix_and_g430l(sed_table, component_repo, instrument_list, scale=False)
     sed_table, instrument_list= sed.add_phx_spectrum(sed_table, component_repo, instrument_list)
@@ -155,13 +154,22 @@ for star in stars:
     sed_table, instrument_list = sed.add_euv(sed_table, component_repo, instrument_list, euv_gap, euv_name)
     
     sed_table.sort(['WAVELENGTH'])
-   # lim = np.mean(sed_table['FLUX'][(sed_table['WAVELENGTH'] > 2e5) & (sed_table['WAVELENGTH'] < 3e5)])
-    print(np.trapz(sed_table['FLUX'], sed_table['WAVELENGTH']))
 #     print(sed_table.meta)
     #bolometric flux
     sed_table = sed.add_bolometric_flux(sed_table, component_repo, row)
-    np.save('test_to_fits/ti_instlist', instrument_list)
-#     sed_table.write('test_to_fits/t1_table_test.ecsv')
+    
+    print(sed_table['BOLOFLUX'][100])
+    
+    #final meta keys
+    sed_table.meta['WAVEMIN'] = min(sed_table['WAVELENGTH'])
+    sed_table.meta['WAVEMAX'] = max(sed_table['WAVELENGTH'])
+    sed_table.meta['FLUXMIN'] = min(sed_table['FLUX'])
+    sed_table.meta['FLUXMAX'] = max(sed_table['FLUX'])
+
+    
+#     np.save('test_to_fits/ti_instlist', instrument_list)
+#     sed_table.write('test_to_fits/t1_table_test.ecsv', overwrite=True)
+    make_fits.make_mm_fits(component_repo, sed_table, instrument_list, version,sed_type='var')
     
 #     print (sed_table.dtype.names)
     
@@ -172,27 +180,26 @@ for star in stars:
 #     savdat = Table([sed_table['WAVELENGTH']*u.AA, sed_table['FLUX']*u.erg/u.s/u.cm**2/u.AA, sed_table['ERROR']*u.erg/u.s/u.cm**2/u.AA], names=['WAVELENGTH', 'FLUX', 'ERROR'])
 #     ascii.write(savdat, '{}/basic_seds/{}_basic_v1.ecsv'.format(path, star), format='ecsv', overwrite=True)
 
-    plt.figure(star, figsize=(7, 5))
-    plt.plot(sed_table['WAVELENGTH'], sed_table['FLUX'], label=star, rasterized=True)
-   # plt.plot(sed_table['WAVELENGTH'], sed_table['ERROR'], rasterized=True)
-#     plt.ylim(lim)
-#     plt.ylim(1e-17, 1e-13)
-#     plt.xlim(5, 3e5)
-    plt.yscale('log')
-    plt.xscale('log')
-    plt.xlabel('Wavelength (\AA)')
-    plt.ylabel('Flux (erg s$^{-1}$cm$^{-2}$\AA$^{-1}$)')
-    plt.legend(loc=1)
-    plt.tight_layout()
-    #plt.savefig('plots/first_seds/{}_v{}_sed.png'.format(star, version))
-    plt.show()
-    plt.close()
+#     plt.figure(star, figsize=(7, 5))
+#     plt.plot(sed_table['WAVELENGTH'], sed_table['FLUX'], label=star, rasterized=True)
+#    # plt.plot(sed_table['WAVELENGTH'], sed_table['ERROR'], rasterized=True)
+# #     plt.ylim(lim)
+# #     plt.ylim(1e-17, 1e-13)
+# #     plt.xlim(5, 3e5)
+#     plt.yscale('log')
+#     plt.xscale('log')
+#     plt.xlabel('Wavelength (\AA)')
+#     plt.ylabel('Flux (erg s$^{-1}$cm$^{-2}$\AA$^{-1}$)')
+#     plt.legend(loc=1)
+#     plt.tight_layout()
+#     #plt.savefig('plots/first_seds/{}_v{}_sed.png'.format(star, version))
+#     plt.show()
+#     plt.close()
     
     
 
     
 
- 
 print('Done')
 
 """    
