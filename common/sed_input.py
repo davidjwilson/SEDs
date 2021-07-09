@@ -41,21 +41,21 @@ sources = ['cos','stis', 'lya','phoenix', 'xmm', 'chandra', 'apec', 'euv']
 
 
 # stars= []# leaving out Trappist-1
-# stars = ['2MASS-J23062928-0502285',
-#         'L-980-5',
-#         'GJ674', 
-#         'GJ676A',
-#         'GJ649',
-#         'GJ699',
-#         'GJ163',
-#         'GJ849',
-#         'GJ1132',
-#         'LHS-2686',
-#         'GJ729',
-#         'GJ15A']
+stars = ['2MASS-J23062928-0502285',
+        'L-980-5',
+        'GJ674', 
+        'GJ676A',
+        'GJ649',
+        'GJ699',
+        'GJ163',
+        'GJ849',
+        'GJ1132',
+        'LHS-2686',
+        'GJ729',
+        'GJ15A']
 
 # stars = ['GJ15A']
-stars = ['2MASS-J23062928-0502285']#, 'GJ699']
+# stars = ['2MASS-J23062928-0502285']#, 'GJ699']
 airglow =  [1207, 1222, 1300, 1310, 1353, 1356]
 cos_gratings = ['G130M', 'G160M']
 stis_gratings = ['G140M','E140M','G140L', 'G230L', 'G230LB', 'G430L']
@@ -64,7 +64,7 @@ stis_gratings = ['G140M','E140M','G140L', 'G230L', 'G230LB', 'G430L']
 
 #print(lya_ecsvs)
 ###################
-version = 2
+version = 1
 ###################
 
 def make_repo(star, path, version):
@@ -180,21 +180,21 @@ for star in stars:
 #     savdat = Table([sed_table['WAVELENGTH']*u.AA, sed_table['FLUX']*u.erg/u.s/u.cm**2/u.AA, sed_table['ERROR']*u.erg/u.s/u.cm**2/u.AA], names=['WAVELENGTH', 'FLUX', 'ERROR'])
 #     ascii.write(savdat, '{}/basic_seds/{}_basic_v1.ecsv'.format(path, star), format='ecsv', overwrite=True)
 
-#     plt.figure(star, figsize=(7, 5))
-#     plt.plot(sed_table['WAVELENGTH'], sed_table['FLUX'], label=star, rasterized=True)
-#    # plt.plot(sed_table['WAVELENGTH'], sed_table['ERROR'], rasterized=True)
-# #     plt.ylim(lim)
-# #     plt.ylim(1e-17, 1e-13)
-# #     plt.xlim(5, 3e5)
-#     plt.yscale('log')
-#     plt.xscale('log')
-#     plt.xlabel('Wavelength (\AA)')
-#     plt.ylabel('Flux (erg s$^{-1}$cm$^{-2}$\AA$^{-1}$)')
+    plt.figure(star, figsize=(7, 5))
+    plt.plot(sed_table['WAVELENGTH'], sed_table['FLUX'], label=star, rasterized=True)
+   # plt.plot(sed_table['WAVELENGTH'], sed_table['ERROR'], rasterized=True)
+#     plt.ylim(lim)
+#     plt.ylim(1e-17, 1e-13)
+#     plt.xlim(5, 3e5)
+    plt.yscale('log')
+    plt.xscale('log')
+    plt.xlabel('Wavelength (\AA)')
+    plt.ylabel('Flux (erg s$^{-1}$cm$^{-2}$\AA$^{-1}$)')
 #     plt.legend(loc=1)
-#     plt.tight_layout()
-#     #plt.savefig('plots/first_seds/{}_v{}_sed.png'.format(star, version))
-#     plt.show()
-#     plt.close()
+    plt.tight_layout()
+    #plt.savefig('plots/first_seds/{}_v{}_sed.png'.format(star, version))
+    plt.show()
+    plt.close()
     
     
 
