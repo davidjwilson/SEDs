@@ -74,6 +74,35 @@ def data_header(hdr):
     return hdr
 
 
+def make_instrument_extension(sed_table, instlist, version):
+    """
+    Make the instrument extension for a MEGA-MUSCLES file, containing translations of the instrument codes and the list of component file names
+    
+    """
+    telescopes = [instruments.getinststr(inst)[0:3].upper() for inst in instlist]
+    instrus = [instruments.getinststr(inst)[4:7].upper() for inst in instlist]
+    gratings = [instruments.getinststr(inst)[8:].replace('-----','na').upper() for inst in instlist]
+    target = sed_table.meta['TARGNAME']
+    filenames = ['hlsp_muscles_{}_{}_{}_{}_v{}_component-spec.fits'.format(tel, inst, target, grating, version).lower() for tel, inst, grating in zip(telescopes, instrus,gratings)]
+    data = Table([instlist, telescopes, instrus, gratings , filenames], names = ['BITVALUE','TELESCOPE','INSTRUMENT','GRATING','HLSP_FILE'])
+    hdu = fits.table_to_hdu(data)
+    
+    comment = 'This extension is a legend for the integer identifiers in the instrument column of the '\
+              'spectrum extension. Instruments are identified by bitwise flags so that any combination of '\
+              'instruments contributing to the data within a spectral element can be identified together. '\
+              'For example, if instruments 4 and 16 (100 and 10000 in binary) both contribute to the data '\
+              'in a bin, then that bin will have the value 20, or 10100 in binary, to signify that both '\
+              'instruments 4 and 16 have contributed. This is identical to the handling of bitwise data '\
+              'quality flags. Note that polynomial fits for filling spectral gaps were not saved as separate spectra.'\
+
+    
+    
+    hdu.header.append(('COMMENT',comment))
+    return hdu
+    
+    
+
+
 def make_data_ext(sed_table):
     """
     The table extension, takes an astropy table 
@@ -97,11 +126,11 @@ def make_mm_fits(savepath, sed_table, instrument_list, version,sed_type='var'):
     """
     primary_hdu = make_primary_ext(sed_table, instrument_list)
     data_ext = make_data_ext(sed_table)
-    #add instruments here
+    inst_ext = make_instrument_extension(sed_table, instrument_list, version)
     star = sed_table.meta['TARGNAME'].lower()
     if star == '2mass-j23062928-0502285':
         star = 'trappist-1'
     file_name = 'hlsp_muscles_multi_multi_{}_broadband_v{}_{}-res-sed'.format(star, version, sed_type)
-    hdul = fits.HDUList([primary_hdu, data_ext])
+    hdul = fits.HDUList([primary_hdu, data_ext,inst_ext])
     hdul.writeto('{}{}.fits'.format(savepath,file_name), overwrite=True)
     print('sed saved as {}'.format(file_name))
