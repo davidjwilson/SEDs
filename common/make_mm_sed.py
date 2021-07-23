@@ -234,11 +234,13 @@ def fill_model(table, model_name):
     #'ERROR':e_new*u.erg/u.s/u.cm**2/u.AA,'EXPTIME':exptime*u.s,'DQ':dq_new,'EXPSTART':start*cds.MJD,'EXPEND':end*cds.MJD keep incase units are an issue
     
 
-def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, other_airglow, norm=True, error_cut=True):
+def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, other_airglow, norm=False, error_cut=True, optical = False):
     """
     Add the stis fuv spectra and lya model to the sed
     """
-    stis_gratings = ['E140M', 'G140M','G140L', 'G230L', 'G230LB', 'G430L']
+    stis_gratings = ['E140M', 'G140M','G140L', 'G230L', 'G230LB']
+    if optical:
+        stis_gratings.append('G430L') #usually want to add the optical spectrum with the phoenix model, but retaining the option here
    # g140l_path = glob.glob(component_repo+'*g140l*.ecsv')
    # g140m_path = glob.glob(component_repo+'*g140m*.ecsv')
     lya = dict(WAVELENGTH = [10000, 0]) #filler for the star that doesn't have a lya measurement 
@@ -250,6 +252,8 @@ def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, othe
         lya = normfac_column(lya)
         
     normfac = 1.0
+    uses_e140m = False #if nether present fill in COS airglow with a polynomial
+    used_g140l = False
     for grating in stis_gratings:
         specpath = glob.glob('{}*{}_v*.ecsv'.format(component_repo, grating.lower()))
         
@@ -262,14 +266,16 @@ def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, othe
                 instrument_list.append(instrument_code)
                 if grating != 'E140M':
                     if norm:
-                        normfac = find_normfac(sed_table, specpath[0], np.concatenate((lya_range, other_airglow)), normfac) #normalise to COS spectra then sequentially 
+                        normfac = find_normfac(sed_table, specpath[0], np.concatenate((lya_range, other_airglow)), normfac) 
                     update_norm(specpath[0], '{}.fits'.format(specpath[0][:-5]), normfac)
                 if grating == 'E140M':
+                    uses_e140m = True
                     mask = (data['WAVELENGTH'] > 1160) & (data['WAVELENGTH'] < lya['WAVELENGTH'][0]) | (data['WAVELENGTH'] > lya['WAVELENGTH'][-1]) 
 
                 elif grating == 'G140M':
                     mask = (data['WAVELENGTH'] > lya_range[0]) & (data['WAVELENGTH'] < lya['WAVELENGTH'][0]) | (data['WAVELENGTH'] > lya['WAVELENGTH'][-1]) & (data['WAVELENGTH'] < lya_range[1])
                 elif grating == 'G140L':
+                    used_g140l = True
                     mask = mask_maker(data['WAVELENGTH'], other_airglow, include=False) #fill in airglow gaps
                     mask |= (data['WAVELENGTH'] > max(sed_table['WAVELENGTH']))
                     
@@ -295,6 +301,10 @@ def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, othe
                 if len(lya_path) == 1:    #lya needs to be added after e140m  
                     sed_table = vstack([sed_table, lya], metadata_conflicts = 'silent')
                 sed_table.sort(['WAVELENGTH'])
+                
+    if  uses_e140m == False and used_g140l == False:
+        print('filling COS aiglow with polynomials')
+        fill_cos_airglow(sed_table, other_airglow, instrument_list)
 
                 
     return sed_table, instrument_list
@@ -360,7 +370,7 @@ def add_phx_spectrum(sed_table, component_repo, instrument_list):
         sed_table = vstack([sed_table, phx], metadata_conflicts = 'silent')
     return sed_table, instrument_list
         
-def add_phoenix_and_g430l(sed_table, component_repo, instrument_list, error_cut=True, scale=True):
+def add_phoenix_and_g430l(sed_table, component_repo, instrument_list, error_cut=True, scale=False):
     """
     Adds both the phoenix model and the g430l spectrum, triming the g430l spectrum by and error cut and filling in any gap with the phoenix model. 
     """
@@ -385,7 +395,7 @@ def add_phoenix_and_g430l(sed_table, component_repo, instrument_list, error_cut=
             start = w[:-bin_width][np.where(sn > 1)[0][0]]
             mask = (w > start) & (f > 0)
             g430l = g430l[mask]
-        
+     
         if scale: #scale g430l spectrum to the phoenix spectrum
             mask = (phx['WAVELENGTH'] >= g430l['WAVELENGTH'][0]) & (phx['WAVELENGTH'] <= g430l['WAVELENGTH'][-1]) 
             mw, mf = phx['WAVELENGTH'][mask], phx['FLUX'][mask]
