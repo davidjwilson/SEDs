@@ -532,3 +532,5 @@ def add_bolometric_flux(sed_table, component_repo, star_params):
      #   if sed_table['ERROR'][i] > 0.0:
       #      boloerr[i] = sed_table['ERROR'][i]/boloflux
     return sed_table
+
+
