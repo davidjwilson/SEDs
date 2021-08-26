@@ -22,7 +22,7 @@ import astropy.units as u
 import astropy.constants as const
 from astropy.modeling import models, fitting
 from craftroom import resample
-from scipy.interpolate import interp1d
+from scipy.interpolate import interpolate
 from astropy.convolution import convolve, Box1DKernel, convolve_fft, Gaussian1DKernel
 import prepare_cos 
 import prepare_stis
@@ -31,6 +31,7 @@ from scipy.io import readsav
 from scipy.optimize import leastsq
 from scipy.signal import argrelmax
 from scipy.integrate import quad
+import math as mt
 cds.enable()
 
 
@@ -303,7 +304,7 @@ def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, othe
                 sed_table.sort(['WAVELENGTH'])
                 
     if  uses_e140m == False and used_g140l == False:
-        print('filling COS aiglow with polynomials')
+        print('filling COS airglow with polynomials')
         fill_cos_airglow(sed_table, other_airglow, instrument_list)
 
                 
@@ -400,7 +401,7 @@ def add_phoenix_and_g430l(sed_table, component_repo, instrument_list, error_cut=
             mask = (phx['WAVELENGTH'] >= g430l['WAVELENGTH'][0]) & (phx['WAVELENGTH'] <= g430l['WAVELENGTH'][-1]) 
             mw, mf = phx['WAVELENGTH'][mask], phx['FLUX'][mask]
             mw, mf = smear(mw, mf, 1000)
-            pfr = interp1d(mw, mf, fill_value='extrapolate')(g430l['WAVELENGTH'])
+            pfr = interpolate.interp1d(mw, mf, fill_value='extrapolate')(g430l['WAVELENGTH'])
             normfac = leastsq(residuals, 1., args=(g430l['FLUX'], pfr))[0]
             g430l['FLUX'] *= normfac
             g430l['ERROR'] *= normfac
@@ -533,4 +534,72 @@ def add_bolometric_flux(sed_table, component_repo, star_params):
       #      boloerr[i] = sed_table['ERROR'][i]/boloflux
     return sed_table
 
+def sed_to_const_res(sed_table, res=1, start_cut=0, end_cut = 1e5):
+    """
+    Rebins an SED to a wavelength grid with a bin size of res, default = 1A
+    """
+    
+    #wavelength 
+    start, end= mt.ceil(sed_table['WAVELENGTH'][0]), mt.floor(sed_table['WAVELENGTH'][-1])
+    if start < start_cut: #cut MM SEDs down to 1e5 A
+        start = start_cut
+    if end > end_cut:
+        end = end_cut 
+    
+    new_wavelength = np.arange(start,end+res, res)
+    new_w0 = new_wavelength - (0.5 * res)
+    new_w1 = new_wavelength + (0.5 * res)
+
+    #flux
+    new_wavelength, new_flux = resample.bintogrid(sed_table['WAVELENGTH'], sed_table['FLUX'], newx=new_wavelength)
+    
+    #error
+    new_error =  interpolate.interp1d(sed_table['WAVELENGTH'], sed_table['ERROR'])(new_wavelength)
+    
+    #exptime - linear extrapolation is similar to averaged to bin widths
+    new_exptime = interpolate.interp1d(sed_table['WAVELENGTH'], sed_table['EXPTIME'])(new_wavelength)
+    
+    #dq - interploate, then look for unusual values and correct them, summing if the values to either side are different.
+   
+    new_dq = interpolate.interp1d(sed_table['WAVELENGTH'], sed_table['DQ'])(new_wavelength)
+    new_dq = new_dq.astype(int)
+    
+    #expstart - minumum expstart in each bin
+    startups = interpolate.interp1d(sed_table['WAVELENGTH'], sed_table['EXPSTART'], kind='next')(new_wavelength)
+    startdowns = interpolate.interp1d(sed_table['WAVELENGTH'], sed_table['EXPSTART'], kind='previous')(new_wavelength)
+    new_expstart = np.min([startups, startdowns], axis=0)
+    
+    #expends - maximum expend in each bin
+    endups = interpolate.interp1d(sed_table['WAVELENGTH'], sed_table['EXPEND'], kind='next')(new_wavelength)
+    enddowns = interpolate.interp1d(sed_table['WAVELENGTH'], sed_table['EXPEND'], kind='previous')(new_wavelength)
+    new_expend = np.max([endups, enddowns], axis=0)
+    
+    #instrument - as dqs
+    new_instrument = interpolate.interp1d(sed_table['WAVELENGTH'], sed_table['INSTRUMENT'])(new_wavelength)
+    new_instrument = new_instrument.astype(int)
+    
+    #dq and instrument loop
+    dqs = np.unique(sed_table['DQ'])
+    insts = np.unique(sed_table['INSTRUMENT'])
+    for i in range(len(new_wavelength))[1:-1]:
+        if new_dq[i] not in dqs:
+            new_dq[i] = new_dq[i-1] + new_dq[i+1]
+        if new_instrument[i] not in insts:
+            new_instrument[i] = new_instrument[i-1] + new_instrument[i+1]
+    
+    #normfac - linear extrapolation
+    new_normfac = interpolate.interp1d(sed_table['WAVELENGTH'], sed_table['NORMFAC'])(new_wavelength)
+    
+    #boloflux -use original boloflux for consitency
+    bolo_int = sed_table.meta['BOLOFLUX']*(u.erg/u.s/u.cm**2)
+    new_boloflux = (new_flux/bolo_int).value
+    new_boloerr = (new_error/bolo_int).value
+    
+
+    names = sed_table.dtype.names
+    new_sed_table = Table([new_wavelength*u.AA, new_w0*u.AA, new_w1*u.AA, new_flux*u.erg/u.s/u.cm**2/u.AA, new_error*u.erg/u.s/u.cm**2/u.AA, new_exptime*u.s, 
+                           new_dq,new_expstart*cds.MJD, new_expend*cds.MJD, new_instrument, new_normfac, new_boloflux*(1/u.AA), new_boloerr*(1/u.AA)], names=names, meta= sed_table.meta)
+    
+    return new_sed_table
+          
 

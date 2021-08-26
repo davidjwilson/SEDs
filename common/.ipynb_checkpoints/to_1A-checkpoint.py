@@ -25,19 +25,7 @@ def sed_to_const_res(sed_table, res=1):
     Rebins an SED to a wavelength grid with a bin size of res, default = 1A
     """
     
-        ('WAVELENGTH',
-     'WAVELENGTH0',
-     'WAVELENGTH1',
-     'FLUX',
-     'ERROR',
-     'EXPTIME',
-     'DQ',
-     'EXPSTART',
-     'EXPEND',
-     'INSTRUMENT',
-     'NORMFAC',
-     'BOLOFLUX',
-     'BOLOERR')
+  
     
     #wavelength 
     start, end= mt.ceil(w[0]), mt.floor(w[-1])
@@ -84,4 +72,25 @@ def sed_to_const_res(sed_table, res=1):
     new_boloflux = (new_flux/bolo_int).value
     new_boloerr = (new_error/bolo_int).value
     
+    #new table
+    new_sed_table = sed_table
+    new_arrays = [new_wavelength, new_w0, new_w1, new_flux, new_error, new_exptime, new_dq, 
+                  new_expstart, new_expend, new_instrument, new_normfac, new_boloflux, new_boloerr]
+    for i, name in enumerate(new_sed_table.dtype.names):
+        new_sed_table[name] = new_arrays[i]
     
+    return new_sed_table
+    
+#     ('WAVELENGTH',
+#      'WAVELENGTH0',
+#      'WAVELENGTH1',
+#      'FLUX',
+#      'ERROR',
+#      'EXPTIME',
+#      'DQ',
+#      'EXPSTART',
+#      'EXPEND',
+#      'INSTRUMENT',
+#      'NORMFAC',
+#      'BOLOFLUX',
+#      'BOLOERR')
