@@ -561,7 +561,7 @@ def sed_to_const_res(sed_table, res=1, start_cut=0, end_cut = 1e5):
     
     #dq - interploate, then look for unusual values and correct them, summing if the values to either side are different.
    
-    new_dq = interpolate.interp1d(sed_table['WAVELENGTH'], sed_table['DQ'])(new_wavelength)
+    new_dq = interpolate.interp1d(sed_table['WAVELENGTH'], sed_table['DQ'], kind='previous')(new_wavelength)
     new_dq = new_dq.astype(int)
     
     #expstart - minumum expstart in each bin
@@ -575,17 +575,15 @@ def sed_to_const_res(sed_table, res=1, start_cut=0, end_cut = 1e5):
     new_expend = np.max([endups, enddowns], axis=0)
     
     #instrument - as dqs
-    new_instrument = interpolate.interp1d(sed_table['WAVELENGTH'], sed_table['INSTRUMENT'])(new_wavelength)
+    new_instrument = interpolate.interp1d(sed_table['WAVELENGTH'], sed_table['INSTRUMENT'], kind='previous')(new_wavelength)
     new_instrument = new_instrument.astype(int)
     
     #dq and instrument loop
-    dqs = np.unique(sed_table['DQ'])
-    insts = np.unique(sed_table['INSTRUMENT'])
     for i in range(len(new_wavelength))[1:-1]:
-        if new_dq[i] not in dqs:
-            new_dq[i] = new_dq[i-1] + new_dq[i+1]
-        if new_instrument[i] not in insts:
-            new_instrument[i] = new_instrument[i-1] + new_instrument[i+1]
+        if new_dq[i] != new_dq[i+1]:
+            new_dq[i] = new_dq[i] + new_dq[i+1]
+        if new_instrument[i] != new_instrument[i+1]:
+            new_instrument[i] = new_instrument[i] + new_instrument[i+1]
     
     #normfac - linear extrapolation
     new_normfac = interpolate.interp1d(sed_table['WAVELENGTH'], sed_table['NORMFAC'])(new_wavelength)
@@ -599,7 +597,6 @@ def sed_to_const_res(sed_table, res=1, start_cut=0, end_cut = 1e5):
     names = sed_table.dtype.names
     new_sed_table = Table([new_wavelength*u.AA, new_w0*u.AA, new_w1*u.AA, new_flux*u.erg/u.s/u.cm**2/u.AA, new_error*u.erg/u.s/u.cm**2/u.AA, new_exptime*u.s, 
                            new_dq,new_expstart*cds.MJD, new_expend*cds.MJD, new_instrument, new_normfac, new_boloflux*(1/u.AA), new_boloerr*(1/u.AA)], names=names, meta= sed_table.meta)
-    
     return new_sed_table
           
 
