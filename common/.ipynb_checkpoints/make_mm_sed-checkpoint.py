@@ -431,9 +431,11 @@ def add_xray_spectrum(sed_table, component_repo, instrument_list, scope, add_ape
     xray_end = 0
     if len(xray_path) > 0:
         xray = Table.read(xray_path[0])
-        error = xray['ERROR']
+        error = xray['ERROR'] #retain error and exptime 
+        exptime = xray['EXPTIME']
         instrument_code, xray = fill_model(xray, instrument_name)
         xray['ERROR'] = error
+        xray['EXPTIME'] = exptime
         instrument_list.append(instrument_code)
         #xray = normfac_column(xray)
         xray_end = max(xray['WAVELENGTH'])
