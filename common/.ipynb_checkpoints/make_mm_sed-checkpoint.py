@@ -1,9 +1,9 @@
 """
-@verison: 3
+@verison: 4
 
 @author: David Wilson
 
-@date 20202811
+@date 20210910
 
 The big one. Draft here, will spin off to modules as required. 
 
@@ -551,12 +551,23 @@ def sed_to_const_res(sed_table, res=1, start_cut=0, end_cut = 1e5):
     new_wavelength = np.arange(start,end+res, res)
     new_w0 = new_wavelength - (0.5 * res)
     new_w1 = new_wavelength + (0.5 * res)
-
-    #flux
-    new_wavelength, new_flux = resample.bintogrid(sed_table['WAVELENGTH'], sed_table['FLUX'], newx=new_wavelength)
     
-    #error
-    new_error =  interpolate.interp1d(sed_table['WAVELENGTH'], sed_table['ERROR'])(new_wavelength)
+    #flux and error
+    #add an error array to models so that bintogrid works. Take it away later on
+    model_instruments = []
+    for i in range(len(sed_table['WAVELENGTH'])):
+        if sed_table['ERROR'][i] == 0.0:
+            model_instruments.append(sed_table['INSTRUMENT'][i])
+            sed_table['ERROR'][i]  = 0.1*sed_table['FLUX'][i]
+    print(len(new_wavelength))
+    new_wavelength, new_flux, new_error = resample.bintogrid(sed_table['WAVELENGTH'], sed_table['FLUX'], newx=new_wavelength, unc = sed_table['ERROR'], drop_nans=False)
+    print(len(new_wavelength))
+
+#     #flux
+#     new_wavelength, new_flux = resample.bintogrid(sed_table['WAVELENGTH'], sed_table['FLUX'], newx=new_wavelength)
+    
+#     #error
+#     new_error =  interpolate.interp1d(sed_table['WAVELENGTH'], sed_table['ERROR'])(new_wavelength)# this doesn't work
     
     #exptime - linear extrapolation is similar to averaged to bin widths
     new_exptime = interpolate.interp1d(sed_table['WAVELENGTH'], sed_table['EXPTIME'])(new_wavelength)
@@ -580,12 +591,14 @@ def sed_to_const_res(sed_table, res=1, start_cut=0, end_cut = 1e5):
     new_instrument = interpolate.interp1d(sed_table['WAVELENGTH'], sed_table['INSTRUMENT'], kind='previous')(new_wavelength)
     new_instrument = new_instrument.astype(int)
     
-    #dq and instrument loop
+    #error, dq and instrument loop
     for i in range(len(new_wavelength))[1:-1]:
         if new_dq[i] != new_dq[i+1]:
             new_dq[i] = new_dq[i] + new_dq[i+1]
         if new_instrument[i] != new_instrument[i+1]:
             new_instrument[i] = new_instrument[i] + new_instrument[i+1]
+        if new_instrument[i] in model_instruments:
+            new_error[i] = 0.0
     
     #normfac - linear extrapolation
     new_normfac = interpolate.interp1d(sed_table['WAVELENGTH'], sed_table['NORMFAC'])(new_wavelength)
