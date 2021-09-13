@@ -32,6 +32,9 @@ from scipy.optimize import leastsq
 from scipy.signal import argrelmax
 from scipy.integrate import quad
 import math as mt
+from specutils import Spectrum1D
+from specutils.manipulation import FluxConservingResampler
+from astropy.nddata import StdDevUncertainty
 cds.enable()
 
 
@@ -560,7 +563,21 @@ def sed_to_const_res(sed_table, res=1, start_cut=0, end_cut = 1e5):
             model_instruments.append(sed_table['INSTRUMENT'][i])
             sed_table['ERROR'][i]  = 0.1*sed_table['FLUX'][i]
     print(len(new_wavelength))
-    new_wavelength, new_flux, new_error = resample.bintogrid(sed_table['WAVELENGTH'], sed_table['FLUX'], newx=new_wavelength, unc = sed_table['ERROR'], drop_nans=False)
+    cut = 5700 #spectutils struggles with large numbers, do top of spectrum separatly.
+
+    #HELLO TOMORROW ME DEFINE W, F, E AS VALUELESS NP ARRAYS
+    
+    mask = (sed_table['WAVELENGTH'] < cut)
+    print('here', sed_table['WAVELENGTH'][mask])
+    input_spec = Spectrum1D(spectral_axis=((sed_table['WAVELENGTH'][mask]).value)*u.AA, flux=sed_table['FLUX'][mask]*u.Unit('erg cm-2 s-1 AA-1') , uncertainty= StdDevUncertainty(sed_table['ERROR'][mask])) 
+    fluxcon = FluxConservingResampler()
+    new_spec_fluxcon = fluxcon(input_spec, new_wavelength[new_wavelength < cut]*u.AA)
+                    
+    new_wavelength, new_flux = resample.bintogrid(sed_table['WAVELENGTH'][~mask], sed_table['FLUX'][~mask], newx=new_wavelength[new_wavelength >= cut])
+    
+    new_error = np.concatenate(((1/new_spec_fluxcon.uncertainty.array**0.5), np.zeros(len(new_wavelength))))
+    new_wavelength = np.concatenate((new_spec_fluxcon.spectral_axis.value), new_wavelength)
+    new_flux = np.concatenate((new_spec_fluxcon.flux.value, new_flux))
     print(len(new_wavelength))
 
 #     #flux
