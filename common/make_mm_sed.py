@@ -556,27 +556,30 @@ def sed_to_const_res(sed_table, res=1, start_cut=0, end_cut = 1e5):
     new_w1 = new_wavelength + (0.5 * res)
     
     #flux and error
+    #HELLO TOMORROW ME DEFINE W, F, E AS VALUELESS NP ARRAYS
+    w, f, e= np.array(sed_table['WAVELENGTH']), np.array(sed_table['FLUX']), np.array(sed_table['ERROR'])
+    
     #add an error array to models so that bintogrid works. Take it away later on
     model_instruments = []
-    for i in range(len(sed_table['WAVELENGTH'])):
-        if sed_table['ERROR'][i] == 0.0:
+    for i in range(len(w)):
+        if e[i] == 0.0:
             model_instruments.append(sed_table['INSTRUMENT'][i])
-            sed_table['ERROR'][i]  = 0.1*sed_table['FLUX'][i]
+            e[i]  = 0.1*f[i]
     print(len(new_wavelength))
     cut = 5700 #spectutils struggles with large numbers, do top of spectrum separatly.
 
-    #HELLO TOMORROW ME DEFINE W, F, E AS VALUELESS NP ARRAYS
+
+    mask = ( w < cut)
+#     print('here', e[mask])
     
-    mask = (sed_table['WAVELENGTH'] < cut)
-    print('here', sed_table['WAVELENGTH'][mask])
-    input_spec = Spectrum1D(spectral_axis=((sed_table['WAVELENGTH'][mask]).value)*u.AA, flux=sed_table['FLUX'][mask]*u.Unit('erg cm-2 s-1 AA-1') , uncertainty= StdDevUncertainty(sed_table['ERROR'][mask])) 
+    input_spec = Spectrum1D(spectral_axis=w[mask]*u.AA, flux=f[mask]*u.Unit('erg cm-2 s-1 AA-1') , uncertainty= StdDevUncertainty(e[mask]))
     fluxcon = FluxConservingResampler()
     new_spec_fluxcon = fluxcon(input_spec, new_wavelength[new_wavelength < cut]*u.AA)
                     
-    new_wavelength, new_flux = resample.bintogrid(sed_table['WAVELENGTH'][~mask], sed_table['FLUX'][~mask], newx=new_wavelength[new_wavelength >= cut])
+    new_wavelength, new_flux = resample.bintogrid(w[~mask], f[~mask], newx=new_wavelength[new_wavelength >= cut])
     
     new_error = np.concatenate(((1/new_spec_fluxcon.uncertainty.array**0.5), np.zeros(len(new_wavelength))))
-    new_wavelength = np.concatenate((new_spec_fluxcon.spectral_axis.value), new_wavelength)
+    new_wavelength = np.concatenate((new_spec_fluxcon.spectral_axis.value, new_wavelength))
     new_flux = np.concatenate((new_spec_fluxcon.flux.value, new_flux))
     print(len(new_wavelength))
 
@@ -614,7 +617,7 @@ def sed_to_const_res(sed_table, res=1, start_cut=0, end_cut = 1e5):
             new_dq[i] = new_dq[i] + new_dq[i+1]
         if new_instrument[i] != new_instrument[i+1]:
             new_instrument[i] = new_instrument[i] + new_instrument[i+1]
-        if new_instrument[i] in model_instruments:
+        if new_instrument[i] in instruments.getmodelcodes():
             new_error[i] = 0.0
     
     #normfac - linear extrapolation

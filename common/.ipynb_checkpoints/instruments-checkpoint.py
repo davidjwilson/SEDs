@@ -59,3 +59,14 @@ def gethlspname(inst_string):
     """
     tel, inst, grate = inst_string[0:3], inst_string[4:7], inst_string[8:]
     return HLSPtelescopes[tel], HLSPinstruments[inst], HLSPgratings[grate]
+
+def getmodelcodes():
+    """
+    Returns the list of codes that are models.
+    """
+    mod_codes = []
+    for inst in instvals:
+#         print(gethlspname(getinststr(inst))[0])
+        if gethlspname(getinststr(inst))[0] == 'MODEL': 
+                mod_codes.append(inst)
+    return mod_codes
