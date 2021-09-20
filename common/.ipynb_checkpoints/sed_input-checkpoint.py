@@ -53,7 +53,7 @@ stars = ['2MASS-J23062928-0502285',
         'LHS-2686',
         'GJ729',
         'GJ15A']
-
+# stars = ['L-980-5']
 # stars = ['GJ15A']
 # stars = ['2MASS-J23062928-0502285', 'GJ699']
 # stars = ['L-980-5']
@@ -177,7 +177,7 @@ for star in stars:
     sed_table_1A.meta['WAVEMAX'] = max(sed_table_1A['WAVELENGTH'])
     sed_table_1A.meta['FLUXMIN'] = min(sed_table_1A['FLUX'])
     sed_table_1A.meta['FLUXMAX'] = max(sed_table_1A['FLUX'])
-#     print(min(sed_table_1A['WAVELENGTH']), max(sed_table_1A['WAVELENGTH']),min(sed_table_1A['FLUX']), max(sed_table_1A['FLUX']))
+    print(min(sed_table_1A['WAVELENGTH']), max(sed_table_1A['WAVELENGTH']),min(sed_table_1A['FLUX']), max(sed_table_1A['FLUX']))
     make_fits.make_mm_fits(component_repo, sed_table_1A, instrument_list, version,sed_type='const')
     
 #     print (sed_table.dtype.names)

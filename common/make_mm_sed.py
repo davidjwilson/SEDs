@@ -612,13 +612,20 @@ def sed_to_const_res(sed_table, res=1, start_cut=0, end_cut = 1e5):
     new_instrument = new_instrument.astype(int)
     
     #error, dq and instrument loop
-    for i in range(len(new_wavelength))[1:-1]:
-        if new_dq[i] != new_dq[i+1]:
-            new_dq[i] = new_dq[i] + new_dq[i+1]
-        if new_instrument[i] != new_instrument[i+1]:
-            new_instrument[i] = new_instrument[i] + new_instrument[i+1]
+    for i in range(len(new_wavelength)):
+        if i < len(new_wavelength)-1:
+            if new_dq[i] != new_dq[i+1]:
+                new_dq[i] = new_dq[i] + new_dq[i+1]
+            if new_instrument[i] != new_instrument[i+1]:
+                new_instrument[i] = new_instrument[i] + new_instrument[i+1]
         if new_instrument[i] in instruments.getmodelcodes():
             new_error[i] = 0.0
+        if np.isnan(new_flux[i]) == True:
+            print('yes')
+            new_flux[i] = 0.0
+        if np.isnan(new_error[i]) == True:
+            new_error[i] = 0.0
+
     
     #normfac - linear extrapolation
     new_normfac = interpolate.interp1d(sed_table['WAVELENGTH'], sed_table['NORMFAC'])(new_wavelength)
