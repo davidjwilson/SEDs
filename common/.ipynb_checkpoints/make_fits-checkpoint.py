@@ -98,6 +98,7 @@ def make_instrument_extension(sed_table, instlist, version):
     
     
     hdu.header.append(('COMMENT',comment))
+    hdu.name = 'INSTLGND'
     return hdu
     
     
@@ -109,7 +110,7 @@ def make_data_ext(sed_table):
     """
     hdu = fits.table_to_hdu(Table(dict(sed_table)))
     hdu.header = data_header(hdu.header)
-    hdu.name = 'SPECTRUM' #Monday me see if this works.
+    hdu.name = 'SPECTRUM' # Monday Me check if this works, regards Friday Me
     return hdu
 
 

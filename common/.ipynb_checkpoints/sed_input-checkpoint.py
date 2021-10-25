@@ -41,20 +41,20 @@ sources = ['cos','stis', 'lya','phoenix', 'xmm', 'chandra', 'apec', 'euv']
 
 
 # stars= []# leaving out Trappist-1
-stars = ['2MASS-J23062928-0502285',
-        'L-980-5',
-        'GJ674', 
-        'GJ676A',
-        'GJ649',
-        'GJ699',
-        'GJ163',
-        'GJ849',
-        'GJ1132',
-        'LHS-2686',
-        'GJ729',
-        'GJ15A']
+# stars = ['2MASS-J23062928-0502285',
+#         'L-980-5',
+#         'GJ674', 
+#         'GJ676A',
+#         'GJ649',
+#         'GJ699',
+#         'GJ163',
+#         'GJ849',
+#         'GJ1132',
+#         'LHS-2686',
+#         'GJ729',
+#         'GJ15A']
 # stars = ['L-980-5']
-# stars = ['GJ15A']
+stars = ['GJ15A']
 # stars = ['2MASS-J23062928-0502285', 'GJ699']
 # stars = ['L-980-5']
 airglow =  [1207, 1222, 1300, 1310, 1353, 1356]
@@ -170,15 +170,15 @@ for star in stars:
     
 #     np.save('test_to_fits/ti_instlist', instrument_list)
 #     sed_table.write('test_to_fits/t1_table_test.ecsv', overwrite=True)
-#     make_fits.make_mm_fits(component_repo, sed_table, instrument_list, version,sed_type='var')
+    make_fits.make_mm_fits(component_repo, sed_table, instrument_list, version,sed_type='var')
     
-    sed_table_1A = sed.sed_to_const_res(sed_table)
-    sed_table_1A.meta['WAVEMIN'] = min(sed_table_1A['WAVELENGTH'])
-    sed_table_1A.meta['WAVEMAX'] = max(sed_table_1A['WAVELENGTH'])
-    sed_table_1A.meta['FLUXMIN'] = min(sed_table_1A['FLUX'])
-    sed_table_1A.meta['FLUXMAX'] = max(sed_table_1A['FLUX'])
-    print(min(sed_table_1A['WAVELENGTH']), max(sed_table_1A['WAVELENGTH']),min(sed_table_1A['FLUX']), max(sed_table_1A['FLUX']))
-    make_fits.make_mm_fits(component_repo, sed_table_1A, instrument_list, version,sed_type='const')
+#     sed_table_1A = sed.sed_to_const_res(sed_table)
+#     sed_table_1A.meta['WAVEMIN'] = min(sed_table_1A['WAVELENGTH'])
+#     sed_table_1A.meta['WAVEMAX'] = max(sed_table_1A['WAVELENGTH'])
+#     sed_table_1A.meta['FLUXMIN'] = min(sed_table_1A['FLUX'])
+#     sed_table_1A.meta['FLUXMAX'] = max(sed_table_1A['FLUX'])
+#     print(min(sed_table_1A['WAVELENGTH']), max(sed_table_1A['WAVELENGTH']),min(sed_table_1A['FLUX']), max(sed_table_1A['FLUX']))
+#     make_fits.make_mm_fits(component_repo, sed_table_1A, instrument_list, version,sed_type='const')
     
 #     print (sed_table.dtype.names)
     

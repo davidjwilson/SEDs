@@ -98,6 +98,7 @@ def make_instrument_extension(sed_table, instlist, version):
     
     
     hdu.header.append(('COMMENT',comment))
+    hdu.name = 'INSTLGND'
     return hdu
     
     
