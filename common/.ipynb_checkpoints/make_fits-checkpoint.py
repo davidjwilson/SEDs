@@ -110,7 +110,7 @@ def make_data_ext(sed_table):
     """
     hdu = fits.table_to_hdu(Table(dict(sed_table)))
     hdu.header = data_header(hdu.header)
-    hdu.name = 'SPECTRUM' # Monday Me check if this works, regards Friday Me
+    hdu.name = 'SPECTRUM' 
     return hdu
 
 

@@ -556,7 +556,6 @@ def sed_to_const_res(sed_table, res=1, start_cut=0, end_cut = 1e5):
     new_w1 = new_wavelength + (0.5 * res)
     
     #flux and error
-    #HELLO TOMORROW ME DEFINE W, F, E AS VALUELESS NP ARRAYS
     w, f, e= np.array(sed_table['WAVELENGTH']), np.array(sed_table['FLUX']), np.array(sed_table['ERROR'])
     
     #add an error array to models so that bintogrid works. Take it away later on
@@ -566,10 +565,10 @@ def sed_to_const_res(sed_table, res=1, start_cut=0, end_cut = 1e5):
             model_instruments.append(sed_table['INSTRUMENT'][i])
             e[i]  = 0.1*f[i]
     print(len(new_wavelength))
-    cut = 5700 #spectutils struggles with large numbers, do top of spectrum separatly.
-
-
-    mask = ( w < cut)
+#     cut = 5700 #spectutils struggles with large numbers, do top of spectrum separatly.
+    mask = sed_table['INSTRUMENT'] != 131072 #cut of the phoenix spectrum and do it in craftroom
+    cut = w[~mask][0] #where to cut the new wavelength grid
+#     mask = ( w < cut)
 #     print('here', e[mask])
     
     input_spec = Spectrum1D(spectral_axis=w[mask]*u.AA, flux=f[mask]*u.Unit('erg cm-2 s-1 AA-1') , uncertainty= StdDevUncertainty(e[mask]))
@@ -620,6 +619,9 @@ def sed_to_const_res(sed_table, res=1, start_cut=0, end_cut = 1e5):
                 new_instrument[i] = new_instrument[i] + new_instrument[i+1]
         if new_instrument[i] in instruments.getmodelcodes():
             new_error[i] = 0.0
+        if i > 0 and i < len(new_wavelength):
+            if new_instrument[i-1] in instruments.getmodelcodes() and if new_instrument[i+1] in instruments.getmodelcodes():
+                new_error[i] = 0 #fudge for when two instruments next to each other
         if np.isnan(new_flux[i]) == True:
             print('yes')
             new_flux[i] = 0.0
