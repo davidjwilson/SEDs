@@ -37,60 +37,6 @@ from specutils.manipulation import FluxConservingResampler
 from astropy.nddata import StdDevUncertainty
 cds.enable()
 
-
-def smear(w,f, R, w_sample=1):
-    '''
-    Smears a model spectrum with a gaussian kernel to the given resolution, R.
-    Adapeted from https://github.com/spacetelescope/pysynphot/issues/78
-
-    Parameters
-    -----------
-
-    w,f:  spectrum to smear
-
-    R: int
-        The resolution (dL/L) to smear to
-
-    w_sample: int
-        Oversampling factor for smoothing
-photometry
-    Returns
-    -----------
-
-    sp: PySynphot Source Spectrum
-        The smeared spectrum
-    '''
-
-    # Save original wavelength grid and units
-    w_grid = w
-    
-
-    # Generate logarithmic wavelength grid for smoothing
-    w_logmin = np.log10(np.nanmin(w_grid))
-    w_logmax = np.log10(np.nanmax(w_grid))
-    n_w = np.size(w_grid)*w_sample
-    w_log = np.logspace(w_logmin, w_logmax, num=n_w)
-
-    # Find stddev of Gaussian kernel for smoothing
-    R_grid = (w_log[1:-1]+w_log[0:-2])/(w_log[1:-1]-w_log[0:-2])/2
-    sigma = np.median(R_grid)/R
-    if sigma < 1:
-        sigma = 1
-
-    # Interpolate on logarithmic grid
-    f_log = np.interp(w_log, w_grid, f)
-
-    # Smooth convolving with Gaussian kernel
-    gauss = Gaussian1DKernel(stddev=sigma)
-    f_conv = convolve_fft(f_log, gauss)
-
-    # Interpolate back on original wavelength grid
-    f_sm = np.interp(w_grid, w_log, f_conv)
-
-    # Write smoothed spectrum back into Spectrum object
-    return w_grid, f_sm
-
-
 def mask_maker(x, pairs, include=True):
     """
     creates a mask for a spectrum that excudes between pairs from an array
@@ -212,8 +158,6 @@ def update_norm(ecsv_file, fits_file, normfac):
     h[0].header['NORMFAC'] = normfac
     h.writeto(fits_file, overwrite=True)
     h.close()
-    
-
 
 def fill_model(table, model_name): 
     """
@@ -222,21 +166,14 @@ def fill_model(table, model_name):
     table_length = len(table['WAVELENGTH'])
     fill_zeros = np.zeros(table_length)
     extra_names = ['ERROR','EXPTIME','DQ','EXPSTART','EXPEND']
-    #units = [*u.erg/u.s/u.cm**2/u.AA, *u.s,None, *cds.MJD, *cds.MJD]
     for i in range(len(extra_names)):
         table[extra_names[i]] = fill_zeros#*units[i]
-    #[table[name]=fill_zeros*unit for name, unit in zip(extra_names, units)]
-    
     inst_code = instruments.getinsti(model_name)
     inst_array = np.full(table_length, inst_code, dtype=int)
-    table['INSTRUMENT'] = inst_array 
-    
+    table['INSTRUMENT'] = inst_array    
     norm_array = np.full(len(table['WAVELENGTH']), table.meta['NORMFAC'], dtype =float)
     table['NORMFAC'] = norm_array
     return inst_code, table
-
-    #'ERROR':e_new*u.erg/u.s/u.cm**2/u.AA,'EXPTIME':exptime*u.s,'DQ':dq_new,'EXPSTART':start*cds.MJD,'EXPEND':end*cds.MJD keep incase units are an issue
-    
 
 def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, other_airglow, norm=False, error_cut=True, optical = False):
     """
@@ -253,17 +190,13 @@ def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, othe
         lya = Table.read(lya_path[0])
         instrument_code, lya = fill_model(lya, 'mod_lya_young')
         instrument_list.append(instrument_code)
-        lya = normfac_column(lya)
-        
+        lya = normfac_column(lya)        
     normfac = 1.0
     uses_e140m = False #if nether present fill in COS airglow with a polynomial
     used_g140l = False
     for grating in stis_gratings:
-        specpath = glob.glob('{}*{}_v*.ecsv'.format(component_repo, grating.lower()))
-        
+        specpath = glob.glob('{}*{}_v*.ecsv'.format(component_repo, grating.lower()))  
         if len(specpath) == 1:
-           
-                 
             data= Table.read(specpath[0])
             if data.meta['INSTRUME'] =='STIS':
                 instrument_code, data = hst_instrument_column(data)
@@ -320,59 +253,7 @@ def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, othe
     
 def residuals(scale, f, mf):
     return f - mf/scale
-    
-def phoenix_norm(component_repo, star_params, plot=False): 
-    """
-    find the normalisation factor between the phoenix model and the stis ccd (ccd_path)
-    """
-    norm = Table.read(glob.glob(component_repo+'*phx*.ecsv')[0])
-    radius, distance = star_params['radius'], star_params['distance']
-    normfac = ((radius.to(u.cm)/distance.to(u.cm))**2).value
-    print('PHOENIX NORMFAC =', normfac)
-    update_norm(glob.glob(component_repo+'*phx*.ecsv')[0], glob.glob(component_repo+'*phx*.fits')[0], normfac)
 
-    if plot:
-        plt.figure(star+'_scaled')
-        plt.plot(w_phx, f_phx*normfac)
-        #plt.step(w,f, where='mid')
-        plt.step(w1, f1, where='mid')
-        plt.xlabel('Wavelength (\AA)', size=20)
-        plt.ylabel('Flux (erg s$^{-1}$ cm$^{-2}$ \AA$^{-1}$)', size=20)
-        plt.xlim(2000, 6000)
-        plt.yscale('log')
-        plt.axvline(cut, c='r', ls='--')
-        plt.tight_layout()
-        plt.show()
-    return normfac
-
-def add_stis_optical(sed_table, component_repo, instrument_list):
-    """
-    Adds the G430L spectrum
-    """
-    g430l_path = glob.glob(component_repo+'*g430l*.ecsv')
-    if len(g430l_path) > 0:
-        g430l = Table.read(g430l_path[0])
-        instrument_code, g430l = hst_instrument_column(g430l)
-        instrument_list.append(instrument_code)
-        g430l = normfac_column(g430l)
-        g430l = g430l[g430l['WAVELENGTH'] > max(sed_table['WAVELENGTH'])]
-        sed_table = vstack([sed_table, g430l], metadata_conflicts = 'silent')
-    return sed_table, instrument_list
-
-def add_phx_spectrum(sed_table, component_repo, instrument_list):
-    """
-    Adds the scaled phoenix spectrum
-    """
-    phx_path = glob.glob(component_repo+'*phx*.ecsv')
-    if len(phx_path) > 0:
-        phx = Table.read(phx_path[0])
-        instrument_code, phx = fill_model(phx, 'mod_phx_-----')
-        instrument_list.append(instrument_code)
-        phx = normfac_column(phx)
-        phx = phx[phx['WAVELENGTH'] > max(sed_table['WAVELENGTH'])]
-        phx['FLUX'] *= phx.meta['NORMFAC']
-        sed_table = vstack([sed_table, phx], metadata_conflicts = 'silent')
-    return sed_table, instrument_list
         
 def add_phoenix_and_g430l(sed_table, component_repo, instrument_list, error_cut=True, scale=False):
     """
@@ -476,32 +357,6 @@ def add_euv(sed_table, component_repo, instrument_list, euv_gap, euv_type):
         sed_table = vstack([sed_table, euv], metadata_conflicts = 'silent')
     return sed_table, instrument_list
 
-def blackbody_fit(phx, Teff):
-    """Return a function that is a blackbody fit to the phoenix spectrum for the star. The fit is to the unnormalized
-    phoenix spectrum, so the fit function values must be multiplied by the appropriate normalization factor to match
-    the normalized spectrum. From PLs code"""
-
-    
-    # recursively identify relative maxima until there are fewer than N points
-    N = 10000
-    keep = np.arange(len(phx))
-    while len(keep) > N:
-        temp, = argrelmax(phx['FLUX'][keep])
-        keep = keep[temp]
-
-    efac = const.h * const.c / const.k_B / (Teff * u.K)
-    efac  = efac.to(u.angstrom).value
-    w = phx['WAVELENGTH']
-    w = w[keep]
-    planck_shape = 1.0/w**5/(np.exp(efac/w) - 1)
-    y = phx['FLUX'][keep]
-
-    Sfy = np.sum(planck_shape * y)
-    Sff = np.sum(planck_shape**2)
-
-    norm = Sfy/Sff
-
-    return lambda w: norm/w**5/(np.exp(efac/w) - 1)
 
 def bolo_integral(pan,phx,teff,uplim=np.inf, tail=False):
     """
@@ -533,10 +388,6 @@ def add_bolometric_flux(sed_table, component_repo, star_params):
     sed_table['BOLOFLUX'] = boloflux*(1/u.AA)
     sed_table['BOLOERR'] = boloerr*(1/u.AA)
     sed_table.meta['BOLOFLUX'] = bolo_int.value
-    #boloerr = np.zeros(len(sed_table['ERROR']))
-    #for i in range(len(boloerr)):
-     #   if sed_table['ERROR'][i] > 0.0:
-      #      boloerr[i] = sed_table['ERROR'][i]/boloflux
     return sed_table
 
 def sed_to_const_res(sed_table, res=1, start_cut=0, end_cut = 1e5):

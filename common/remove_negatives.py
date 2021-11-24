@@ -5,51 +5,96 @@ Removes negative values by iterativly replacing them with the sum of the nearest
 
 20211111
 """
+def wavelength_edges(w):
+    """
+    Calulates w0 and w1
+    """
+    diff = np.diff(w)
+    diff0 = np.concatenate((np.array([diff[0]]), diff)) #adds an extravalue to make len(diff) = len(w)
+    diff1 = np.concatenate((diff, np.array([diff[-1]]))) #adds an extravalue to make len(diff) = len(w)
+    w0 = w - diff0/2.
+    w1 = w + diff1/2.
+    return w0, w1
 
-def remove_negatives(w0, w1,w, f, e):
+
+
+def remove_negatives(w, f, e):
     """
-    Iteritavly removes negative values by combining them with adjecent bins
+    Iteratvly removes negative values by combining them with adjecent bins
     """
-    wo, fo, eo = w, f, e
-    nz = len(fo[fo <0.0])
-    if nz <= 1: 
-        wn, fn, en = w, f, e
-    while nz > 1: #hangs up on last negative value
-        fn = []
-        wn = []
-        en = []
-        inds = []
-        last = -2
-        for i in range(len(fo)):
-            if fo[i] <= 0.0 and i > last+2:
-                inds.append(i-1)
-                inds.append(i+1)
-                start, end = i-1, i+2
-                if i == 0: 
-                    start = i
-                if i == len(fo)-1:
-                    end = i+1
-                weights = 1 / (eo[start:end]**2)
-                fi = np.sum(f[start:end]*(w1[start:end]-w0[start:end])) / (w1[end-1] - w0[start])
-                ei = (np.sum(e[start:end]**2 * (w1[start:end]-w0[start:end])**2))**0.5                
-                fn.append(fi)
-                wn.append((w0[start]+w1[end-1])/2)
-                en.append(ei)
-                last = i
-            else:
-                wn.append(wo[i])
-                fn.append(fo[i])
-                en.append(eo[i])
-        inds = np.array(inds)
-        inds = np.unique(inds[(inds >= 0) & (inds < len(fo)-1)])
-        wn, fn, en = np.array(wn), np.array(fn), np.array(en)
-        wn, fn, en  = np.delete(wn, inds), np.delete(fn, inds), np.delete(en, inds)
+    wn, fn, en = w, f, e  
+    nz = len(fn[fn <0.0]) 
+    minfi = np.argmin(fn) # most negative point
+    fi = fn[minfi]   
+    while fi < 0:
+        w0, w1 = wavelength_edges(wn)
+        delinds = [] #indices to delete when we're done
+        start, end = minfi-1, minfi+2
+        if minfi == 0: 
+            start = minfi
+        elif minfi == len(fn)-1:
+            end = minfi +1
+        delinds.append(start)
+        delinds.append(end-1)
+        fi = np.sum(fn[start:end]*(w1[start:end]-w0[start:end])) / (w1[end-1] - w0[start])
+        ei = (np.sum(en[start:end]**2 * (w1[start:end]-w0[start:end])**2))**0.5                
+        wi = (w0[start]+w1[end-1])/2
+        wn[minfi], fn[minfi], en[minfi] = wi, fi, ei
+        delinds = np.array(delinds)
+        delinds = np.unique(delinds[(delinds != minfi) & (delinds >= 0) & (delinds < len(fn)-1)])
+        wn, fn, en  = np.delete(wn, delinds), np.delete(fn, delinds), np.delete(en, delinds)
+        minfi = np.argmin(fn) # most negative point
+        fi = fn[minfi]
         nz = len(fn[fn <0.0])
-        wo, fo, eo =wn, fn, en
+#         print(nz)
     return(wn[fn >0], fn[fn >0], en[fn >0])
 
-def fill_gaps():
+def get_line_groups():
     """
-    Fills any gaps larger than 1A
+    Collections of nearby strong emission lines
     """
+    line_groups = np.array([
+        [1174.935,1175.265,1175.592,1175.713,1175.713,1175.989,1176.372],
+        [1206.499],[1264.737,1265.001],[1238.821], [1242.804],[1294.543],
+        [1298.918],[1323.952],[1334.524],[1335.709],[1393.755],[1402.77],
+        [1548.201],[1550.772],
+        [1640.332,1640.345,1640.375,1640.391,1640.474,1640.49,1640.533],
+        [1657.268],
+        [1656.267,1656.926,1657.008,1657.379,1657.907,1658.122],
+        [1670.787],[2796.35], [2803.53]], dtype='object')
+    return line_groups
+
+def make_clean_spectrum(data, dv=0*u.km/u.s):
+    """
+    Divides a spectrum up into chunks around lines, removes negative values, then sticks them back together.
+    """
+    w, f, e = data['WAVELENGTH'], data['FLUX'], data['ERROR']
+    line_groups = get_line_groups
+    starts = np.array([group[-1]+0.5 for group in line_groups]) #start of each range to remove negatives from
+    starts = starts[(starts > w[0]) & (starts < w[-1])]
+    starts = dv.to(u.AA, equivalencies=u.doppler_optical(starts*u.AA)).value
+    starts = np.insert(starts, 0, w[0])
+    ends = np.array([group[0]-0.5 for group in line_groups]) #end of each range to remove negatives from
+    end  = dv.to(u.AA, equivalencies=u.doppler_optical(ends*u.AA)).value
+    ends = ends[(ends > w[0]) & (ends < w[-1])]
+    ends = np.append(ends, w[-1])
+    chunks = np.concatenate((starts, ends))
+    chunks = chunks[np.argsort(chunks)]
+    wnew, fnew, enew = np.array([], dtype=float), np.array([], dtype=float), np.array([], dtype=float)
+    for i in range(len(chunks)-1):
+        start, end = chunks[i], chunks[i+1]
+        mask = (w >= start) & (w <= end)
+        if len(w[mask]) > 0:
+            w0i, w1i, wi, fi, ei = w0[mask], w1[mask], w[mask], f[mask], e[mask]
+            wn, fn, en = remove_negatives(wi, fi, ei)
+            wnew= np.concatenate((wnew, wn))
+            fnew= np.concatenate((fnew, fn))
+            enew= np.concatenate((enew, en))
+    args = np.argsort(wnew)
+    wnew, fnew, enew = wnew[args], fnew[args], enew[args]
+    
+    
+
+
+
     
