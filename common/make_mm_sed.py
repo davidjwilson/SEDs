@@ -35,6 +35,7 @@ import math as mt
 from specutils import Spectrum1D
 from specutils.manipulation import FluxConservingResampler
 from astropy.nddata import StdDevUncertainty
+import remove_negatives as negs
 cds.enable()
 
 def mask_maker(x, pairs, include=True):
@@ -72,7 +73,7 @@ def normfac_column(table):
     table['NORMFAC'] = norm_array
     return table
 
-def add_cos(cospath, airglow):
+def add_cos(cospath, airglow, remove_negs=False):
     """
     cospath is a path to where the output from prepare_cos are stored. 
     Airglow is a list of airglow regions to mask out (inculding the Lyman alpha). Defined by visual inspection of each spectrum.
@@ -86,6 +87,9 @@ def add_cos(cospath, airglow):
     if len(g130m_path) == 1:
     
         g130m = Table.read(g130m_path[0])
+        if remove_negs:
+            print('removing negatives from {}'.format(g130m_path[0]))
+            g130m = negs.make_clean_spectrum(g130m)
         instrument_code, g130m = hst_instrument_column(g130m)
         g130m = normfac_column(g130m)
         instrument_list.append(instrument_code)
@@ -96,6 +100,9 @@ def add_cos(cospath, airglow):
     
     if len(g160m_path) > 0:
         g160m = Table.read(g160m_path[0])
+        if remove_negs:
+            print('removing negatives from {}'.format(g160m_path[0]))
+            g160m = negs.make_clean_spectrum(g160m)
         instrument_code, g160m = hst_instrument_column(g160m)
         instrument_list.append(instrument_code)
         g130m = normfac_column(g130m)
@@ -104,6 +111,9 @@ def add_cos(cospath, airglow):
       
     if len(g230l_path) > 0:
         g230l = Table.read(g230l_path[0])
+        if remove_negs:
+            print('removing negatives from {}'.format(g230l_path[0]))
+            g230l = negs.make_clean_spectrum(g230l)
         gap_edges = [2085.0, 2777.0]
         gap_mask = mask_maker(g230l['WAVELENGTH'], gap_edges)
         g230l = g230l[gap_mask] 
@@ -175,7 +185,7 @@ def fill_model(table, model_name):
     table['NORMFAC'] = norm_array
     return inst_code, table
 
-def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, other_airglow, norm=False, error_cut=True, optical = False):
+def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, other_airglow, norm=False, error_cut=True, optical = False, remove_negs=False):
     """
     Add the stis fuv spectra and lya model to the sed
     """
@@ -199,6 +209,9 @@ def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, othe
         if len(specpath) == 1:
             data= Table.read(specpath[0])
             if data.meta['INSTRUME'] =='STIS':
+                if remove_negs:
+                    print('removing negatives from {}'.format(specpath))
+                    data = negs.make_clean_spectrum(data)
                 instrument_code, data = hst_instrument_column(data)
                 instrument_list.append(instrument_code)
                 if grating != 'E140M':
@@ -358,22 +371,8 @@ def add_euv(sed_table, component_repo, instrument_list, euv_gap, euv_type):
     return sed_table, instrument_list
 
 
-def bolo_integral(pan,phx,teff,uplim=np.inf, tail=False):
-    """
-    Calculates the bolometric integral flux of the SED by adding a blackbody fit to the end of the sed
-    """
-    fit_unnormed = blackbody_fit(phx, teff)
-    normfac = pan[-1]['NORMFAC'] 
-    #Ibody = flux_integral(pan)[0]
-    Ibody = np.trapz(pan['FLUX'], pan['WAVELENGTH'])
-    if tail:
-        Itail = normfac*quad(fit_unnormed, pan['WAVELENGTH'][-1], uplim)[0]
-        I = Ibody + Itail
-    else:
-        I = Ibody
-#     print(I)
 
-    return I
+
 
 
 def add_bolometric_flux(sed_table, component_repo, star_params):
@@ -381,10 +380,10 @@ def add_bolometric_flux(sed_table, component_repo, star_params):
     Creates and adds the bolometric flux column to the sed
     """
     phx = Table.read(glob.glob(component_repo+'*phx*ecsv')[0])
-    bolo_int = bolo_integral(sed_table,phx,star_params['Teff'])*(u.erg/u.s/u.cm**2)
+    bolo_int = np.trapz(sed_table['FLUX'], sed_table['WAVELENGTH'])*(u.erg/u.s/u.cm**2)
+#     bolo_int = bolo_integral(sed_table,phx,star_params['Teff'])*(u.erg/u.s/u.cm**2)
     boloflux = (sed_table['FLUX']/bolo_int).value
     boloerr = (sed_table['ERROR']/bolo_int).value
-    
     sed_table['BOLOFLUX'] = boloflux*(1/u.AA)
     sed_table['BOLOERR'] = boloerr*(1/u.AA)
     sed_table.meta['BOLOFLUX'] = bolo_int.value
@@ -470,9 +469,9 @@ def sed_to_const_res(sed_table, res=1, start_cut=0, end_cut = 1e5):
                 new_instrument[i] = new_instrument[i] + new_instrument[i+1]
         if new_instrument[i] in instruments.getmodelcodes():
             new_error[i] = 0.0
-        if i > 0 and i < len(new_wavelength):
-            if new_instrument[i-1] in instruments.getmodelcodes() and if new_instrument[i+1] in instruments.getmodelcodes():
-                new_error[i] = 0 #fudge for when two instruments next to each other
+#         if i > 0 and i < len(new_wavelength):
+#             if new_instrument[i-1] in instruments.getmodelcodes() and if new_instrument[i+1] in instruments.getmodelcodes():
+#                 new_error[i] = 0 #fudge for when two instruments next to each other
         if np.isnan(new_flux[i]) == True:
             print('yes')
             new_flux[i] = 0.0

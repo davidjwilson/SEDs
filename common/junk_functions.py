@@ -128,3 +128,19 @@ def blackbody_fit(phx, Teff):
     norm = Sfy/Sff
 
     return lambda w: norm/w**5/(np.exp(efac/w) - 1)
+def bolo_integral(pan,phx,teff,uplim=np.inf, tail=False):
+    """
+    Calculates the bolometric integral flux of the SED by adding a blackbody fit to the end of the sed
+    """
+#     fit_unnormed = blackbody_fit(phx, teff)
+    normfac = pan[-1]['NORMFAC'] 
+    #Ibody = flux_integral(pan)[0]
+    Ibody = np.trapz(pan['FLUX'], pan['WAVELENGTH'])
+#     if tail:
+#         Itail = normfac*quad(fit_unnormed, pan['WAVELENGTH'][-1], uplim)[0]
+#         I = Ibody + Itail
+    else:
+        I = Ibody
+#     print(I)
+
+    return I

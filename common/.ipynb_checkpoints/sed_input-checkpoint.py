@@ -41,21 +41,21 @@ sources = ['cos','stis', 'lya','phoenix', 'xmm', 'chandra', 'apec', 'euv']
 
 
 # stars= []# leaving out Trappist-1
-# stars = ['2MASS-J23062928-0502285',
-#         'L-980-5',
-#         'GJ674', 
-#         'GJ676A',
-#         'GJ649',
-#         'GJ699',
-#         'GJ163',
-#         'GJ849',
-#         'GJ1132',
-#         'LHS-2686',
-#         'GJ729',
-#         'GJ15A']
+stars = ['2MASS-J23062928-0502285',
+        'L-980-5',
+        'GJ674', 
+        'GJ676A',
+        'GJ649',
+        'GJ699',
+        'GJ163',
+        'GJ849',
+        'GJ1132',
+        'LHS-2686',
+        'GJ729',
+        'GJ15A']
 # stars = ['L-980-5']
-stars = ['GJ15A']
-# stars = ['2MASS-J23062928-0502285', 'GJ699']
+# stars = ['GJ15A']
+# stars = ['GJ699']
 # stars = ['L-980-5']
 airglow =  [1207, 1222, 1300, 1310, 1353, 1356]
 cos_gratings = ['G130M', 'G160M']
@@ -130,18 +130,18 @@ for star in stars:
     
    #COS
     
-    sed_table, instrument_list = sed.add_cos(component_repo, airglow)
+    sed_table, instrument_list = sed.add_cos(component_repo, airglow, remove_negs=True)
     
     #STIS and Lya
     
-    sed_table, instrument_list = sed.add_stis_and_lya(sed_table, component_repo, airglow[0:2], instrument_list, airglow[2:], norm=False)
+    sed_table, instrument_list = sed.add_stis_and_lya(sed_table, component_repo, airglow[0:2], instrument_list, airglow[2:], norm=False, remove_negs=True)
     
     #PHOENIX
     
 
     
     sed_table, instrument_list = sed.add_phoenix_and_g430l(sed_table, component_repo, instrument_list, scale=False)
-    sed_table, instrument_list= sed.add_phx_spectrum(sed_table, component_repo, instrument_list)
+#     sed_table, instrument_list= sed.add_phx_spectrum(sed_table, component_repo, instrument_list)
     
     #X-ray
     
@@ -170,7 +170,7 @@ for star in stars:
     
 #     np.save('test_to_fits/ti_instlist', instrument_list)
 #     sed_table.write('test_to_fits/t1_table_test.ecsv', overwrite=True)
-    make_fits.make_mm_fits(component_repo, sed_table, instrument_list, version,sed_type='var')
+    make_fits.make_mm_fits(component_repo, sed_table, instrument_list, version,sed_type='adapt-var')
     
 #     sed_table_1A = sed.sed_to_const_res(sed_table)
 #     sed_table_1A.meta['WAVEMIN'] = min(sed_table_1A['WAVELENGTH'])
@@ -190,10 +190,10 @@ for star in stars:
 #     ascii.write(savdat, '{}/basic_seds/{}_basic_v1.ecsv'.format(path, star), format='ecsv', overwrite=True)
 
 #     plt.figure(star, figsize=(7, 5))
-# #     plt.plot(sed_table['WAVELENGTH'], sed_table['FLUX'], label=star)
-# #     plt.plot(sed_table['WAVELENGTH'], sed_table['ERROR'])
-#     plt.plot(sed_table_1A['WAVELENGTH'], sed_table_1A['FLUX'], label=star)
-#     plt.plot(sed_table_1A['WAVELENGTH'], sed_table_1A['ERROR'])
+#     plt.plot(sed_table['WAVELENGTH'], sed_table['FLUX'], label=star)
+#     plt.plot(sed_table['WAVELENGTH'], sed_table['ERROR'])
+# #     plt.plot(sed_table_1A['WAVELENGTH'], sed_table_1A['FLUX'], label=star)
+# #     plt.plot(sed_table_1A['WAVELENGTH'], sed_table_1A['ERROR'])
 
 # #     plt.ylim(lim)
 # #     plt.ylim(1e-17, 1e-13)
