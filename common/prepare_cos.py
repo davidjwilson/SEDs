@@ -35,7 +35,7 @@ def wavelength_edges(w):
     """
     diff = np.diff(w)
     diff0 = np.concatenate((np.array([diff[0]]), diff)) #adds an extravalue to make len(diff) = len(w)
-    diff0 = np.concatenate((diff, np.array([diff[-1]]))) #adds an extravalue to make len(diff) = len(w)
+    diff1 = np.concatenate((diff, np.array([diff[-1]]))) #adds an extravalue to make len(diff) = len(w)
     w0 = w - diff0/2.
     w1 = w + diff1/2.
     return w0, w1
