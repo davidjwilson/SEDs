@@ -40,9 +40,10 @@ def wavelength_edges(w):
     Calulates w0 and w1
     """
     diff = np.diff(w)
-    diff = np.concatenate((np.array([diff[0]]), diff)) #adds an extravalue to make len(diff) = len(w)
-    w0 = w - diff/2.
-    w1 = w + diff/2.
+    diff0 = np.concatenate((np.array([diff[0]]), diff)) #adds an extravalue to make len(diff) = len(w)
+    diff1 = np.concatenate((diff, np.array([diff[-1]]))) #adds an extravalue to make len(diff) = len(w)
+    w0 = w - diff0/2.
+    w1 = w + diff1/2.
     return w0, w1
 
 def euv_estimator(euv_inputs, save_path, star, save=True):
@@ -62,6 +63,7 @@ def euv_estimator(euv_inputs, save_path, star, save=True):
 
     #log(f/lya) = a + b *log(lya)
     f = a + b*np.log10(lya_1au)
+    
 
    # print('Total EUV=',np.sum(f))
     f = (lya_1au * 10**f)/bandwidth
@@ -70,7 +72,8 @@ def euv_estimator(euv_inputs, save_path, star, save=True):
 
     #extrapolate onto 1A grid
     wavelength = np.arange((w1[0])+0.5, (w2[-1])+0.5, 1.0)
-    flux = interpolate.interp1d(np.mean([w1, w2], axis=0), f, kind='nearest', bounds_error=False)(wavelength)
+    flux = interpolate.interp1d(np.mean([w1, w2], axis=0), f, kind='nearest', bounds_error=False, fill_value='extrapolate')(wavelength)
+ 
 
     if os.path.exists(save_path) == False:
         os.mkdir(save_path)
