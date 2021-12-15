@@ -20,12 +20,12 @@ from astropy.table import Table, vstack
 from astropy.io import ascii
 import astropy.units as u
 import make_mm_sed as sed
-import prepare_cos
-import prepare_stis
-import prepare_model
-import prepare_xmm
-import prepare_euv
-import prepare_chandra
+# import prepare_cos
+# import prepare_stis
+# import prepare_model
+# import prepare_xmm
+# import prepare_euv
+# import prepare_chandra
 from craftroom import resample
 from scipy.interpolate import interp1d
 import make_sed_files
@@ -42,21 +42,21 @@ sources = ['cos','stis', 'lya','phoenix', 'xmm', 'chandra', 'apec', 'euv']
 
 
 # stars= []# leaving out Trappist-1
-# stars = ['2MASS-J23062928-0502285',
-#         'L-980-5',
-#         'GJ674', 
-#         'GJ676A',
-#         'GJ649',
-#         'GJ699',
-#         'GJ163',
-#         'GJ849',
-#         'GJ1132',
-#         'LHS-2686',
-#         'GJ729',
-#         'GJ15A']
+stars = ['2MASS-J23062928-0502285',
+        'L-980-5',
+        'GJ674', 
+        'GJ676A',
+        'GJ649',
+        'GJ699',
+        'GJ163',
+        'GJ849',
+        'GJ1132',
+        'LHS-2686',
+        'GJ729',
+        'GJ15A']
 # stars = ['L-980-5']
-# stars = ['GJ15A']
-stars = ['GJ699']
+# stars = ['GJ729']
+# stars = ['GJ699']
 # stars = ['L-980-5']#'GJ676A']
 # stars = ['GJ1132']
 # stars = ['GJ15A', 'GJ163', 'GJ699', 'GJ849', 'LHS-2686']
@@ -138,25 +138,25 @@ for star in stars:
     
     #STIS and Lya
     
-    sed_table, instrument_list = sed.add_stis_and_lya(sed_table, component_repo, airglow[0:2], instrument_list, airglow[2:], norm=False, remove_negs=True)
+    sed_table, instrument_list = sed.add_stis_and_lya(sed_table, component_repo, airglow[0:2], instrument_list, airglow[2:], norm=False, remove_negs=True,to_1A=True)
     
     #PHOENIX
     
 
     
-    sed_table, instrument_list = sed.add_phoenix_and_g430l(sed_table, component_repo, instrument_list, scale=False)
+    sed_table, instrument_list = sed.add_phoenix_and_g430l(sed_table, component_repo, instrument_list, remove_negs=True, to_1A=True)
 #     sed_table, instrument_list= sed.add_phx_spectrum(sed_table, component_repo, instrument_list)
     
     #X-ray
     
-    sed_table, instrument_list, euv_gap = sed.add_xray_spectrum(sed_table, component_repo, instrument_list, which_xray(component_repo), add_apec = True, find_gap=True)
+    sed_table, instrument_list, euv_gap = sed.add_xray_spectrum(sed_table, component_repo, instrument_list, which_xray(component_repo), add_apec = True, find_gap=True,to_1A=True)
     
     #EUV
     euv_name = 'euv-scaling'
     if len(glob.glob('{}*dem*'.format(component_repo))) > 1:
         euv_name = 'dem'
     
-    sed_table, instrument_list = sed.add_euv(sed_table, component_repo, instrument_list, euv_gap, euv_name)
+    sed_table, instrument_list = sed.add_euv(sed_table, component_repo, instrument_list, euv_gap, euv_name,to_1A=True)
     
     sed_table.sort(['WAVELENGTH'])
 #     print(sed_table.meta)
@@ -171,10 +171,18 @@ for star in stars:
     sed_table.meta['FLUXMIN'] = min(sed_table['FLUX'])
     sed_table.meta['FLUXMAX'] = max(sed_table['FLUX'])
 
+    print('testing wavelength')
+    test_w = np.arange(min(sed_table['WAVELENGTH']), max(sed_table['WAVELENGTH'])+1, 1)
+    for wi in test_w:
+        if wi not in sed_table['WAVELENGTH']:
+            print (wi)
+    print('end of test')
+            
+                  
     
 #     np.save('test_to_fits/ti_instlist', instrument_list)
 #     sed_table.write('test_to_fits/t1_table_test.ecsv', overwrite=True)
-    # make_fits.make_mm_fits(component_repo, sed_table, instrument_list, version,sed_type='adapt-var')
+    make_fits.make_mm_fits(component_repo, sed_table, instrument_list, version,sed_type='adapt-const')
     
 #     sed_table_1A = sed.sed_to_const_res(sed_table)
 #     sed_table_1A.meta['WAVEMIN'] = min(sed_table_1A['WAVELENGTH'])
@@ -193,24 +201,24 @@ for star in stars:
 #     savdat = Table([sed_table['WAVELENGTH']*u.AA, sed_table['FLUX']*u.erg/u.s/u.cm**2/u.AA, sed_table['ERROR']*u.erg/u.s/u.cm**2/u.AA], names=['WAVELENGTH', 'FLUX', 'ERROR'])
 #     ascii.write(savdat, '{}/basic_seds/{}_basic_v1.ecsv'.format(path, star), format='ecsv', overwrite=True)
 
-    plt.figure(star, figsize=(7, 5))
-    plt.plot(sed_table['WAVELENGTH'], sed_table['FLUX'], label=star)
-    plt.plot(sed_table['WAVELENGTH'], sed_table['ERROR'])
-#     plt.plot(sed_table_1A['WAVELENGTH'], sed_table_1A['FLUX'], label=star)
-#     plt.plot(sed_table_1A['WAVELENGTH'], sed_table_1A['ERROR'])
+#     plt.figure(star, figsize=(7, 5))
+#     plt.step(sed_table['WAVELENGTH'], sed_table['FLUX'], label=star, where='mid')
+#     # plt.plot(sed_table['WAVELENGTH'], sed_table['ERROR'])
+# #     plt.plot(sed_table_1A['WAVELENGTH'], sed_table_1A['FLUX'], label=star)
+# #     plt.plot(sed_table_1A['WAVELENGTH'], sed_table_1A['ERROR'])
 
-#     plt.ylim(lim)
-#     plt.ylim(1e-17, 1e-13)
-#     plt.xlim(5, 3e5)
-    plt.yscale('log')
-    plt.xscale('log')
-    plt.xlabel('Wavelength (\AA)')
-    plt.ylabel('Flux (erg s$^{-1}$cm$^{-2}$\AA$^{-1}$)')
-#     plt.legend(loc=1)
-    plt.tight_layout()
-    #plt.savefig('plots/first_seds/{}_v{}_sed.png'.format(star, version))
-    plt.show()
-    plt.close()
+# #     plt.ylim(lim)
+# #     plt.ylim(1e-17, 1e-13)
+# #     plt.xlim(5, 3e5)
+#     plt.yscale('log')
+#     plt.xscale('log')
+#     plt.xlabel('Wavelength (\AA)')
+#     plt.ylabel('Flux (erg s$^{-1}$cm$^{-2}$\AA$^{-1}$)')
+# #     plt.legend(loc=1)
+#     plt.tight_layout()
+#     #plt.savefig('plots/first_seds/{}_v{}_sed.png'.format(star, version))
+#     plt.show()
+#     plt.close()
     
     
 

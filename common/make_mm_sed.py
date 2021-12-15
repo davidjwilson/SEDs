@@ -88,12 +88,13 @@ def add_cos(cospath, airglow, remove_negs=False, to_1A=False):
     if len(g130m_path) == 1:
     
         g130m = Table.read(g130m_path[0])
-        if to_1A:
-            print('binning {}'.format(g130m_path[0]))
-            g130m = bin1A.spectrum_to_const_res(g130m)
         if remove_negs:
             print('removing negatives from {}'.format(g130m_path[0]))
             g130m = negs.make_clean_spectrum(g130m)
+        if to_1A:
+            print('binning {}'.format(g130m_path[0]))
+            g130m = bin1A.spectrum_to_const_res(g130m)
+        
         instrument_code, g130m = hst_instrument_column(g130m)
         g130m = normfac_column(g130m)
         instrument_list.append(instrument_code)
@@ -107,6 +108,10 @@ def add_cos(cospath, airglow, remove_negs=False, to_1A=False):
         if remove_negs:
             print('removing negatives from {}'.format(g160m_path[0]))
             g160m = negs.make_clean_spectrum(g160m)
+        if to_1A:
+            print('binning {}'.format(g160m_path[0]))
+            g160m = bin1A.spectrum_to_const_res(g160m)
+       
         instrument_code, g160m = hst_instrument_column(g160m)
         instrument_list.append(instrument_code)
         g130m = normfac_column(g130m)
@@ -118,6 +123,10 @@ def add_cos(cospath, airglow, remove_negs=False, to_1A=False):
         if remove_negs:
             print('removing negatives from {}'.format(g230l_path[0]))
             g230l = negs.make_clean_spectrum(g230l)
+        if to_1A:
+            print('binning {}'.format(g230l_path[0]))
+            g230l = bin1A.spectrum_to_const_res(g230l)
+        
         gap_edges = [2085.0, 2777.0]
         gap_mask = mask_maker(g230l['WAVELENGTH'], gap_edges)
         g230l = g230l[gap_mask] 
@@ -189,7 +198,7 @@ def fill_model(table, model_name):
     table['NORMFAC'] = norm_array
     return inst_code, table
 
-def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, other_airglow, norm=False, error_cut=True, optical = False, remove_negs=False):
+def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, other_airglow, norm=False, error_cut=True, optical = False, remove_negs=False, to_1A=False):
     """
     Add the stis fuv spectra and lya model to the sed
     """
@@ -202,6 +211,9 @@ def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, othe
     lya_path = glob.glob(component_repo+'*lya*.ecsv')
     if len(lya_path) == 1:
         lya = Table.read(lya_path[0])
+        if to_1A:
+            print('binning {}'.format(lya_path[0]))
+            lya = bin1A.spectrum_to_const_res(lya)
         instrument_code, lya = fill_model(lya, 'mod_lya_young')
         instrument_list.append(instrument_code)
         lya = normfac_column(lya)        
@@ -216,6 +228,9 @@ def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, othe
                 if remove_negs:
                     print('removing negatives from {}'.format(specpath))
                     data = negs.make_clean_spectrum(data)
+                if to_1A:
+                    print('binning {}'.format(specpath))
+                    data = bin1A.spectrum_to_const_res(data)
                 instrument_code, data = hst_instrument_column(data)
                 instrument_list.append(instrument_code)
                 if grating != 'E140M':
@@ -258,7 +273,7 @@ def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, othe
                 
     if  uses_e140m == False and used_g140l == False:
         print('filling COS airglow with polynomials')
-        fill_cos_airglow(sed_table, other_airglow, instrument_list)
+        sed_table, instrument_list = fill_cos_airglow(sed_table, other_airglow, instrument_list)
 
                 
     return sed_table, instrument_list
@@ -272,7 +287,7 @@ def residuals(scale, f, mf):
     return f - mf/scale
 
         
-def add_phoenix_and_g430l(sed_table, component_repo, instrument_list, error_cut=True, scale=False):
+def add_phoenix_and_g430l(sed_table, component_repo, instrument_list, error_cut=True, scale=False, remove_negs=False, to_1A=False):
     """
     Adds both the phoenix model and the g430l spectrum, triming the g430l spectrum by and error cut and filling in any gap with the phoenix model. 
     """
@@ -280,6 +295,9 @@ def add_phoenix_and_g430l(sed_table, component_repo, instrument_list, error_cut=
     g430l_path = glob.glob(component_repo+'*g430l*.ecsv')
     if len(phx_path) == 1 and len(g430l_path) == 1:
         phx = Table.read(phx_path[0])
+        if to_1A:
+            print('binning {}'.format(phx_path[0]))
+            phx = bin1A.spectrum_to_const_res(phx)
         instrument_code, phx = fill_model(phx, 'mod_phx_-----')
         instrument_list.append(instrument_code)
         phx = normfac_column(phx)
@@ -287,6 +305,12 @@ def add_phoenix_and_g430l(sed_table, component_repo, instrument_list, error_cut=
         phx['FLUX'] *= phx.meta['NORMFAC']
         
         g430l = Table.read(g430l_path[0])
+        if remove_negs:
+            print('removing negatives from {}'.format(g430l_path[0]))
+            data = negs.make_clean_spectrum(g430l)
+        if to_1A:
+            print('binning {}'.format(g430l_path[0]))
+            g430l = bin1A.spectrum_to_const_res(g430l)
         instrument_code, g430l = hst_instrument_column(g430l)
         instrument_list.append(instrument_code)
         
@@ -295,7 +319,7 @@ def add_phoenix_and_g430l(sed_table, component_repo, instrument_list, error_cut=
             w, f, e = g430l['WAVELENGTH'], g430l['FLUX'], g430l['ERROR']
             sn = np.array([np.mean(f[i:i+bin_width]/e[i:i+bin_width]) for i in range(len(w[:-bin_width]))])
             start = w[:-bin_width][np.where(sn > 1)[0][0]]
-            mask = (w > start) & (f > 0)
+            mask = (w > start)
             g430l = g430l[mask]
      
         if scale: #scale g430l spectrum to the phoenix spectrum
@@ -310,6 +334,7 @@ def add_phoenix_and_g430l(sed_table, component_repo, instrument_list, error_cut=
         
         g430l = normfac_column(g430l)
         g430l = g430l[g430l['WAVELENGTH'] > max(sed_table['WAVELENGTH'])]
+        # print('optical gap', max(sed_table['WAVELENGTH']), min(g430l['WAVELENGTH']))
         phx = phx[(phx['WAVELENGTH'] > max(sed_table['WAVELENGTH'])) & (phx['WAVELENGTH'] < min(g430l['WAVELENGTH'])) | (phx['WAVELENGTH'] > max(g430l['WAVELENGTH']))]
 
         sed_table = vstack([sed_table, g430l], metadata_conflicts = 'silent')
@@ -319,7 +344,7 @@ def add_phoenix_and_g430l(sed_table, component_repo, instrument_list, error_cut=
         
     
     
-def add_xray_spectrum(sed_table, component_repo, instrument_list, scope, add_apec = True, find_gap=True):
+def add_xray_spectrum(sed_table, component_repo, instrument_list, scope, add_apec = True, find_gap=True, to_1A=False):
     """
     Adds either a Chandra or and XMM spectrum and an APEC model. Can also return the gap that the EUV/DEM will fit into.
     """
@@ -332,6 +357,9 @@ def add_xray_spectrum(sed_table, component_repo, instrument_list, scope, add_ape
     xray_end = 0
     if len(xray_path) > 0:
         xray = Table.read(xray_path[0])
+        if to_1A:
+            print('binning {}'.format(xray_path[0]))
+            xray = bin1A.spectrum_to_const_res(xray)
         error = xray['ERROR'] #retain error and exptime 
         exptime = xray['EXPTIME']
         instrument_code, xray = fill_model(xray, instrument_name)
@@ -346,6 +374,9 @@ def add_xray_spectrum(sed_table, component_repo, instrument_list, scope, add_ape
         if len(apec_path) > 0:
 #             print(apec_path)
             apec = Table.read(apec_path[0])
+            if to_1A:
+                print('binning {}'.format(apec_path[0]))
+                apec = bin1A.spectrum_to_const_res(apec)
             instrument_code, apec = fill_model(apec, 'mod_apc_-----')
             instrument_list.append(instrument_code)
             apec = normfac_column(apec)
@@ -357,7 +388,7 @@ def add_xray_spectrum(sed_table, component_repo, instrument_list, scope, add_ape
     else:
         return sed_table, instrument_list
     
-def add_euv(sed_table, component_repo, instrument_list, euv_gap, euv_type):
+def add_euv(sed_table, component_repo, instrument_list, euv_gap, euv_type, to_1A=False):
     """
     Add the euv portion of the spectrum, either a Linsky_14 estmation or a DEM.
     """
@@ -367,6 +398,9 @@ def add_euv(sed_table, component_repo, instrument_list, euv_gap, euv_type):
     euv_path = glob.glob(component_repo+'*'+euv_type+'*.ecsv')
     if len(euv_path) > 0:
         euv = Table.read(euv_path[0])
+        if to_1A:
+            print('binning {}'.format(euv_path[0]))
+            euv = bin1A.spectrum_to_const_res(euv)
         instrument_code, euv = fill_model(euv, instrument_name)
         instrument_list.append(instrument_code)
         euv = normfac_column(euv)
