@@ -89,7 +89,7 @@ def make_clean_spectrum(spectrum, dv=0*u.km/u.s):
  'EXPTIME',
  'DQ',
  'EXPSTART',
- 'EXPEND'
+ 'EXPEND' 
     """
     w, f, e = spectrum['WAVELENGTH'], spectrum['FLUX'], spectrum['ERROR']
     line_groups = get_line_groups()
@@ -139,7 +139,6 @@ def make_clean_spectrum(spectrum, dv=0*u.km/u.s):
     new_spectrum = Table([new_wavelength*u.AA, new_w0*u.AA, new_w1*u.AA, new_flux*u.erg/u.s/u.cm**2/u.AA, new_error*u.erg/u.s/u.cm**2/u.AA, new_exptime*u.s, 
                            new_dq,new_expstart*cds.MJD, new_expend*cds.MJD], names=names, meta= spectrum.meta)
     return new_spectrum
-
 
 
     

@@ -1,9 +1,9 @@
 """
-@verison: 5
+@verison: 4
 
 @author: David Wilson
 
-@date 20211215
+@date 20210910
 
 The big one. Draft here, will spin off to modules as required. 
 
@@ -36,7 +36,6 @@ from specutils import Spectrum1D
 from specutils.manipulation import FluxConservingResampler
 from astropy.nddata import StdDevUncertainty
 import remove_negatives as negs
-import bin_to_const as bin1A
 cds.enable()
 
 def mask_maker(x, pairs, include=True):
@@ -74,7 +73,7 @@ def normfac_column(table):
     table['NORMFAC'] = norm_array
     return table
 
-def add_cos(cospath, airglow, remove_negs=False, to_1A=False):
+def add_cos(cospath, airglow, remove_negs=False):
     """
     cospath is a path to where the output from prepare_cos are stored. 
     Airglow is a list of airglow regions to mask out (inculding the Lyman alpha). Defined by visual inspection of each spectrum.
@@ -88,9 +87,6 @@ def add_cos(cospath, airglow, remove_negs=False, to_1A=False):
     if len(g130m_path) == 1:
     
         g130m = Table.read(g130m_path[0])
-        if to_1A:
-            print('binning {}'.format(g130m_path[0]))
-            g130m = bin1A.spectrum_to_const_res(g130m)
         if remove_negs:
             print('removing negatives from {}'.format(g130m_path[0]))
             g130m = negs.make_clean_spectrum(g130m)

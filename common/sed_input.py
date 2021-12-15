@@ -55,11 +55,11 @@ sources = ['cos','stis', 'lya','phoenix', 'xmm', 'chandra', 'apec', 'euv']
 #         'GJ729',
 #         'GJ15A']
 # stars = ['L-980-5']
-stars = ['GJ15A']
-# stars = ['GJ699']
+# stars = ['GJ15A']
+stars = ['GJ699']
 # stars = ['L-980-5']#'GJ676A']
 # stars = ['GJ1132']
-stars = ['GJ15A', 'GJ163', 'GJ699', 'GJ849', 'LHS-2686']
+# stars = ['GJ15A', 'GJ163', 'GJ699', 'GJ849', 'LHS-2686']
 
 airglow =  [1207, 1222, 1300, 1310, 1353, 1356]
 cos_gratings = ['G130M', 'G160M']
@@ -134,7 +134,7 @@ for star in stars:
     
    #COS
     
-    sed_table, instrument_list = sed.add_cos(component_repo, airglow, remove_negs=True)
+    sed_table, instrument_list = sed.add_cos(component_repo, airglow, remove_negs=True, to_1A=True)
     
     #STIS and Lya
     
@@ -174,7 +174,7 @@ for star in stars:
     
 #     np.save('test_to_fits/ti_instlist', instrument_list)
 #     sed_table.write('test_to_fits/t1_table_test.ecsv', overwrite=True)
-    make_fits.make_mm_fits(component_repo, sed_table, instrument_list, version,sed_type='adapt-var')
+    # make_fits.make_mm_fits(component_repo, sed_table, instrument_list, version,sed_type='adapt-var')
     
 #     sed_table_1A = sed.sed_to_const_res(sed_table)
 #     sed_table_1A.meta['WAVEMIN'] = min(sed_table_1A['WAVELENGTH'])
