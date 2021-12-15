@@ -141,5 +141,4 @@ def make_clean_spectrum(spectrum, dv=0*u.km/u.s):
     return new_spectrum
 
 
-
     

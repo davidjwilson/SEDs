@@ -36,7 +36,8 @@ import instruments
 """File structure"""
 
 # path = '/media/david/5tb_storage1/muscles/' #data are in the external harddrive
-path = '/media/david/1tb_storage1/emergency_data/mega_muscles/' #backup hd
+# path = '/media/david/1tb_storage1/emergency_data/mega_muscles/' #backup hd
+path = '/media/david/2tb_ext_hd/hddata/mega_muscles/' #new hd
 sources = ['cos','stis', 'lya','phoenix', 'xmm', 'chandra', 'apec', 'euv']
 
 
@@ -54,10 +55,12 @@ sources = ['cos','stis', 'lya','phoenix', 'xmm', 'chandra', 'apec', 'euv']
 #         'GJ729',
 #         'GJ15A']
 # stars = ['L-980-5']
-# stars = ['GJ15A']
+stars = ['GJ15A']
 # stars = ['GJ699']
-stars = ['L-980-5']#'GJ676A']
+# stars = ['L-980-5']#'GJ676A']
 # stars = ['GJ1132']
+stars = ['GJ15A', 'GJ163', 'GJ699', 'GJ849', 'LHS-2686']
+
 airglow =  [1207, 1222, 1300, 1310, 1353, 1356]
 cos_gratings = ['G130M', 'G160M']
 stis_gratings = ['G140M','E140M','G140L', 'G230L', 'G230LB', 'G430L']
