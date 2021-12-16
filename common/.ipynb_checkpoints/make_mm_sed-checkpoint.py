@@ -39,6 +39,18 @@ import remove_negatives as negs
 import bin_to_const as bin1A
 cds.enable()
 
+
+def wavelength_edges(w):
+    """
+    Calulates w0 and w1
+    """
+    diff = np.diff(w)
+    diff0 = np.concatenate((np.array([diff[0]]), diff)) #adds an extravalue to make len(diff) = len(w)
+    diff1 = np.concatenate((diff, np.array([diff[-1]]))) #adds an extravalue to make len(diff) = len(w)
+    w0 = w - diff0/2.
+    w1 = w + diff1/2.
+    return w0, w1
+
 def mask_maker(x, pairs, include=True):
     """
     creates a mask for a spectrum that excudes between pairs from an array
@@ -114,7 +126,7 @@ def add_cos(cospath, airglow, remove_negs=False, to_1A=False):
        
         instrument_code, g160m = hst_instrument_column(g160m)
         instrument_list.append(instrument_code)
-        g130m = normfac_column(g130m)
+        g160m = normfac_column(g160m)
         g160m = g160m[g160m['WAVELENGTH'] > sed_table['WAVELENGTH'][-1]] #cut off everything covered by g130m
         sed_table = vstack([sed_table, g160m], metadata_conflicts = 'silent')
       
@@ -147,7 +159,7 @@ def fill_cos_airglow(sed_table, airglow, instrument_list, nuv = False):
     """
     if nuv:
         b, r = airglow[0], airglow[1]
-        gap_w = np.arange(b, r, 1)
+        gap_w = np.arange(b, r+1, 1)
         w, f = sed_table['WAVELENGTH'], sed_table['FLUX'] 
         mask = (w > 1700) & (w < 2790) | (w > 2805) & (w < 3150) #cut to nuv range and remove mg ii
         w, f = w[mask], f[mask]
@@ -164,7 +176,8 @@ def fill_cos_airglow(sed_table, airglow, instrument_list, nuv = False):
             gap_w = np.concatenate((gap_w, wi))
             fi = np.polyval((np.polyfit(sed_table['WAVELENGTH'][mask], sed_table['FLUX'][mask], 2)), wi)
             gap_f = np.concatenate((gap_f, fi))
-    fill_table = Table([gap_w*u.AA, gap_f*u.erg/u.s/u.cm**2/u.AA], names=['WAVELENGTH', 'FLUX'], meta={'NORMFAC': 1.0})
+    w0, w1 = wavelength_edges(gap_w)
+    fill_table = Table([gap_w*u.AA, w0*u.AA, w1*u.AA, gap_f*u.erg/u.s/u.cm**2/u.AA], names=['WAVELENGTH', 'WAVELENGTH0', 'WAVELENGTH1','FLUX'], meta={'NORMFAC': 1.0})
     instrument_code, fill_table = fill_model(fill_table, 'mod_gap_fill-')
     sed_table = vstack([sed_table, fill_table], metadata_conflicts = 'silent')
     instrument_list.append(instrument_code)
@@ -263,6 +276,7 @@ def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, othe
                 if norm:
                     data['FLUX'] = data['FLUX'] * normfac
                     data['ERROR'] = data['ERROR'] * normfac
+                data = normfac_column(data)
                 if grating == 'E140M':
                     sed_table = data
                 else:                

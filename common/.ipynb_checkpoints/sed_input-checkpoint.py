@@ -69,7 +69,7 @@ stis_gratings = ['G140M','E140M','G140L', 'G230L', 'G230LB', 'G430L']
 
 #print(lya_ecsvs)
 ###################
-version = 2
+version = 10
 ###################
 
 def make_repo(star, path, version):
@@ -123,66 +123,68 @@ star_params_path = '/home/david/work/muscles/SEDs/optical/stellar_parameters.csv
 star_params = Table.read(star_params_path)
 targets = np.array([table_name(star) for star in star_params['Target']])
 # print(targets)
+ 
+def make_mm_seds(path, star_params, stars, version, norm=False, remove_negs=False, to_1A=False, sed_type='adapt-var'): 
     
-for star in stars:
-    print(star)
-    repo, component_repo = make_repo(star, path, version)
-    print(component_repo)
-#     sort_components(star, path, sources, component_repo)
+    for star in stars:
+        print(star)
+        repo, component_repo = make_repo(star, path, version)
+        print(component_repo)
+    #     sort_components(star, path, sources, component_repo)
 
-    row = star_params[np.where(targets == star)[0][0]]
-    
-   #COS
-    
-    sed_table, instrument_list = sed.add_cos(component_repo, airglow, remove_negs=True, to_1A=True)
-    
-    #STIS and Lya
-    
-    sed_table, instrument_list = sed.add_stis_and_lya(sed_table, component_repo, airglow[0:2], instrument_list, airglow[2:], norm=False, remove_negs=True,to_1A=True)
-    
-    #PHOENIX
-    
+        row = star_params[np.where(targets == star)[0][0]]
 
-    
-    sed_table, instrument_list = sed.add_phoenix_and_g430l(sed_table, component_repo, instrument_list, remove_negs=True, to_1A=True)
-#     sed_table, instrument_list= sed.add_phx_spectrum(sed_table, component_repo, instrument_list)
-    
-    #X-ray
-    
-    sed_table, instrument_list, euv_gap = sed.add_xray_spectrum(sed_table, component_repo, instrument_list, which_xray(component_repo), add_apec = True, find_gap=True,to_1A=True)
-    
-    #EUV
-    euv_name = 'euv-scaling'
-    if len(glob.glob('{}*dem*'.format(component_repo))) > 1:
-        euv_name = 'dem'
-    
-    sed_table, instrument_list = sed.add_euv(sed_table, component_repo, instrument_list, euv_gap, euv_name,to_1A=True)
-    
-    sed_table.sort(['WAVELENGTH'])
-#     print(sed_table.meta)
-    #bolometric flux
-    sed_table = sed.add_bolometric_flux(sed_table, component_repo, row)
-    
-    print(sed_table['BOLOFLUX'][100])
-    
-    #final meta keys
-    sed_table.meta['WAVEMIN'] = min(sed_table['WAVELENGTH'])
-    sed_table.meta['WAVEMAX'] = max(sed_table['WAVELENGTH'])
-    sed_table.meta['FLUXMIN'] = min(sed_table['FLUX'])
-    sed_table.meta['FLUXMAX'] = max(sed_table['FLUX'])
+       #COS
 
-    print('testing wavelength')
-    test_w = np.arange(min(sed_table['WAVELENGTH']), max(sed_table['WAVELENGTH'])+1, 1)
-    for wi in test_w:
-        if wi not in sed_table['WAVELENGTH']:
-            print (wi)
-    print('end of test')
-            
-                  
-    
-#     np.save('test_to_fits/ti_instlist', instrument_list)
-#     sed_table.write('test_to_fits/t1_table_test.ecsv', overwrite=True)
-    make_fits.make_mm_fits(component_repo, sed_table, instrument_list, version,sed_type='adapt-const')
+        sed_table, instrument_list = sed.add_cos(component_repo, airglow, remove_negs=remove_negs, to_1A=to_1A)
+
+        #STIS and Lya
+
+        sed_table, instrument_list = sed.add_stis_and_lya(sed_table, component_repo, airglow[0:2], instrument_list, airglow[2:], norm=False, remove_negs=remove_negs,to_1A=to_1A)
+
+        #PHOENIX
+
+
+
+        sed_table, instrument_list = sed.add_phoenix_and_g430l(sed_table, component_repo, instrument_list, remove_negs=remove_negs, to_1A=to_1A)
+    #     sed_table, instrument_list= sed.add_phx_spectrum(sed_table, component_repo, instrument_list)
+
+        #X-ray
+
+        sed_table, instrument_list, euv_gap = sed.add_xray_spectrum(sed_table, component_repo, instrument_list, which_xray(component_repo), add_apec = True, find_gap=True,to_1A=to_1A)
+
+        #EUV
+        euv_name = 'euv-scaling'
+        if len(glob.glob('{}*dem*'.format(component_repo))) > 1:
+            euv_name = 'dem'
+
+        sed_table, instrument_list = sed.add_euv(sed_table, component_repo, instrument_list, euv_gap, euv_name,to_1A=to_1A)
+
+        sed_table.sort(['WAVELENGTH'])
+    #     print(sed_table.meta)
+        #bolometric flux
+        sed_table = sed.add_bolometric_flux(sed_table, component_repo, row)
+
+        print(sed_table['BOLOFLUX'][100])
+
+        #final meta keys
+        sed_table.meta['WAVEMIN'] = min(sed_table['WAVELENGTH'])
+        sed_table.meta['WAVEMAX'] = max(sed_table['WAVELENGTH'])
+        sed_table.meta['FLUXMIN'] = min(sed_table['FLUX'])
+        sed_table.meta['FLUXMAX'] = max(sed_table['FLUX'])
+
+        # print('testing wavelength')
+        # test_w = np.arange(min(sed_table['WAVELENGTH']), max(sed_table['WAVELENGTH'])+1, 1)
+        # for wi in test_w:
+        #     if wi not in sed_table['WAVELENGTH']:
+        #         print (wi)
+        # print('end of test')
+
+
+
+    #     np.save('test_to_fits/ti_instlist', instrument_list)
+    #     sed_table.write('test_to_fits/t1_table_test.ecsv', overwrite=True)
+        make_fits.make_mm_fits(component_repo, sed_table, instrument_list, version,sed_type=sed_type)
     
 #     sed_table_1A = sed.sed_to_const_res(sed_table)
 #     sed_table_1A.meta['WAVEMIN'] = min(sed_table_1A['WAVELENGTH'])
@@ -221,7 +223,10 @@ for star in stars:
 #     plt.close()
     
     
-
+make_mm_seds(path, star_params, stars, version, norm=False, remove_negs=False, to_1A=False, sed_type='var')
+make_mm_seds(path, star_params, stars, version, norm=False, remove_negs=True, to_1A=False, sed_type='adapt-var')
+make_mm_seds(path, star_params, stars, version, norm=False, remove_negs=True, to_1A=True, sed_type='adapt-const')
+make_mm_seds(path, star_params, stars, version, norm=False, remove_negs=False, to_1A=True, sed_type='const')
     
 
 print('Done')
