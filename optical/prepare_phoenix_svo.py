@@ -204,7 +204,7 @@ def make_phoenix_spectrum(star, save_path, repo, star_params, save_ecsv=False, p
         wavelength, flux = get_existing_model(star_params, repo)
     else:
         param_dicts = make_dicts(param_list)
-        print(param_dicts)
+        # print(param_dicts)
         spectra = get_models(repo,param_dicts)
         wavelength, flux = interp_flux(spectra, params_to_interp, star_params)
     wavelength, flux = wavelength[wavelength >= 501.0], flux[wavelength >= 501.0] #spectrum does funny things at lambda < 501
