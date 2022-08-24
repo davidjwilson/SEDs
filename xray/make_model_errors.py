@@ -44,7 +44,7 @@ while i < nsteps:
         yVals = Plot.model()
         wx = xVals*u.AA
         fx  = (yVals * (u.photon/u.s/u.cm**2/u.AA)).to(u.erg/u.s/u.cm**2/u.AA, equivalencies=u.spectral_density(wx))
-        plt.plot(wx, fx, alpha=0.01, c='C0')
+        plt.plot(wx, fx, alpha=0.01, c='C0', rasterized=True)
         fluxes.append(fx.value)
     i +=1
 plt.xlim(5, 50)
