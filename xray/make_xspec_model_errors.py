@@ -32,6 +32,7 @@ fluxes = []
 plt.figure('models')
 
 while i < nsteps:
+    print(i)
     if kt1s[i] > 0 and kt2s[i] >0 and norm1s[i] > 0 and norm2s[i] > 0: #some small amount go below 0
         mod = Model('phabs*(apec+apec)', setPars={1:1e-3, 2:kt1s[i], 3:0.4, 5:norm1s[i], 6:kt2s[i], 7:0.4, 9:norm2s[i]})
         Plot.xAxis = "angstrom"
