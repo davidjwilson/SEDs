@@ -12,10 +12,10 @@ from  xspec import *
 #trappist-1
 
 
-kts = np.array([0.2, 0.4])
-ktes = np.array([0, 0])
-norms = np.array([0.35, 0.07])*1e-4
-normes = np.array([0.2,0.02])*1e-4
+# kts = np.array([0.2, 0.4])
+# ktes = np.array([0, 0])
+# norms = np.array([0.35, 0.07])*1e-4
+# normes = np.array([0.2,0.02])*1e-4
 
 
 
