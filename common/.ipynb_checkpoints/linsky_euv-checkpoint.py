@@ -52,8 +52,10 @@ def euv_estimator(lya, distance, star='', save=False, plot=False, spt='M'):
     f *= distance_conversion
 
     #extrapolate onto 1A grid
-    wav = np.arange((w1[0])+0.5, (w2[-1])+0.5, 1.0)
-    flux = interpolate.interp1d(np.mean([w1, w2], axis=0), f, kind='nearest', bounds_error=False)(wav)
+    wav = np.arange((w1[0]), (w2[-1])+0.5, 1.0)
+    input_w = np.concatenate(([w1[0]], np.mean([w1, w2], axis=0), [w2[-1]])) #adding values to each end to make the interpolation work
+    input_f = np.concatenate(([f[0]], f, [f[-1]]))
+    flux = interpolate.interp1d(input_w, input_f, kind='nearest', bounds_error=False)(wav)
     #flux = []
     #for w1i, w2i, fi in zip(w1, w2,f):
      #   for wi in wav:

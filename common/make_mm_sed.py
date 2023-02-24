@@ -201,7 +201,7 @@ def fill_model(table, model_name, hdr):
     """
     table_length = len(table['WAVELENGTH'])
     fill_zeros = np.zeros(table_length)
-    extra_names = ['ERROR','EXPTIME','DQ','EXPSTART','EXPEND']
+    extra_names = ['EXPTIME','DQ','EXPSTART','EXPEND']
     for i in range(len(extra_names)):
         table[extra_names[i]] = fill_zeros#*units[i]
     inst_code = instruments.getinsti(model_name)
@@ -321,6 +321,7 @@ def add_phoenix_and_g430l(sed_table, component_repo, instrument_list, error_cut=
         phx = normfac_column(phx, hdr)
        # print(phx.meta['NORMFAC'])
         phx['FLUX'] *= hdr['NORMFAC']
+        phx['ERROR'] *= hdr['NORMFAC']
         
         g430l = Table(fits.getdata(g430l_path[0], 1))
         hdr = fits.getheader(g430l_path[0], 0)
@@ -440,13 +441,13 @@ def add_bolometric_flux(sed_table, component_repo, star_params):
     Creates and adds the bolometric flux column to the sed
     """
     # phx = Table(fits.getdata(glob.glob(component_repo+'*phx*fits')[0], 1))
-    print(sed_table['WAVELENGTH'][100])
+    # print(sed_table['WAVELENGTH'][100])
     bolo_int = np.trapz(sed_table['FLUX'], sed_table['WAVELENGTH'])*(u.erg/u.s/u.cm**2)
-    print(bolo_int)
+    # print(bolo_int)
 #     bolo_int = bolo_integral(sed_table,phx,star_params['Teff'])*(u.erg/u.s/u.cm**2)
     boloflux = (sed_table['FLUX']/bolo_int).value
-    print(sed_table['FLUX'][100])
-    print(boloflux)
+    # print(sed_table['FLUX'][100])
+    # print(boloflux)
     boloerr = (sed_table['ERROR']/bolo_int).value
     sed_table['BOLOFLUX'] = boloflux*(1/u.AA)
     sed_table['BOLOERR'] = boloerr*(1/u.AA)

@@ -165,16 +165,16 @@ def make_mm_seds(path, star_params, stars, version, norm=False, remove_negs=Fals
         print(len(sed_table['FLUX'][np.isnan(sed_table['FLUX'])==True]))
         print(len(sed_table['FLUX'][np.isnan(sed_table['WAVELENGTH'])==True]))
         sed_table.sort(['WAVELENGTH'])
-        plt.figure()
-        plt.plot(sed_table['WAVELENGTH'], sed_table['FLUX'])
-        plt.yscale('log')
-        plt.xscale('log')
-        plt.show()
-    #     print(sed_table.meta)
+    #     plt.figure()
+    #     plt.plot(sed_table['WAVELENGTH'], sed_table['FLUX'])
+    #     plt.yscale('log')
+    #     plt.xscale('log')
+    #     plt.show()
+    # #     print(sed_table.meta)
         #bolometric flux
         sed_table = sed.add_bolometric_flux(sed_table, component_repo, row)
 
-        print('boloflux:', sed_table['BOLOFLUX'][100])
+        # print('boloflux:', sed_table['BOLOFLUX'][100])
 
         #final meta keys
         sed_table.meta['WAVEMIN'] = min(sed_table['WAVELENGTH'])
