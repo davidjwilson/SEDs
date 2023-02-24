@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import glob
 import astropy.io.fits as fits
 import os
-from scipy.io.idl import readsav
+from scipy.io import readsav
 from astropy.table import Table, vstack
 from astropy.io import ascii
 import astropy.units as u
@@ -37,7 +37,7 @@ import instruments
 
 # path = '/media/david/5tb_storage1/muscles/' #data are in the external harddrive
 # path = '/media/david/1tb_storage1/emergency_data/mega_muscles/' #backup hd
-path = '/media/david/2tb_ext_hd/hddata/mega_muscles/' #new hd
+path = '/media/david/2tb_ext_hd/hddata/mega_muscles/v24_hlsp/' #new hd
 sources = ['cos','stis', 'lya','phoenix', 'xmm', 'chandra', 'apec', 'euv']
 
 
@@ -69,15 +69,18 @@ stis_gratings = ['G140M','E140M','G140L', 'G230L', 'G230LB', 'G430L']
 
 #print(lya_ecsvs)
 ###################
-version = 10
+version = 24
 ###################
 
 def make_repo(star, path, version):
     """
     Makes directories to store the produced files
     """
-    repo = '{}hlsp/{}/'.format(path, star)
-    component_repo = '{}components_v1/'.format(repo)
+    if star == '2MASS-J23062928-0502285':
+        star = 'TRAPPIST-1'
+    repo = '{}{}/'.format(path, star)
+    # component_repo = '{}components_v1/'.format(repo)
+    component_repo = repo
     if os.path.exists(repo) == False: #makes the parent directory then puts another directory in it for the components
         os.mkdir(repo)
     if os.path.exists(component_repo) == False:
@@ -139,7 +142,7 @@ def make_mm_seds(path, star_params, stars, version, norm=False, remove_negs=Fals
         sed_table, instrument_list = sed.add_cos(component_repo, airglow, remove_negs=remove_negs, to_1A=to_1A)
 
         #STIS and Lya
-
+        # print(sed_table)
         sed_table, instrument_list = sed.add_stis_and_lya(sed_table, component_repo, airglow[0:2], instrument_list, airglow[2:], norm=False, remove_negs=remove_negs,to_1A=to_1A)
 
         #PHOENIX
@@ -159,13 +162,19 @@ def make_mm_seds(path, star_params, stars, version, norm=False, remove_negs=Fals
             euv_name = 'dem'
 
         sed_table, instrument_list = sed.add_euv(sed_table, component_repo, instrument_list, euv_gap, euv_name,to_1A=to_1A)
-
+        print(len(sed_table['FLUX'][np.isnan(sed_table['FLUX'])==True]))
+        print(len(sed_table['FLUX'][np.isnan(sed_table['WAVELENGTH'])==True]))
         sed_table.sort(['WAVELENGTH'])
+        plt.figure()
+        plt.plot(sed_table['WAVELENGTH'], sed_table['FLUX'])
+        plt.yscale('log')
+        plt.xscale('log')
+        plt.show()
     #     print(sed_table.meta)
         #bolometric flux
         sed_table = sed.add_bolometric_flux(sed_table, component_repo, row)
 
-        print(sed_table['BOLOFLUX'][100])
+        print('boloflux:', sed_table['BOLOFLUX'][100])
 
         #final meta keys
         sed_table.meta['WAVEMIN'] = min(sed_table['WAVELENGTH'])

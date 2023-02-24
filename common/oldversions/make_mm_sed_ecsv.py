@@ -1,12 +1,11 @@
 """
-@verison: 6
+@verison: 5
 
 @author: David Wilson
 
-@date 20230223
+@date 20211215
 
 The big one. Draft here, will spin off to modules as required. 
-v6 updating to use fits files, not ecsv
 
 """
 
@@ -64,11 +63,11 @@ def mask_maker(x, pairs, include=True):
     else:
         return C
 
-def hst_instrument_column(table, hdr):
+def hst_instrument_column(table):
     """
     Builds an instrument column and adds it to data. For HST data.
     """
-    telescope, instrument, grating = hdr['TELESCOP'], hdr['INSTRUME'], hdr['GRATING']
+    telescope, instrument, grating = table.meta['TELESCOP'], table.meta['INSTRUME'], table.meta['GRATING']
     if instrument == 'STIS':
         instrument = 'sts'
     inst_string = '%s_%s_%s' % (telescope.lower(), instrument.lower(), grating.lower())
@@ -77,11 +76,11 @@ def hst_instrument_column(table, hdr):
     table['INSTRUMENT'] = inst_array
     return inst_code, table
 
-def normfac_column(table, hdr):
+def normfac_column(table):
     """
     Adds a normfac column to data
     """
-    norm_array = np.full(len(table['WAVELENGTH']), hdr['NORMFAC'], dtype =float)
+    norm_array = np.full(len(table['WAVELENGTH']), table.meta['NORMFAC'], dtype =float)
     table['NORMFAC'] = norm_array
     return table
 
@@ -92,14 +91,13 @@ def add_cos(cospath, airglow, remove_negs=False, to_1A=False):
     """
     
     instrument_list = [] #starts a running count of all instruments
-    g130m_path = glob.glob(cospath+'*g130m*.fits')
-    g160m_path = glob.glob(cospath+'*g160m*.fits')
-    g230l_path = glob.glob(cospath+'*cos*g230l*.fits')
+    g130m_path = glob.glob(cospath+'*g130m*.ecsv')
+    g160m_path = glob.glob(cospath+'*g160m*.ecsv')
+    g230l_path = glob.glob(cospath+'*cos*g230l*.ecsv')
     
     if len(g130m_path) == 1:
     
-        g130m = Table(fits.getdata(g130m_path[0], 1))
-        hdr = fits.getheader(g130m_path[0], 0)
+        g130m = Table.read(g130m_path[0])
         if remove_negs:
             print('removing negatives from {}'.format(g130m_path[0]))
             g130m = negs.make_clean_spectrum(g130m)
@@ -107,18 +105,16 @@ def add_cos(cospath, airglow, remove_negs=False, to_1A=False):
             print('binning {}'.format(g130m_path[0]))
             g130m = bin1A.spectrum_to_const_res(g130m)
         
-        instrument_code, g130m = hst_instrument_column(g130m, hdr)
-        g130m = normfac_column(g130m, hdr)
+        instrument_code, g130m = hst_instrument_column(g130m)
+        g130m = normfac_column(g130m)
         instrument_list.append(instrument_code)
         airglow_mask = mask_maker(g130m ['WAVELENGTH'], airglow)
         sed_table = g130m[airglow_mask] #start the full SED table
-        sed_table.meta = dict(hdr)
     else: 
         sed_table = {'Message':'nothing here yet, this star uses E140M'}
     
     if len(g160m_path) > 0:
-        g160m = Table(fits.getdata(g160m_path[0], 1))
-        hdr = fits.getheader(g160m_path[0], 0)
+        g160m = Table.read(g160m_path[0])
         if remove_negs:
             print('removing negatives from {}'.format(g160m_path[0]))
             g160m = negs.make_clean_spectrum(g160m)
@@ -126,15 +122,14 @@ def add_cos(cospath, airglow, remove_negs=False, to_1A=False):
             print('binning {}'.format(g160m_path[0]))
             g160m = bin1A.spectrum_to_const_res(g160m)
        
-        instrument_code, g160m = hst_instrument_column(g160m,  hdr)
+        instrument_code, g160m = hst_instrument_column(g160m)
         instrument_list.append(instrument_code)
-        g160m = normfac_column(g160m, hdr)
+        g160m = normfac_column(g160m)
         g160m = g160m[g160m['WAVELENGTH'] > sed_table['WAVELENGTH'][-1]] #cut off everything covered by g130m
         sed_table = vstack([sed_table, g160m], metadata_conflicts = 'silent')
       
     if len(g230l_path) > 0:
-        g230l = Table(fits.getdata(g230l_path[0], 1))
-        hdr = fits.getheader(g230l_path[0], 0)
+        g230l = Table.read(g230l_path[0])
         if remove_negs:
             print('removing negatives from {}'.format(g230l_path[0]))
             g230l = negs.make_clean_spectrum(g230l)
@@ -145,18 +140,18 @@ def add_cos(cospath, airglow, remove_negs=False, to_1A=False):
         gap_edges = [2085.0, 2777.0]
         gap_mask = mask_maker(g230l['WAVELENGTH'], gap_edges)
         g230l = g230l[gap_mask] 
-        instrument_code, g230l = hst_instrument_column(g230l, hdr)
+        instrument_code, g230l = hst_instrument_column(g230l)
         instrument_list.append(instrument_code)
-        g230l = normfac_column(g230l, hdr)
+        g230l = normfac_column(g230l)
         g230l = g230l[g230l['WAVELENGTH'] > max(sed_table['WAVELENGTH'])]
         sed_table = vstack([sed_table, g230l], metadata_conflicts = 'silent')
-        sed_table, instrument_list = fill_cos_airglow(sed_table, gap_edges, instrument_list, hdr, nuv=True)
+        sed_table, instrument_list = fill_cos_airglow(sed_table, gap_edges, instrument_list, nuv=True)
 
         
     
     return sed_table, instrument_list #sed table is the main thing.
 
-def fill_cos_airglow(sed_table, airglow, instrument_list, hdr, nuv = False):
+def fill_cos_airglow(sed_table, airglow, instrument_list, nuv = False):
     """
     Fills in the gaps in cos airglow if stis spectra are unavailable. Fits to specta 5A on either side. If nuv =True then it instead fills the gap in the NUV spectrum, which requires different treatment
     """
@@ -181,21 +176,24 @@ def fill_cos_airglow(sed_table, airglow, instrument_list, hdr, nuv = False):
             gap_f = np.concatenate((gap_f, fi))
     w0, w1 = wavelength_edges(gap_w)
     fill_table = Table([gap_w*u.AA, w0*u.AA, w1*u.AA, gap_f*u.erg/u.s/u.cm**2/u.AA], names=['WAVELENGTH', 'WAVELENGTH0', 'WAVELENGTH1','FLUX'], meta={'NORMFAC': 1.0})
-    instrument_code, fill_table = fill_model(fill_table, 'mod_gap_fill-', hdr)
+    instrument_code, fill_table = fill_model(fill_table, 'mod_gap_fill-')
     sed_table = vstack([sed_table, fill_table], metadata_conflicts = 'silent')
     instrument_list.append(instrument_code)
     return sed_table, instrument_list
     
-def update_norm(fits_file, normfac):
+def update_norm(ecsv_file, fits_file, normfac):
     """
     Updates the normalisation factors in stis ecsv and fits files
     """
+    t = Table.read(ecsv_file)
+    t.meta['NORMFAC'] = normfac
+    t.write(ecsv_file, overwrite=True)
     h = fits.open(fits_file)
     h[0].header['NORMFAC'] = normfac
     h.writeto(fits_file, overwrite=True)
     h.close()
 
-def fill_model(table, model_name, hdr): 
+def fill_model(table, model_name): 
     """
     Fills out the missing columns from a model ecsv
     """
@@ -207,7 +205,7 @@ def fill_model(table, model_name, hdr):
     inst_code = instruments.getinsti(model_name)
     inst_array = np.full(table_length, inst_code, dtype=int)
     table['INSTRUMENT'] = inst_array    
-    norm_array = np.full(len(table['WAVELENGTH']), hdr['NORMFAC'], dtype =float)
+    norm_array = np.full(len(table['WAVELENGTH']), table.meta['NORMFAC'], dtype =float)
     table['NORMFAC'] = norm_array
     return inst_code, table
 
@@ -221,37 +219,35 @@ def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, othe
    # g140l_path = glob.glob(component_repo+'*g140l*.ecsv')
    # g140m_path = glob.glob(component_repo+'*g140m*.ecsv')
     lya = dict(WAVELENGTH = [10000, 0]) #filler for the star that doesn't have a lya measurement 
-    lya_path = glob.glob(component_repo+'*lya*.fits')
+    lya_path = glob.glob(component_repo+'*lya*.ecsv')
     if len(lya_path) == 1:
-        lya = Table(fits.getdata(lya_path[0], 1))
-        hdr = fits.getheader(lya_path[0], 0)
+        lya = Table.read(lya_path[0])
         if to_1A:
             print('binning {}'.format(lya_path[0]))
             lya = bin1A.spectrum_to_const_res(lya)
-        instrument_code, lya = fill_model(lya, 'mod_lya_young', hdr)
+        instrument_code, lya = fill_model(lya, 'mod_lya_young')
         instrument_list.append(instrument_code)
-        lya = normfac_column(lya, hdr)        
+        lya = normfac_column(lya)        
     normfac = 1.0
     uses_e140m = False #if nether present fill in COS airglow with a polynomial
     used_g140l = False
     for grating in stis_gratings:
-        specpath = glob.glob('{}*{}_v*.fits'.format(component_repo, grating.lower()))  
+        specpath = glob.glob('{}*{}_v*.ecsv'.format(component_repo, grating.lower()))  
         if len(specpath) == 1:
-            data= Table(fits.getdata(specpath[0], 1))
-            hdr = fits.getheader(specpath[0], 0)
-            if hdr['INSTRUME'] =='STIS':
+            data= Table.read(specpath[0])
+            if data.meta['INSTRUME'] =='STIS':
                 if remove_negs:
                     print('removing negatives from {}'.format(specpath))
                     data = negs.make_clean_spectrum(data)
                 if to_1A:
                     print('binning {}'.format(specpath))
                     data = bin1A.spectrum_to_const_res(data)
-                instrument_code, data = hst_instrument_column(data,  hdr)
+                instrument_code, data = hst_instrument_column(data)
                 instrument_list.append(instrument_code)
                 if grating != 'E140M':
                     if norm:
                         normfac = find_normfac(sed_table, specpath[0], np.concatenate((lya_range, other_airglow)), normfac) 
-                    update_norm(specpath[0], normfac)
+                    update_norm(specpath[0], '{}.fits'.format(specpath[0][:-5]), normfac)
                 if grating == 'E140M':
                     uses_e140m = True
                     mask = (data['WAVELENGTH'] > 1160) & (data['WAVELENGTH'] < lya['WAVELENGTH'][0]) | (data['WAVELENGTH'] > lya['WAVELENGTH'][-1]) 
@@ -278,10 +274,9 @@ def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, othe
                 if norm:
                     data['FLUX'] = data['FLUX'] * normfac
                     data['ERROR'] = data['ERROR'] * normfac
-                data = normfac_column(data, hdr)
+                data = normfac_column(data)
                 if grating == 'E140M':
                     sed_table = data
-                    sed_table.meta = dict(hdr)
                 else:                
                     sed_table = vstack([sed_table, data], metadata_conflicts = 'silent')
                 if len(lya_path) == 1:    #lya needs to be added after e140m  
@@ -290,7 +285,7 @@ def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, othe
                 
     if  uses_e140m == False and used_g140l == False:
         print('filling COS airglow with polynomials')
-        sed_table, instrument_list = fill_cos_airglow(sed_table, other_airglow, instrument_list, hdr)
+        sed_table, instrument_list = fill_cos_airglow(sed_table, other_airglow, instrument_list)
 
                 
     return sed_table, instrument_list
@@ -308,29 +303,27 @@ def add_phoenix_and_g430l(sed_table, component_repo, instrument_list, error_cut=
     """
     Adds both the phoenix model and the g430l spectrum, triming the g430l spectrum by and error cut and filling in any gap with the phoenix model. 
     """
-    phx_path = glob.glob(component_repo+'*phx*.fits')
-    g430l_path = glob.glob(component_repo+'*g430l*.fits')
+    phx_path = glob.glob(component_repo+'*phx*.ecsv')
+    g430l_path = glob.glob(component_repo+'*g430l*.ecsv')
     if len(phx_path) == 1 and len(g430l_path) == 1:
-        phx = Table(fits.getdata(phx_path[0], 1))
-        hdr = fits.getheader(phx_path[0], 0)
+        phx = Table.read(phx_path[0])
         if to_1A:
             print('binning {}'.format(phx_path[0]))
             phx = bin1A.spectrum_to_const_res(phx)
-        instrument_code, phx = fill_model(phx, 'mod_phx_-----', hdr)
+        instrument_code, phx = fill_model(phx, 'mod_phx_-----')
         instrument_list.append(instrument_code)
-        phx = normfac_column(phx, hdr)
+        phx = normfac_column(phx)
        # print(phx.meta['NORMFAC'])
-        phx['FLUX'] *= hdr['NORMFAC']
+        phx['FLUX'] *= phx.meta['NORMFAC']
         
-        g430l = Table(fits.getdata(g430l_path[0], 1))
-        hdr = fits.getheader(g430l_path[0], 0)
+        g430l = Table.read(g430l_path[0])
         if remove_negs:
             print('removing negatives from {}'.format(g430l_path[0]))
             data = negs.make_clean_spectrum(g430l)
         if to_1A:
             print('binning {}'.format(g430l_path[0]))
             g430l = bin1A.spectrum_to_const_res(g430l)
-        instrument_code, g430l = hst_instrument_column(g430l,  hdr)
+        instrument_code, g430l = hst_instrument_column(g430l)
         instrument_list.append(instrument_code)
         
         if error_cut: #cut region before a rolling 30pt mean SN > 1
@@ -349,9 +342,9 @@ def add_phoenix_and_g430l(sed_table, component_repo, instrument_list, error_cut=
             normfac = leastsq(residuals, 1., args=(g430l['FLUX'], pfr))[0]
             g430l['FLUX'] *= normfac
             g430l['ERROR'] *= normfac
-            update_norm(g430l_path[0], normfac[0])
+            update_norm(g430l_path[0], '{}.fits'.format(g430l_path[0][:-5]), normfac[0])
         
-        g430l = normfac_column(g430l, hdr)
+        g430l = normfac_column(g430l)
         g430l = g430l[g430l['WAVELENGTH'] > max(sed_table['WAVELENGTH'])]
         # print('optical gap', max(sed_table['WAVELENGTH']), min(g430l['WAVELENGTH']))
         phx = phx[(phx['WAVELENGTH'] > max(sed_table['WAVELENGTH'])) & (phx['WAVELENGTH'] < min(g430l['WAVELENGTH'])) | (phx['WAVELENGTH'] > max(g430l['WAVELENGTH']))]
@@ -372,17 +365,16 @@ def add_xray_spectrum(sed_table, component_repo, instrument_list, scope, add_ape
     if scope == 'cxo':
         instrument_name = 'cxo_acs_-----'
     cos_start = min(sed_table['WAVELENGTH']) #save the lowest wavelength on the table before we add anything to it
-    xray_path = glob.glob(component_repo+'*'+scope+'*.fits')
+    xray_path = glob.glob(component_repo+'*'+scope+'*.ecsv')
     xray_end = 0
     if len(xray_path) > 0:
-        xray = Table(fits.getdata(xray_path[0], 1))
-        hdr = fits.getheader(xray_path[0], 0)
+        xray = Table.read(xray_path[0])
         if to_1A:
             print('binning {}'.format(xray_path[0]))
             xray = bin1A.spectrum_to_const_res(xray)
         error = xray['ERROR'] #retain error and exptime 
         exptime = xray['EXPTIME']
-        instrument_code, xray = fill_model(xray, instrument_name, hdr)
+        instrument_code, xray = fill_model(xray, instrument_name)
         xray['ERROR'] = error
         xray['EXPTIME'] = exptime
         instrument_list.append(instrument_code)
@@ -390,17 +382,16 @@ def add_xray_spectrum(sed_table, component_repo, instrument_list, scope, add_ape
         xray_end = max(xray['WAVELENGTH'])
         sed_table = vstack([sed_table, xray], metadata_conflicts = 'silent')
     if add_apec:
-        apec_path = glob.glob(component_repo+'*apec*.fits')
+        apec_path = glob.glob(component_repo+'*apec*.ecsv')
         if len(apec_path) > 0:
 #             print(apec_path)
-            apec = Table(fits.getdata(apec_path[0], 1))
-            hdr = fits.getheader(apec_path[0], 0)
+            apec = Table.read(apec_path[0])
             if to_1A:
                 print('binning {}'.format(apec_path[0]))
                 apec = bin1A.spectrum_to_const_res(apec)
-            instrument_code, apec = fill_model(apec, 'mod_apc_-----', hdr)
+            instrument_code, apec = fill_model(apec, 'mod_apc_-----')
             instrument_list.append(instrument_code)
-            apec = normfac_column(apec, hdr)
+            apec = normfac_column(apec)
             apec = apec[apec['WAVELENGTH'] > xray_end]
             xray_end = max(apec['WAVELENGTH'])
             sed_table = vstack([sed_table, apec], metadata_conflicts = 'silent')
@@ -416,16 +407,15 @@ def add_euv(sed_table, component_repo, instrument_list, euv_gap, euv_type, to_1A
     instrument_name = 'mod_euv_young'
     if euv_type == 'dem':
         instrument_name = 'mod_dem_-----'
-    euv_path = glob.glob(component_repo+'*'+euv_type+'*.fits')
+    euv_path = glob.glob(component_repo+'*'+euv_type+'*.ecsv')
     if len(euv_path) > 0:
-        euv = Table(fits.getdata(euv_path[0], 1))
-        hdr = fits.getheader(euv_path[0], 0)
+        euv = Table.read(euv_path[0])
         if to_1A:
             print('binning {}'.format(euv_path[0]))
             euv = bin1A.spectrum_to_const_res(euv)
-        instrument_code, euv = fill_model(euv, instrument_name, hdr)
+        instrument_code, euv = fill_model(euv, instrument_name)
         instrument_list.append(instrument_code)
-        euv = normfac_column(euv, hdr)
+        euv = normfac_column(euv)
         euv = euv[(euv['WAVELENGTH'] > euv_gap[0]) & (euv['WAVELENGTH'] < euv_gap[1])]
         sed_table = vstack([sed_table, euv], metadata_conflicts = 'silent')
     return sed_table, instrument_list
@@ -439,14 +429,10 @@ def add_bolometric_flux(sed_table, component_repo, star_params):
     """
     Creates and adds the bolometric flux column to the sed
     """
-    # phx = Table(fits.getdata(glob.glob(component_repo+'*phx*fits')[0], 1))
-    print(sed_table['WAVELENGTH'][100])
+    phx = Table.read(glob.glob(component_repo+'*phx*ecsv')[0])
     bolo_int = np.trapz(sed_table['FLUX'], sed_table['WAVELENGTH'])*(u.erg/u.s/u.cm**2)
-    print(bolo_int)
 #     bolo_int = bolo_integral(sed_table,phx,star_params['Teff'])*(u.erg/u.s/u.cm**2)
     boloflux = (sed_table['FLUX']/bolo_int).value
-    print(sed_table['FLUX'][100])
-    print(boloflux)
     boloerr = (sed_table['ERROR']/bolo_int).value
     sed_table['BOLOFLUX'] = boloflux*(1/u.AA)
     sed_table['BOLOERR'] = boloerr*(1/u.AA)
@@ -478,7 +464,7 @@ def sed_to_const_res(sed_table, res=1, start_cut=0, end_cut = 1e5):
         if e[i] == 0.0:
             model_instruments.append(sed_table['INSTRUMENT'][i])
             e[i]  = 0.1*f[i]
-    print('length of new w:', len(new_wavelength))
+    print(len(new_wavelength))
 #     cut = 5700 #spectutils struggles with large numbers, do top of spectrum separatly.
     mask = sed_table['INSTRUMENT'] != 131072 #cut of the phoenix spectrum and do it in craftroom
     cut = w[~mask][0] #where to cut the new wavelength grid
