@@ -325,15 +325,6 @@ def add_phoenix_and_g430l(sed_table, component_repo, instrument_list, error_cut=
         
         g430l = Table(fits.getdata(g430l_path[0], 1))
         hdr = fits.getheader(g430l_path[0], 0)
-        if remove_negs:
-            print('removing negatives from {}'.format(g430l_path[0]))
-            data = negs.make_clean_spectrum(g430l)
-        if to_1A:
-            print('binning {}'.format(g430l_path[0]))
-            g430l = bin1A.spectrum_to_const_res(g430l)
-        instrument_code, g430l = hst_instrument_column(g430l,  hdr)
-        instrument_list.append(instrument_code)
-        
         if error_cut: #cut region before a rolling 30pt mean SN > 1
             bin_width = 30
             w, f, e = g430l['WAVELENGTH'], g430l['FLUX'], g430l['ERROR']
@@ -341,6 +332,17 @@ def add_phoenix_and_g430l(sed_table, component_repo, instrument_list, error_cut=
             start = w[:-bin_width][np.where(sn > 1)[0][0]]
             mask = (w > start)
             g430l = g430l[mask]
+        
+        if remove_negs:
+            print('removing negatives from {}'.format(g430l_path[0]))
+            g430l = negs.make_clean_spectrum(g430l)
+        if to_1A:
+            print('binning {}'.format(g430l_path[0]))
+            g430l = bin1A.spectrum_to_const_res(g430l)
+        instrument_code, g430l = hst_instrument_column(g430l,  hdr)
+        instrument_list.append(instrument_code)
+        
+       
      
         if scale: #scale g430l spectrum to the phoenix spectrum
             mask = (phx['WAVELENGTH'] >= g430l['WAVELENGTH'][0]) & (phx['WAVELENGTH'] <= g430l['WAVELENGTH'][-1]) 
