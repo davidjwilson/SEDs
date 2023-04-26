@@ -284,10 +284,11 @@ def add_stis_and_lya(sed_table, component_repo, lya_range, instrument_list, othe
                     sed_table.meta = dict(hdr)
                 else:                
                     sed_table = vstack([sed_table, data], metadata_conflicts = 'silent')
-                if len(lya_path) == 1:    #lya needs to be added after e140m  
-                    sed_table = vstack([sed_table, lya], metadata_conflicts = 'silent')
-                sed_table.sort(['WAVELENGTH'])
-                
+    if len(lya_path) == 1:    #lya needs to be added after e140m  
+        print('adding lya')
+        sed_table = vstack([sed_table, lya], metadata_conflicts = 'silent')
+    sed_table.sort(['WAVELENGTH'])
+
     if  uses_e140m == False and used_g140l == False:
         print('filling COS airglow with polynomials')
         sed_table, instrument_list = fill_cos_airglow(sed_table, other_airglow, instrument_list, hdr)
