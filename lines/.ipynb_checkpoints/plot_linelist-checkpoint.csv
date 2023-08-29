@@ -1,0 +1,27 @@
+Ion,Wavelength,Likelihood to measure,Log Formation Temperature
+S VI,933,Medium,5.3
+N III,990,Medium,4.9
+N III,992,Medium,4.9
+Ne VI,999,Medium,5.6
+O VI,1032,Medium,5.5
+O VI,1038,Medium,5.5
+Fe XIX,1119,Low,6.9
+Ne V,1146,Medium,5.5
+C III,1175,High,4.9
+Si III,1206,High,4.8
+O V],1218,Low,5.4
+N V,1240,High,5.3
+Si II,1260,Medium,4.5
+Si III,1300,High,4.8
+Si II,1304,High,4.5
+C II,1324,High,4.7
+C II,1335,High,4.6
+Fe XXI,1354,Low,7
+O V,1371,Low,5.4
+O IV],1405,Medium,5.2
+Si IV,1400,High,4.9
+S IV],1406,Low,5
+N IV],1487,Low,5.2
+Si II,1530,Medium,4.4
+C IV,1550,High,5
+O III],1666,Medium,5
