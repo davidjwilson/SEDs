@@ -158,18 +158,20 @@ def make_mm_seds(path, star_params, stars, version, norm=False, remove_negs=Fals
 
         #EUV
         euv_name = 'euv-scaling'
-        if len(glob.glob('{}*dem*'.format(component_repo))) > 1:
+        if len(glob.glob('{}*dem*'.format(component_repo))) == 1:
             euv_name = 'dem'
+            print(euv_name)
 
         sed_table, instrument_list = sed.add_euv(sed_table, component_repo, instrument_list, euv_gap, euv_name,to_1A=to_1A)
         print(len(sed_table['FLUX'][np.isnan(sed_table['FLUX'])==True]))
         print(len(sed_table['FLUX'][np.isnan(sed_table['WAVELENGTH'])==True]))
         sed_table.sort(['WAVELENGTH'])
-    #     plt.figure()
-    #     plt.plot(sed_table['WAVELENGTH'], sed_table['FLUX'])
-    #     plt.yscale('log')
-    #     plt.xscale('log')
-    #     plt.show()
+        plt.figure()
+        plt.plot(sed_table['WAVELENGTH'], sed_table['FLUX'])
+        plt.plot(sed_table['WAVELENGTH'], sed_table['ERROR'], alpha=0.5)
+        plt.yscale('log')
+        plt.xscale('log')
+        # plt.show()
     # #     print(sed_table.meta)
         #bolometric flux
         sed_table = sed.add_bolometric_flux(sed_table, component_repo, row)
@@ -239,7 +241,7 @@ make_mm_seds(path, star_params, stars, version, norm=False, remove_negs=False, t
     
 
 print('Done')
-
+plt.show()
 """    
 
     #savdat = Table([w_full*u.AA, f_full*u.erg/u.s/u.cm**2/u.AA, e_full*u.erg/u.s/u.cm**2/u.AA], names=['WAVELENGTH', 'FLUX', 'ERROR'])
