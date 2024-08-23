@@ -163,8 +163,8 @@ def combine_x1ds(x1ds, correct_error=True):
         #else:
         data = fits.getdata(x1ds[0],data_extension)[0]   
         hdr = fits.getheader(x1ds[0],0)
-        if hdr['TARGNAME'] == '2MASS-J23062928-0502285':
-            data = Table.read('/home/david/work/muscles/SEDs/trappist-1/optical/t1_g430m_edit.ecsv')
+        # if hdr['TARGNAME'] == '2MASS-J23062928-0502285': #don't do this
+        #     data = Table.read('/home/david/work/muscles/SEDs/trappist-1/optical/t1_g430m_edit.ecsv')
         w_new, f_new, e_new, dq_new = data['WAVELENGTH'], data['FLUX'], data['ERROR'], data['DQ']
         exptime, start, end = np.full(len(data['WAVELENGTH']), hdr['TEXPTIME']), np.full(len(data['WAVELENGTH']), hdr['TEXPSTRT']), np.full(len(data['WAVELENGTH']), hdr['TEXPEND'])
         if correct_error:    
