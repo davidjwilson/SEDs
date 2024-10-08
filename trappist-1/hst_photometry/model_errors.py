@@ -21,7 +21,7 @@ def nuv_bb_model(amp_in, scale_in):
 
     
     # nuv_mod = mg_mod+bb_mod
-    mod_w = np.arange(1100, 3501, 0.1)*u.AA
+    mod_w = np.arange(1100, 3501, 1.0)*u.AA
 
 
     bb_mod = bb_mod(mod_w).value
@@ -57,7 +57,7 @@ scale_in_e = np.array([1.2466942704625804e-26, 1.309791110479485e-26, 1.17317419
 fluxes = []
 
 for i in range(len(amp_in)):
-    if i == 2:
+    # if i == 2:
         amps = np.random.normal(amp_in[i], amp_in_e[i], ntries)
         scales = np.random.normal(scale_in[i], scale_in_e[i], ntries)
         n = 0
@@ -84,7 +84,7 @@ for i in range(len(amp_in)):
         e = f * (fluxstd/fluxmean)
     
         savdat = Table([w*u.AA, f*u.erg/u.s/u.cm**2/u.AA, e*u.erg/u.s/u.cm**2/u.AA], names=['WAVELENGTH', 'FLUX', 'ERROR'])
-        savdat.write('model_spectra/epoch{}_nuv_mod.ecsv'.format(i+1), format='ascii.ecsv', overwrite=True)
+        savdat.write('model_spectra/res1A_epoch{}_nuv_mod.ecsv'.format(i+1), format='ascii.ecsv', overwrite=True)
     
 
 
