@@ -42,19 +42,20 @@ sources = ['cos','stis', 'lya','phoenix', 'xmm', 'chandra', 'apec', 'euv']
 
 
 # stars= []# leaving out Trappist-1
-stars = ['2MASS-J23062928-0502285',
-        'L-980-5',
-        'GJ674', 
-        'GJ676A',
-        'GJ649',
-        'GJ699',
-        'GJ163',
-        'GJ849',
-        'GJ1132',
-        'LHS-2686',
-        'GJ729',
-        'GJ15A']
+# stars = ['2MASS-J23062928-0502285',
+#         'L-980-5',
+#         'GJ674', 
+#         'GJ676A',
+#         'GJ649',
+#         'GJ699',
+#         'GJ163',
+#         'GJ849',
+#         'GJ1132',
+#         'LHS-2686',
+#         'GJ729',
+#         'GJ15A']
 # stars = ['2MASS-J23062928-0502285']
+stars = ['TRAPPIST-1']
 # stars = ['L-980-5']
 # stars = ['GJ729']
 # stars = ['GJ699']
